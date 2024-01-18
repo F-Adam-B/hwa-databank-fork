@@ -10,7 +10,7 @@ export type SampleType = {
     value: string;
   }[];
   location: {
-    coordinates: number[] | string[];
+    coordinates: [number, number];
     county: string;
     type: string;
   };

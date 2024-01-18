@@ -1,31 +1,22 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { useGetSamplesQuery } from './features/samples/samplesApi';
+import { MapProvider } from 'react-map-gl';
+import MapBox from './components/Map/MapBox';
+import NavBar from './components/NavBar';
 
 // Dashboard
-// Map
+// MapBox
 // Blog
 //
 
 function App() {
-  const { data, isFetching, isLoading } = useGetSamplesQuery();
-  if (isFetching) return <div>Fetching samples...</div>;
-  if (isLoading) return <div>Loading samples...</div>;
-
   return (
     <div className="App">
-      Sample Projects
-      <ul>
-        {data?.samples.map(({ project }) => {
-          return (
-            <div key={project['_id']}>
-              <li>{project.projectName}</li>
-              <li>{project.organization}</li>
-            </div>
-          );
-        })}
-      </ul>
+      <MapProvider>
+        <NavBar />
+        <MapBox />
+      </MapProvider>
     </div>
   );
 }

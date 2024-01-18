@@ -2,3 +2,5 @@
 .vscode/settings.json
 backend/.env
 backend/.env
+frontend/hwa-react-app/.env
+frontend/hwa-react-app/src/.env
