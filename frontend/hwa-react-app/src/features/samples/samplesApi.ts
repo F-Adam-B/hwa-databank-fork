@@ -39,7 +39,7 @@ export const samplesInventoryApi = createApi({
   tagTypes: ['Samples'],
   endpoints: (builder) => ({
     getSamples: builder.query<SamplesResponse, void>({
-      query: () => '/api/',
+      query: () => '/',
       providesTags: ['Samples'],
       transformResponse: (
         response: SamplesResponse,

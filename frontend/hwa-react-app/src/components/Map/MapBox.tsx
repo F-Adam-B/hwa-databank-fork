@@ -1,18 +1,26 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import Map, {
+  Layer,
   Marker,
   Popup,
   NavigationControl,
   FullscreenControl,
   ScaleControl,
+  Source,
   GeolocateControl,
   useMap,
 } from 'react-map-gl';
-import Pin from '../Pin';
+import Pin from '../Pin/Pin';
+import { SideBar } from '../index';
 import {
   useGetSamplesQuery,
   SampleType,
 } from '../../features/samples/samplesApi';
+import {
+  addSelectedSample,
+  removeSelectedSample,
+} from '../../features/samples/sampleSlice';
 
 const MAPBOX_API_KEY = process.env.REACT_APP_MAPBOX_API_TOKEN || '';
 
@@ -27,6 +35,7 @@ type LngLatBounds = {
   _ne: [number, number];
 };
 const MapBox = () => {
+  const dispatch = useDispatch();
   const { waterSamplesMap } = useMap();
 
   const { data, isFetching, isLoading } = useGetSamplesQuery();
@@ -75,6 +84,7 @@ const MapBox = () => {
               color: 'aquamarine',
             }}
             onClick={(e) => {
+              dispatch(addSelectedSample(s));
               // If we let the click event propagates to the map, it will immediately close the popup
               // with `closeOnClick: true`
               e.originalEvent.stopPropagation();
@@ -92,6 +102,7 @@ const MapBox = () => {
   if (isLoading) return <div>Loading samples...</div>;
   return (
     <div className="mapContainer" style={{ height: '500px' }}>
+      <SideBar />
       <Map
         id="waterSamplesMap"
         initialViewState={{
@@ -115,7 +126,9 @@ const MapBox = () => {
             anchor="top"
             latitude={Number(popupInfo.location.coordinates[0])}
             longitude={Number(popupInfo.location.coordinates[1])}
-            onClose={() => setPopupInfo(null)}
+            onClose={() => {
+              setPopupInfo(null);
+            }}
           >
             <div>
               {popupInfo.sampleNumber}, {popupInfo.stationName}

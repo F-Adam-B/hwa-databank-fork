@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { NavLink, Router, Outlet, Link } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -11,7 +12,13 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
-const pages = ['Samples', 'Pricing', 'Blog'];
+const pages = [
+  { name: 'Dashboard', url: '/' },
+  { name: 'Map', url: '/map' },
+  { name: 'Blog', url: '/blog' },
+  { name: 'Sample Form', url: '/sampleForm' },
+  { name: 'About', url: '/about' },
+];
 const settings = ['Profile', 'Account', 'Dashboard', 'Login'];
 
 const NavBar = () => {
@@ -55,51 +62,20 @@ const NavBar = () => {
             HWA LOGO
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              Need an Icon!!!
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
-                key={page}
+                key={page.name}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                <Link
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                  to={page.url}
+                >
+                  {' '}
+                  {page.name}
+                </Link>
               </Button>
             ))}
           </Box>

@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // app.use("/", router);
-app.use('/api/', waterSampleRouter);
+app.use('/', waterSampleRouter);
 
 var port = process.env.PORT || 8000;
 
@@ -26,7 +26,7 @@ const server = createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-dbConnect(process.env.DATABASE_URL);
+// dbConnect(process.env.DATABASE_URL);
 
 server.listen(port, () => {
   console.log(`Server running on http://localhost:8000`);
