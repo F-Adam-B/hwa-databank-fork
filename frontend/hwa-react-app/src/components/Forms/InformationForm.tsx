@@ -28,14 +28,22 @@ const InformationForm = () => {
           name="organizationName"
           control={control}
           render={({ field }) => (
-            <ControlledInputField label="Organization Name" {...field} />
+            <ControlledInputField
+              control={control}
+              label="Organization Name"
+              {...field}
+            />
           )}
         />
         <Controller
           name="projectName"
           control={control}
           render={({ field }) => (
-            <ControlledInputField label="Project Type" {...field} />
+            <ControlledInputField
+              control={control}
+              label="Project Type"
+              {...field}
+            />
           )}
         />
       </Card>

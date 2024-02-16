@@ -64,19 +64,19 @@ const NavBar = () => {
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Button
-                key={page.name}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+              <Link
+                style={{ textDecoration: 'none', color: 'inherit' }}
+                to={page.url}
               >
-                <Link
-                  style={{ textDecoration: 'none', color: 'inherit' }}
-                  to={page.url}
+                <Button
+                  key={page.name}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
                 >
                   {' '}
                   {page.name}
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             ))}
           </Box>
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useQuery } from '@apollo/client';
 import { useDispatch } from 'react-redux';
 import Map, {
   Layer,
@@ -21,6 +22,7 @@ import {
   addSelectedSample,
   removeSelectedSample,
 } from '../../features/samples/sampleSlice';
+import { GET_ALL_SAMPLES } from '../../graphql/queries/sampleQueries';
 
 const MAPBOX_API_KEY = process.env.REACT_APP_MAPBOX_API_TOKEN || '';
 
@@ -34,11 +36,17 @@ type LngLatBounds = {
   _sw: [number, number];
   _ne: [number, number];
 };
+
 const MapBox = () => {
   const dispatch = useDispatch();
   const { waterSamplesMap } = useMap();
 
-  const { data, isFetching, isLoading } = useGetSamplesQuery();
+  // const { loading, data: graphQlData } = useQuery(GET_ALL_SAMPLES);
+
+  const graphQlData = {
+    samples: [],
+  };
+  // const { data, isFetching, isLoading } = useGetSamplesQuery();
   const [popupInfo, setPopupInfo] = useState<SampleType | null>(null);
   const [mapBounds, setMapBounds] = useState<any>(null);
   const [error, setError] = useState<boolean>(false);
@@ -63,20 +71,20 @@ const MapBox = () => {
 
   const samplesWithCoordinates = useMemo(() => {
     return (
-      data?.samples.filter((s) =>
+      graphQlData?.samples.filter((s: SampleType) =>
         s.location.coordinates.every((coord) => coord !== null)
       ) || []
     );
-  }, [data?.samples]);
+  }, [graphQlData?.samples]);
 
   const samplePins = useMemo(() => {
-    return samplesWithCoordinates.map((s) => {
-      const latitude = s.location.coordinates[0];
-      const longitude = s.location.coordinates[1];
+    return samplesWithCoordinates.map((s: SampleType) => {
+      const latitude = Number(s.location.coordinates[0]);
+      const longitude = Number(s.location.coordinates[1]);
       return (
         <div className="pinsContainer">
           <Marker
-            key={`marker-${s._id}`}
+            key={`marker-${s.id}`}
             latitude={latitude}
             longitude={longitude}
             anchor="bottom"
@@ -98,8 +106,8 @@ const MapBox = () => {
     });
   }, [samplesWithCoordinates]);
 
-  if (isFetching) return <div>Fetching samples...</div>;
-  if (isLoading) return <div>Loading samples...</div>;
+  // if (isFetching) return <div>Fetching samples...</div>;
+  // if (loading) return <div>Loading samples...</div>;
   return (
     <div className="mapContainer" style={{ height: '500px' }}>
       <SideBar />
@@ -141,26 +149,3 @@ const MapBox = () => {
 };
 
 export default MapBox;
-
-// const [pins, setPins] = useState([]);
-// const mapBounds = useMapBounds(); // Custom hook or function to get map bounds
-
-// useEffect(() => {
-//   const fetchPins = async () => {
-//     try {
-//       const response = await axios.get('api/pins', {
-//         params: {
-//           northEastLat: mapBounds.ne.lat,
-//           northEastLng: mapBounds.ne.lng,
-//           southWestLat: mapBounds.sw.lat,
-//           southWestLng: mapBounds.sw.lng,
-//         },
-//       });
-//       setPins(response.data);
-//     } catch (error) {
-//       console.error('Failed to fetch pins:', error);
-//     }
-//   };
-
-//   fetchPins();
-// }, [mapBounds]); // Re-fetch pins whenever the map bounds change

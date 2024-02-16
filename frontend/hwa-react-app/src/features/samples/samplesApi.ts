@@ -3,6 +3,7 @@ import { formatTimestamp } from '../../utilities';
 
 export type SampleType = {
   _id: number | null;
+  id: number | null;
   createdAt: string;
   elementsTested: {
     description: string;
@@ -47,9 +48,10 @@ export const samplesInventoryApi = createApi({
         arg: void
       ): SamplesResponse | Promise<SamplesResponse> => {
         const transformedSamples: SampleType[] = response.samples.map(
-          ({ createdAt, ...rest }) => ({
+          ({ createdAt, sampleDate, ...rest }) => ({
             ...rest,
-            createdAt: formatTimestamp(createdAt), // Adjust the transformation as necessary
+            createdAt: formatTimestamp(createdAt),
+            sampleDate: formatTimestamp(sampleDate),
           })
         );
 

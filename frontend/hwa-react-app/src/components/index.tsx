@@ -1,4 +1,5 @@
 import ControlledInputField from './ControlledInputField/ControlledInputField';
+import DataGridMUI from './DataGridMUI/DataGridMUI';
 import ErrorPage from './ErrorPage/ErrorPage';
 import MapBox from './Map/MapBox';
 import NavBar from './NavBar';
@@ -11,6 +12,7 @@ import ResultsForm from './Forms/CharacteristicsForm';
 
 export {
   ControlledInputField,
+  DataGridMUI,
   ErrorPage,
   InformationForm,
   LocationForm,

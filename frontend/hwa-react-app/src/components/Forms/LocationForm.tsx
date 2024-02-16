@@ -19,42 +19,66 @@ const LocationForm = () => {
           name="wellName"
           control={control}
           render={({ field }) => (
-            <ControlledInputField label="Well Name" {...field} />
+            <ControlledInputField
+              control={control}
+              label="Well Name"
+              {...field}
+            />
           )}
         />
         <Controller
           name="projectName"
           control={control}
           render={({ field }) => (
-            <ControlledInputField label="Project Name" {...field} />
+            <ControlledInputField
+              control={control}
+              label="Project Name"
+              {...field}
+            />
           )}
         />
         <Controller
           name="description"
           control={control}
           render={({ field }) => (
-            <ControlledInputField label="Description" {...field} />
+            <ControlledInputField
+              control={control}
+              label="Description"
+              {...field}
+            />
           )}
         />
         <Controller
           name="subLocation"
           control={control}
           render={({ field }) => (
-            <ControlledInputField label="Sub-location" {...field} />
+            <ControlledInputField
+              control={control}
+              label="Sub-location"
+              {...field}
+            />
           )}
         />
         <Controller
           name="watershed"
           control={control}
           render={({ field }) => (
-            <ControlledInputField label="Watershed" {...field} />
+            <ControlledInputField
+              control={control}
+              label="Watershed"
+              {...field}
+            />
           )}
         />
         <Controller
           name="surfaceWaterUnit"
           control={control}
           render={({ field }) => (
-            <ControlledInputField label="Surface Water Unit" {...field} />
+            <ControlledInputField
+              control={control}
+              label="Surface Water Unit"
+              {...field}
+            />
           )}
         />
       </Card>

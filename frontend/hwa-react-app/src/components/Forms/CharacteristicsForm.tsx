@@ -19,35 +19,55 @@ const CharacteristicsForm = () => {
           name="characteristicGroup"
           control={control}
           render={({ field }) => (
-            <ControlledInputField label="Characteristic Group" {...field} />
+            <ControlledInputField
+              control={control}
+              label="Characteristic Group"
+              {...field}
+            />
           )}
         />
         <Controller
           name="characteristic"
           control={control}
           render={({ field }) => (
-            <ControlledInputField label="Characteristic" {...field} />
+            <ControlledInputField
+              control={control}
+              label="Characteristic"
+              {...field}
+            />
           )}
         />
         <Controller
           name="sampleFraction"
           control={control}
           render={({ field }) => (
-            <ControlledInputField label="Sample Fraction" {...field} />
+            <ControlledInputField
+              control={control}
+              label="Sample Fraction"
+              {...field}
+            />
           )}
         />
         <Controller
           name="resultMeasureQualifier"
           control={control}
           render={({ field }) => (
-            <ControlledInputField label="Characteristics Measured" {...field} />
+            <ControlledInputField
+              control={control}
+              label="Characteristics Measured"
+              {...field}
+            />
           )}
         />
         <Controller
           name="result"
           control={control}
           render={({ field }) => (
-            <ControlledInputField label="Activity Media" {...field} />
+            <ControlledInputField
+              control={control}
+              label="Activity Media"
+              {...field}
+            />
           )}
         />
       </Card>

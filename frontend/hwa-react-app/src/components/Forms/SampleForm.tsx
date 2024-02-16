@@ -19,35 +19,55 @@ const SampleForm = () => {
           name="collectionDate"
           control={control}
           render={({ field }) => (
-            <ControlledInputField label="Collection Date" {...field} />
+            <ControlledInputField
+              control={control}
+              label="Collection Date"
+              {...field}
+            />
           )}
         />
         <Controller
           name="collectionTime"
           control={control}
           render={({ field }) => (
-            <ControlledInputField label="Collection Time" {...field} />
+            <ControlledInputField
+              control={control}
+              label="Collection Time"
+              {...field}
+            />
           )}
         />
         <Controller
           name="sampleVolume"
           control={control}
           render={({ field }) => (
-            <ControlledInputField label="Sample Volume" {...field} />
+            <ControlledInputField
+              control={control}
+              label="Sample Volume"
+              {...field}
+            />
           )}
         />
         <Controller
           name="characteristicsMeasured"
           control={control}
           render={({ field }) => (
-            <ControlledInputField label="Characteristics Measured" {...field} />
+            <ControlledInputField
+              control={control}
+              label="Characteristics Measured"
+              {...field}
+            />
           )}
         />
         <Controller
           name="activityMedia"
           control={control}
           render={({ field }) => (
-            <ControlledInputField label="Activity Media" {...field} />
+            <ControlledInputField
+              control={control}
+              label="Activity Media"
+              {...field}
+            />
           )}
         />
         <Controller
@@ -55,6 +75,7 @@ const SampleForm = () => {
           control={control}
           render={({ field }) => (
             <ControlledInputField
+              control={control}
               label="Activity Media Subdivision"
               {...field}
             />

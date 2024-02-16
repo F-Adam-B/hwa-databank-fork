@@ -2,26 +2,17 @@ import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
+import { analyteSchema } from './analyteModel.js';
 // Common field type options
-const requiredString = {
+export const requiredString = {
   type: String,
   required: true,
 };
 
-const uniqueString = {
+export const uniqueString = {
   type: String,
   unique: true,
 };
-
-// Schema for element results
-const elementSchema = new Schema(
-  {
-    elementName: requiredString,
-    description: String,
-    value: String,
-  },
-  { _id: false }
-);
 
 // Schema for location
 const isValidLongitude = (lon) => isFinite(lon) && lon >= -180 && lon <= 180;
@@ -60,12 +51,17 @@ const locationSchema = new Schema(
 );
 
 // Schema for project
-const projectSchema = new Schema({
-  projectName: String,
-  organization: String,
-  labName: String,
-  labId: String,
-});
+const projectSchema = new Schema(
+  {
+    projectName: String,
+    organization: String,
+    labName: String,
+    labId: String,
+  },
+  {
+    _id: false,
+  }
+);
 
 // Schema for tags
 const tagsSchema = new Schema(
@@ -79,11 +75,18 @@ const tagsSchema = new Schema(
   { _id: false }
 );
 
+const analytesTestedType = new Schema(
+  {
+    ...analyteSchema.obj,
+    value: String,
+  },
+  { _id: false }
+);
 // Define the main schema for the water sample
 const waterSampleSchema = new Schema(
   {
     location: locationSchema,
-    elementsTested: [elementSchema],
+    analytesTested: [analytesTestedType],
     eventId: String,
     matrix: String,
     project: projectSchema,
@@ -113,3 +116,5 @@ export const WaterSample = mongoose.model(
   waterSampleSchema,
   'hwa-databank'
 );
+
+// export const AnalyteSchema = mongoose.model('AnalyteSchema', 'hwa-analytes');

@@ -1,10 +1,16 @@
 import fs from 'fs';
 import { MongoClient } from 'mongodb';
-import mongoose from 'mongoose';
+import mongoose, { model } from 'mongoose';
 
 // import jsonFile from './databank_hwa.json' assert { type: 'json' };
 import jsonFile from './hws_removed_empty_fields.json' assert { type: 'json' };
+import charJsonFile from './characteristicJSON.json' assert { type: 'json' };
+import transformedAnalytesAndChars from './transformedAnalytesAndChars.json' assert { type: 'json' };
+import modelShapedHwaDataSet from './modelShapedHwaDataSet.json' assert { type: 'json' };
+import fullyTransformedDataSet from './fullyTransformedDataSet.json' assert { type: 'json' };
+
 import { WaterSample } from '../models/waterSampleModel.js';
+import { Analytes } from '../models/analyteModel.js';
 
 const username = encodeURIComponent('fadambrad');
 const password = encodeURIComponent('ZpQkT3TreH3Y9c0R');
@@ -14,13 +20,41 @@ const mongoUrl = `mongodb+srv://${username}:${password}@cluster0.hzdku2o.mongodb
 const dbName = 'HWA-Water-Sample-DB';
 const collectionName = 'water_sample';
 
+const transformCharsJson = (input) => {
+  return input.reduce((accumulator, currentValue) => {
+    let analyteEntry = accumulator.find(
+      (entry) => entry.analyteName === currentValue.FIELD3
+    );
+
+    // If no such entry exists, create one
+    if (!analyteEntry) {
+      analyteEntry = {
+        analyteName: currentValue.FIELD3,
+        characteristics: [],
+      };
+
+      accumulator.push(analyteEntry);
+    }
+
+    // Add characteristic to the analyte entry
+    analyteEntry.characteristics.push({
+      name: currentValue.FIELD4,
+      description: currentValue.FIELD5,
+    });
+
+    return accumulator;
+  }, []);
+};
+
+// const transformedChars = JSON.stringify(transformCharsJson(charJsonFile));
+
 const transformData = (input, idx) => {
   // Extract location details
   const latitude = input.Latitude ? parseFloat(input.Latitude) : '';
   const longitude = input.Longitude ? parseFloat(input.Longitude) : '';
 
-  // Initialize elementsTested array
-  let elementsTested = [];
+  // Initialize analytesTested array
+  let analytesTested = [];
 
   // Loop through the keys of the input object to build element results
   for (const key in input) {
@@ -28,7 +62,7 @@ const transformData = (input, idx) => {
 
     // Check if the property can be considered an element
     if (key.includes('_') && typeof value !== 'undefined' && value !== null) {
-      elementsTested.push({
+      analytesTested.push({
         elementName: key,
         description: '',
         value: value,
@@ -53,7 +87,7 @@ const transformData = (input, idx) => {
       elevationToGrade: input.ElevationToGrade,
       locationDesc: input.LocationDesc,
     },
-    elementsTested: elementsTested,
+    analytesTested: analytesTested,
     eventId: input.EventID,
     matrix: input.Matrix,
     project: project,
@@ -75,15 +109,74 @@ const transformData = (input, idx) => {
   return transformedSample;
 };
 
-async function main() {
+const reshapeAnalytes = (analytes, reference) => {
+  return reference
+    .map((refAna) => {
+      const filteredCharacteristics = refAna.characteristics
+        .map((char) => {
+          // Find the matching analyte by elementName
+          const foundAnalyte = analytes.find(
+            (a) => a.elementName === char.name
+          );
+          if (foundAnalyte) {
+            // If an analyte is found, return an object with the needed properties
+            return {
+              name: foundAnalyte.elementName,
+              description: char.description,
+              value: foundAnalyte.value,
+            };
+          }
+          return null; // Return null if no analyte is found
+        })
+        .filter((item) => item !== null); // Filter out the null entries
+
+      if (filteredCharacteristics.length > 0) {
+        return {
+          analyteName: refAna.analyteName,
+          characteristics: filteredCharacteristics,
+        };
+      }
+      return null;
+    })
+    .filter(Boolean);
+};
+
+const transformedAnalytesTestedValues = (dataSet) => {
+  return dataSet.map((sample, idx) => {
+    const { analytesTested } = sample;
+
+    const reshapedAnalytes = reshapeAnalytes(
+      analytesTested,
+      transformedAnalytesAndChars
+    );
+    return {
+      ...sample,
+      analytesTested: reshapedAnalytes,
+    };
+  });
+};
+
+// fs.writeFile(
+//   'fullyTransformedDataSet.json',
+//   JSON.stringify(fullyTransformedDataSet),
+//   'utf-8',
+//   (err) => {
+//     if (err) {
+//       console.log(err);
+//     }
+
+//     console.log('Success!!!');
+//   }
+// );
+
+export const main = async () => {
   try {
-    const modelShapedHwaJson = jsonFile.map((o) => transformData(o));
-    await WaterSample.insertMany(modelShapedHwaJson);
+    await WaterSample.insertMany(fullyTransformedDataSet);
     console.log('Payload WaterSamples uploaded successfully');
   } catch (error) {
     console.error('An error occurred:', error);
   }
-}
+};
 
 // main();
 

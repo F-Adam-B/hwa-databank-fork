@@ -5,6 +5,7 @@ import { ErrorPage, MapBox, NavBar } from '../components';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import FormPage from './pages/FormPage';
+import SearchForm from '../components/Forms/SearchForm';
 
 const routes: RouteObject[] = [
   {
@@ -33,6 +34,7 @@ const routes: RouteObject[] = [
       <>
         <NavBar />
         <MapBox />
+        <SearchForm />
       </>
     ),
     errorElement: <ErrorPage />,

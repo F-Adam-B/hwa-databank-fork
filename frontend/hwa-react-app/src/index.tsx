@@ -1,4 +1,5 @@
 import React from 'react';
+import { ApolloProvider } from '@apollo/client';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -13,19 +14,22 @@ import { themeOptions } from './Providers/Theme';
 import router from './routes';
 import { MapProvider } from 'react-map-gl';
 import { NavBar } from './components';
+import client from './graphql/apollo-client';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <MapProvider>
-        {/* <ThemeProvider theme={themeOptions}> */}
-        {/* <App /> */}
-        <RouterProvider router={router} />
-      </MapProvider>
-    </Provider>
+    <ApolloProvider client={client}>
+      <Provider store={store}>
+        <MapProvider>
+          {/* <ThemeProvider theme={themeOptions}> */}
+          {/* <App /> */}
+          <RouterProvider router={router} />
+        </MapProvider>
+      </Provider>
+    </ApolloProvider>
     {/* </ThemeProvider> */}
   </React.StrictMode>
 );
