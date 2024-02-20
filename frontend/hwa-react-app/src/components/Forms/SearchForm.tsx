@@ -6,7 +6,10 @@ import { DevTool } from '@hookform/devtools';
 import ControlledInputField from '../ControlledInputField/ControlledInputField';
 import ControlledSelectField from '../ControlledSelectField/ControlledSelectField';
 import ControlledDateField from '../ControlledDateField/ControlledDateField';
-import { GET_SAMPLES } from '../../graphql/queries/sampleQueries';
+import {
+  GET_SAMPLES,
+  GET_SEARCH_SAMPLE_FORM_FIELDS,
+} from '../../graphql/queries/sampleQueries';
 
 type SearchFormInput = {
   fromDate: string;
@@ -49,6 +52,12 @@ const stationNames = [
 ];
 
 const SearchForm = () => {
+  const {
+    loading: searchSampleFormFieldsLoading,
+    error: searchSampleFormFieldsError,
+    data: searchSampleFormFieldData,
+  } = useQuery(GET_SEARCH_SAMPLE_FORM_FIELDS);
+
   const [selectedFromDate, setSelectedFromDate] = useState<Date | null>(null);
   const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
   const { control, handleSubmit, getValues, watch } = useForm({
