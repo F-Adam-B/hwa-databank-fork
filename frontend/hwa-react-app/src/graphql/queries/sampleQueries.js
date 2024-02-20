@@ -46,3 +46,14 @@ export const GET_SAMPLES = gql`
     }
   }
 `;
+
+export const GET_SEARCH_SAMPLE_FORM_FIELDS = gql`
+  query GetSearchSampleFormFields {
+    formFieldValues {
+      uniqueMatrices
+      uniqueWaterBodies
+      uniqueStationNames
+      uniqueOrganizations
+    }
+  }
+`;
