@@ -10,6 +10,7 @@ import {
 } from 'graphql';
 
 import { WaterSample } from '../models/waterSampleModel.js';
+import { Analytes } from '../models/analyteModel.js';
 
 const GraphQLDate = new GraphQLScalarType({
   name: 'Date',
@@ -93,9 +94,58 @@ const SampleType = new GraphQLObjectType({
   }),
 });
 
+const FormFieldType = new GraphQLObjectType({
+  name: 'FormField',
+  fields: () => ({
+    uniqueStationNames: { type: GraphQLList(GraphQLString) },
+    uniqueOrganizations: { type: GraphQLList(GraphQLString) },
+    uniqueMatrices: { type: GraphQLList(GraphQLString) },
+    uniqueWaterBodies: { type: GraphQLList(GraphQLString) },
+  }),
+});
+
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
+    formFieldValues: {
+      type: new GraphQLList(FormFieldType),
+      resolve: async (parent, args) => {
+        try {
+          const result = await WaterSample.aggregate([
+            {
+              $group: {
+                _id: null, // Group by null to aggregate over the whole collection
+                uniqueStationNames: { $addToSet: '$stationName' },
+                uniqueOrganizations: { $addToSet: '$project.organization' },
+                uniqueMatrices: { $addToSet: '$matrix' },
+                uniqueWaterBodies: { $addToSet: '$waterBody' },
+                // Add other fields here as needed
+              },
+            },
+            {
+              $project: {
+                _id: 0, // Exclude the _id field from results
+                uniqueStationNames: 1,
+                uniqueOrganizations: 1,
+                uniqueMatrices: 1,
+                uniqueWaterBodies: 1,
+                // Include other fields here as needed
+              },
+            },
+          ]);
+
+          if (result.length > 0) {
+            return Array.isArray(result) ? result : [];
+          } else {
+            console.log('No unique values found.');
+            return {}; // Optionally return an empty object or any other appropriate value
+          }
+        } catch (error) {
+          console.error('Error fetching distinct values:', error);
+          throw new Error('Error fetching distinct values'); // Propagate the error up to GraphQL
+        }
+      },
+    },
     samples: {
       type: new GraphQLList(SampleType),
       resolve(parent, args) {
@@ -139,8 +189,13 @@ const RootQuery = new GraphQLObjectType({
         if (waterBody) queryFilter.waterBody = waterBody;
         // Return the filtered water samples
 
-        console.log(queryFilter, 'queryFilter');
         return WaterSample.find(queryFilter);
+      },
+    },
+    analytes: {
+      type: new GraphQLList(AnalyteType),
+      resolve(parent, args) {
+        return Analytes.find();
       },
     },
   },
