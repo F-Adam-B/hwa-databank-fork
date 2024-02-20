@@ -7,6 +7,8 @@ import {
 } from 'react-hook-form';
 import { Box, Card, MenuItem, Select, Typography } from '@mui/material';
 import { ControlledInputField } from '../index';
+import ControlledDateField from '../ControlledDateField/ControlledDateField';
+import ControlledTimeField from '../ControlledTimeField/ControlledTimeField';
 
 const SampleForm = () => {
   const { control } = useFormContext();
@@ -15,28 +17,8 @@ const SampleForm = () => {
     <Box>
       <Typography variant="h5">Sample Form</Typography>
       <Card>
-        <Controller
-          name="collectionDate"
-          control={control}
-          render={({ field }) => (
-            <ControlledInputField
-              control={control}
-              label="Collection Date"
-              {...field}
-            />
-          )}
-        />
-        <Controller
-          name="collectionTime"
-          control={control}
-          render={({ field }) => (
-            <ControlledInputField
-              control={control}
-              label="Collection Time"
-              {...field}
-            />
-          )}
-        />
+        <ControlledDateField control={control} name="collectionDate" />
+        <ControlledTimeField control={control} name="collectionTime" />
         <Controller
           name="sampleVolume"
           control={control}
