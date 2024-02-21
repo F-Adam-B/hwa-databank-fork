@@ -19,10 +19,10 @@ import { render } from '@testing-library/react';
 
 interface ControlledDateFieldProps {
   control: Control<any>;
-  label: string;
+  label?: string;
   name: string;
-  value: Date | null;
-  onChange: any;
+  value?: Date | null;
+  onChange?: any;
 }
 
 const ControlledDateField = ({
