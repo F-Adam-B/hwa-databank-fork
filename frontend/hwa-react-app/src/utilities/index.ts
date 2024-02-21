@@ -16,3 +16,10 @@ export const formatTimestamp = (timestamp: string): string => {
   const legibleDate = date.toLocaleDateString('en-US', options);
   return legibleDate;
 };
+
+export const createFormDropdownObject = (arr: string[]) => {
+  const sortedArray = [...arr, 'None'].sort((a, b) =>
+    a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
+  );
+  return sortedArray.map((value) => ({ label: value, value }));
+};
