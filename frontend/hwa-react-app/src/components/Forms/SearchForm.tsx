@@ -7,13 +7,16 @@ import ControlledInputField from '../ControlledInputField/ControlledInputField';
 import ControlledSelectField from '../ControlledSelectField/ControlledSelectField';
 import ControlledDateField from '../ControlledDateField/ControlledDateField';
 import {
+  GET_ANALYTES,
   GET_SAMPLES,
   GET_SEARCH_SAMPLE_FORM_FIELDS,
 } from '../../graphql/queries/sampleQueries';
 
+import { createFormDropdownObject } from '../../utilities';
+
 type SearchFormInput = {
-  fromDate: string;
-  toDate: string;
+  fromDate: string | null;
+  toDate: string | null;
   matrix: string;
   organization: string;
   waterBody: string;
@@ -21,35 +24,13 @@ type SearchFormInput = {
 };
 
 const defaultValues: SearchFormInput = {
-  fromDate: '',
-  toDate: '',
+  fromDate: null,
+  toDate: null,
   matrix: '',
   organization: '',
   waterBody: '',
   analyte: '',
 };
-
-const matrices = [
-  {
-    value: 'Groundwater',
-    label: 'Ground Water',
-  },
-  {
-    value: 'surfaceWater',
-    label: 'Surface Water',
-  },
-];
-
-const stationNames = [
-  {
-    value: 'MW-1',
-    label: 'MW-1',
-  },
-  {
-    value: 'MW-2',
-    label: 'MW-2',
-  },
-];
 
 const SearchForm = () => {
   const {
@@ -57,6 +38,39 @@ const SearchForm = () => {
     error: searchSampleFormFieldsError,
     data: searchSampleFormFieldData,
   } = useQuery(GET_SEARCH_SAMPLE_FORM_FIELDS);
+
+  const { loading: analytesLoading, data: analytesData } = useQuery(
+    GET_ANALYTES,
+    {
+      fetchPolicy: 'cache-only',
+    }
+  );
+
+  type TOptions = {
+    label: string;
+    value: string;
+  };
+
+  let matricesOptions: TOptions[] = [],
+    stationOptions: TOptions[] = [],
+    organizationOptions: TOptions[] = [],
+    waterBodyOptions: TOptions[] = [],
+    analyteOptions: TOptions[] = [];
+
+  if (!searchSampleFormFieldsLoading && !searchSampleFormFieldsError) {
+    const {
+      uniqueMatrices = [],
+      uniqueWaterBodies = [],
+      uniqueStationNames = [],
+      uniqueOrganizations = [],
+    } = searchSampleFormFieldData?.formFieldValues || {};
+
+    matricesOptions = createFormDropdownObject(uniqueMatrices);
+    stationOptions = createFormDropdownObject(uniqueStationNames);
+    organizationOptions = createFormDropdownObject(uniqueOrganizations);
+    waterBodyOptions = createFormDropdownObject(uniqueWaterBodies);
+    analyteOptions = createFormDropdownObject(['Silver', 'Gold']);
+  }
 
   const [selectedFromDate, setSelectedFromDate] = useState<Date | null>(null);
   const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
@@ -102,7 +116,7 @@ const SearchForm = () => {
                 helperText="Matrix"
                 name="matrix"
                 label="Matrix"
-                options={matrices}
+                options={matricesOptions}
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -111,7 +125,7 @@ const SearchForm = () => {
                 helperText="Station Name"
                 label="Station Name"
                 name="stationName"
-                options={stationNames}
+                options={stationOptions}
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -120,7 +134,7 @@ const SearchForm = () => {
                 helperText="Organization"
                 name="organization"
                 label="Organization"
-                options={matrices}
+                options={organizationOptions}
               />
             </Grid>
 
@@ -130,7 +144,7 @@ const SearchForm = () => {
                 helperText="Water Body"
                 name="waterBody"
                 label="Water Body"
-                options={matrices}
+                options={waterBodyOptions}
               />
             </Grid>
 
@@ -140,7 +154,7 @@ const SearchForm = () => {
                 helperText="Analyte"
                 name="analyte"
                 label="Analyte"
-                options={matrices}
+                options={analyteOptions}
               />
             </Grid>
           </Grid>
