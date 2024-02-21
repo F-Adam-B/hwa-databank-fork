@@ -57,3 +57,15 @@ export const GET_SEARCH_SAMPLE_FORM_FIELDS = gql`
     }
   }
 `;
+
+export const GET_ANALYTES = gql`
+  query GetAnalytes {
+    analytes {
+      characteristics {
+        name
+        description
+        value
+      }
+    }
+  }
+`;
