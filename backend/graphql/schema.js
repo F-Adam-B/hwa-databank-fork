@@ -108,7 +108,7 @@ const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
     formFieldValues: {
-      type: new GraphQLList(FormFieldType),
+      type: FormFieldType,
       resolve: async (parent, args) => {
         try {
           const result = await WaterSample.aggregate([
@@ -135,7 +135,7 @@ const RootQuery = new GraphQLObjectType({
           ]);
 
           if (result.length > 0) {
-            return Array.isArray(result) ? result : [];
+            return result[0];
           } else {
             console.log('No unique values found.');
             return {}; // Optionally return an empty object or any other appropriate value
@@ -184,8 +184,13 @@ const RootQuery = new GraphQLObjectType({
         if (stationName) queryFilter.stationName = stationName;
         if (organization) queryFilter.organization = organization;
         if (analyte) queryFilter.analyte = analyte;
-        if (fromDate) queryFilter.fromDate = { $gte: fromDate };
-        if (toDate) queryFilter.toDate = { $gte: toDate };
+        if (fromDate && toDate) {
+          queryFilter.sampleDate = { $gte: fromDate, $lte: toDate };
+        } else if (fromDate) {
+          queryFilter.sampleDate = { $gte: fromDate };
+        } else if (toDate) {
+          queryFilter.sampleDate = { $lte: toDate };
+        }
         if (waterBody) queryFilter.waterBody = waterBody;
         // Return the filtered water samples
 
