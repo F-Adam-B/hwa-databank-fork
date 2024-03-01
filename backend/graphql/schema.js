@@ -182,7 +182,7 @@ const RootQuery = new GraphQLObjectType({
         };
         if (matrix) queryFilter.matrix = matrix;
         if (stationName) queryFilter.stationName = stationName;
-        if (organization) queryFilter.organization = organization;
+        if (organization) queryFilter['project.organization'] = organization;
         if (analyte) queryFilter.analyte = analyte;
         if (fromDate && toDate) {
           queryFilter.sampleDate = { $gte: fromDate, $lte: toDate };
