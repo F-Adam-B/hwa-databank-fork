@@ -17,9 +17,14 @@ export const formatTimestamp = (timestamp: string): string => {
   return legibleDate;
 };
 
-export const createFormDropdownObject = (arr: string[]) => {
+export const createFormDropdownObject = (arr: string[], key: string) => {
   const sortedArray = [...arr, 'None'].sort((a, b) =>
     a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
   );
-  return sortedArray.map((value) => ({ label: value, value }));
+  return sortedArray.map((value) => ({ [key]: value, value }));
+};
+
+export const getUniqueValues = (array: string[]): string[] => {
+  const uniqueSet = new Set(array);
+  return Array.from(uniqueSet);
 };
