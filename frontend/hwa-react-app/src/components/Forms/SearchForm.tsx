@@ -1,18 +1,31 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useLazyQuery, useQuery } from '@apollo/client';
-import { Box, Card, Typography, Grid, Button } from '@mui/material';
+import {
+  Autocomplete,
+  Checkbox,
+  Box,
+  Card,
+  Typography,
+  Grid,
+  Button,
+  TextField,
+} from '@mui/material';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
-import ControlledInputField from '../ControlledInputField/ControlledInputField';
-import ControlledSelectField from '../ControlledSelectField/ControlledSelectField';
-import ControlledDateField from '../ControlledDateField/ControlledDateField';
+import {
+  ControlledAutocompleteField,
+  ControlledDateField,
+  ControlledInputField,
+  ControlledSelectField,
+  MapBox,
+} from '../index';
 import {
   GET_ANALYTES,
   GET_SAMPLES,
   GET_SEARCH_SAMPLE_FORM_FIELDS,
 } from '../../graphql/queries/sampleQueries';
 
-import { createFormDropdownObject } from '../../utilities';
+import { createFormDropdownObject, getUniqueValues } from '../../utilities';
 
 type SearchFormInput = {
   fromDate: string | null;
@@ -37,17 +50,15 @@ const SearchForm = () => {
     loading: searchSampleFormFieldsLoading,
     error: searchSampleFormFieldsError,
     data: searchSampleFormFieldData,
-  } = useQuery(GET_SEARCH_SAMPLE_FORM_FIELDS);
+  } = useQuery(GET_SEARCH_SAMPLE_FORM_FIELDS, {
+    fetchPolicy: 'cache-and-network',
+  });
 
-  const { loading: analytesLoading, data: analytesData } = useQuery(
-    GET_ANALYTES,
-    {
-      fetchPolicy: 'cache-only',
-    }
-  );
+  const { loading: analytesLoading, data: analytesData } =
+    useQuery(GET_ANALYTES);
 
   type TOptions = {
-    label: string;
+    [key: string]: string;
     value: string;
   };
 
@@ -55,7 +66,24 @@ const SearchForm = () => {
     stationOptions: TOptions[] = [],
     organizationOptions: TOptions[] = [],
     waterBodyOptions: TOptions[] = [],
-    analyteOptions: TOptions[] = [];
+    analyteOptions: any;
+
+  analyteOptions = useMemo(() => {
+    if (analytesData && analytesData.analytes.length) {
+      const arrayOfAnalyteValues = analytesData.analytes.map(
+        (analyte: { analyteName: string; __typename: string }) => {
+          return analyte?.analyteName;
+        }
+      );
+
+      const flatArrayOfAnalyteValues = getUniqueValues(
+        arrayOfAnalyteValues.flat()
+      );
+
+      return createFormDropdownObject(flatArrayOfAnalyteValues, 'title');
+    }
+    return [];
+  }, [analytesData]);
 
   if (!searchSampleFormFieldsLoading && !searchSampleFormFieldsError) {
     const {
@@ -65,11 +93,13 @@ const SearchForm = () => {
       uniqueOrganizations = [],
     } = searchSampleFormFieldData?.formFieldValues || {};
 
-    matricesOptions = createFormDropdownObject(uniqueMatrices);
-    stationOptions = createFormDropdownObject(uniqueStationNames);
-    organizationOptions = createFormDropdownObject(uniqueOrganizations);
-    waterBodyOptions = createFormDropdownObject(uniqueWaterBodies);
-    analyteOptions = createFormDropdownObject(['Silver', 'Gold']);
+    matricesOptions = createFormDropdownObject(uniqueMatrices, 'label');
+    stationOptions = createFormDropdownObject(uniqueStationNames, 'label');
+    organizationOptions = createFormDropdownObject(
+      uniqueOrganizations,
+      'label'
+    );
+    waterBodyOptions = createFormDropdownObject(uniqueWaterBodies, 'label');
   }
 
   const [selectedFromDate, setSelectedFromDate] = useState<Date | null>(null);
@@ -88,6 +118,7 @@ const SearchForm = () => {
 
   return (
     <Box>
+      <MapBox data={data} loading={loading} />
       <Typography variant="h5">Search Sample Set</Typography>
       <Card>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -149,12 +180,12 @@ const SearchForm = () => {
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <ControlledSelectField
+              <ControlledAutocompleteField
                 control={control}
-                helperText="Analyte"
-                name="analyte"
-                label="Analyte"
+                name="analytes"
+                label="Analytes"
                 options={analyteOptions}
+                placeholder="Analytes"
               />
             </Grid>
           </Grid>
