@@ -116,5 +116,3 @@ export const WaterSample = mongoose.model(
   waterSampleSchema,
   'hwa-databank'
 );
-
-// export const AnalyteSchema = mongoose.model('AnalyteSchema', 'hwa-analytes');
