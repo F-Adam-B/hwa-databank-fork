@@ -33,7 +33,6 @@ const routes: RouteObject[] = [
     element: (
       <>
         <NavBar />
-        <MapBox />
         <SearchForm />
       </>
     ),
