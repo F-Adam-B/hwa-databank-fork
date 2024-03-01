@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useQuery } from '@apollo/client';
+import { useApolloClient, useQuery } from '@apollo/client';
 import { useDispatch } from 'react-redux';
 import Map, {
   Layer,
@@ -14,6 +14,7 @@ import Map, {
 } from 'react-map-gl';
 import Pin from '../Pin/Pin';
 import { SideBar } from '../index';
+import client from '../../graphql/apollo-client';
 import {
   useGetSamplesQuery,
   SampleType,
@@ -22,7 +23,11 @@ import {
   addSelectedSample,
   removeSelectedSample,
 } from '../../features/samples/sampleSlice';
-import { GET_ALL_SAMPLES } from '../../graphql/queries/sampleQueries';
+import {
+  GET_ALL_SAMPLES,
+  GET_SAMPLES,
+} from '../../graphql/queries/sampleQueries';
+import { formatTimestamp } from '../../utilities';
 
 const MAPBOX_API_KEY = process.env.REACT_APP_MAPBOX_API_TOKEN || '';
 
@@ -37,16 +42,17 @@ type LngLatBounds = {
   _ne: [number, number];
 };
 
-const MapBox = () => {
+type TMapBoxProps = {
+  data: {
+    sample: SampleType[];
+  };
+  loading: boolean;
+};
+
+const MapBox = ({ data, loading }: TMapBoxProps) => {
   const dispatch = useDispatch();
   const { waterSamplesMap } = useMap();
 
-  // const { loading, data: graphQlData } = useQuery(GET_ALL_SAMPLES);
-
-  const graphQlData = {
-    samples: [],
-  };
-  // const { data, isFetching, isLoading } = useGetSamplesQuery();
   const [popupInfo, setPopupInfo] = useState<SampleType | null>(null);
   const [mapBounds, setMapBounds] = useState<any>(null);
   const [error, setError] = useState<boolean>(false);
@@ -70,12 +76,12 @@ const MapBox = () => {
   }, [waterSamplesMap]);
 
   const samplesWithCoordinates = useMemo(() => {
-    return (
-      graphQlData?.samples.filter((s: SampleType) =>
-        s.location.coordinates.every((coord) => coord !== null)
-      ) || []
-    );
-  }, [graphQlData?.samples]);
+    return data
+      ? data?.sample.filter((s: SampleType) =>
+          s.location.coordinates.every((coord) => coord !== null)
+        ) || []
+      : [];
+  }, [data]);
 
   const samplePins = useMemo(() => {
     return samplesWithCoordinates.map((s: SampleType) => {
@@ -87,12 +93,11 @@ const MapBox = () => {
             key={`marker-${s.id}`}
             latitude={latitude}
             longitude={longitude}
-            anchor="bottom"
+            anchor="top"
             style={{
               color: 'aquamarine',
             }}
             onClick={(e) => {
-              dispatch(addSelectedSample(s));
               // If we let the click event propagates to the map, it will immediately close the popup
               // with `closeOnClick: true`
               e.originalEvent.stopPropagation();
@@ -131,16 +136,21 @@ const MapBox = () => {
 
         {popupInfo && (
           <Popup
-            anchor="top"
+            anchor="bottom"
             latitude={Number(popupInfo.location.coordinates[0])}
             longitude={Number(popupInfo.location.coordinates[1])}
             onClose={() => {
               setPopupInfo(null);
             }}
           >
-            <div>
-              {popupInfo.sampleNumber}, {popupInfo.stationName}
-            </div>
+            <ul>
+              <li>Matrix: {popupInfo.matrix}</li>
+              <li>Project Name: {popupInfo.project.projectName}</li>
+              <li>Organization: {popupInfo.project.organization}</li>
+              <li>Sample Number: {popupInfo.sampleNumber}</li>
+              <li>Station Name: {popupInfo.stationName}</li>
+              <li>Sample Date: {formatTimestamp(popupInfo.sampleDate)}</li>
+            </ul>
           </Popup>
         )}
       </Map>
