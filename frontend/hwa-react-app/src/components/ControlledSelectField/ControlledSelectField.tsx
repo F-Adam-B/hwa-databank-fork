@@ -21,12 +21,12 @@ interface FormSelectProps {
   id?: string;
   label?: string;
   options: {
-    label: string;
-    value: string;
+    label?: string;
+    value?: string;
   }[];
 }
 
-const SelectTextFields = ({
+const ControlledSelectField = ({
   control,
   defaultValue = '',
   helperText = '',
@@ -66,4 +66,4 @@ const SelectTextFields = ({
   );
 };
 
-export default SelectTextFields;
+export default ControlledSelectField;
