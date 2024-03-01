@@ -48,6 +48,7 @@ const transformCharsJson = (input) => {
 
 // const transformedChars = JSON.stringify(transformCharsJson(charJsonFile));
 
+// use with hws_removed_empty_fields.json
 const transformData = (input, idx) => {
   // Extract location details
   const latitude = input.Latitude ? parseFloat(input.Latitude) : '';
