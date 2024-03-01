@@ -9,9 +9,17 @@ import LocationForm from './Forms/LocationForm';
 import InformationForm from './Forms/InformationForm';
 import SampleForm from './Forms/SampleForm';
 import ResultsForm from './Forms/CharacteristicsForm';
+import ControlledAutocompleteField from './ControlledAutocompleteField/ControlledAutocompleteField';
+import ControlledSelectField from './ControlledSelectField/ControlledSelectField';
+import ControlledTimeField from './ControlledTimeField/ControlledTimeField';
+import ControlledDateField from './ControlledDateField/ControlledDateField';
 
 export {
+  ControlledAutocompleteField,
+  ControlledDateField,
   ControlledInputField,
+  ControlledSelectField,
+  ControlledTimeField,
   DataGridMUI,
   ErrorPage,
   InformationForm,
