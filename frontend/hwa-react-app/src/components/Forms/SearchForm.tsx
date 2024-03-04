@@ -33,7 +33,7 @@ type SearchFormInput = {
   matrix: string;
   organization: string;
   waterBody: string;
-  analyte: string;
+  analytes: string[];
 };
 
 const defaultValues: SearchFormInput = {
@@ -42,7 +42,7 @@ const defaultValues: SearchFormInput = {
   matrix: '',
   organization: '',
   waterBody: '',
-  analyte: '',
+  analytes: [],
 };
 
 const SearchForm = () => {

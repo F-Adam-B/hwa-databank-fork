@@ -10,7 +10,6 @@ type MyComponentProps = {
   placeholder: string;
 };
 
-// Define a constant for the checkbox style to prevent re-creation on each render
 const checkboxStyle = { marginRight: 8 };
 
 const ControlledAutocompleteField = ({
@@ -26,17 +25,26 @@ const ControlledAutocompleteField = ({
       <Controller
         name={name}
         control={control}
-        defaultValue={[]}
         render={({ field }) => (
           <Autocomplete
             multiple
-            onChange={(e, data) => field.onChange(data)}
+            onChange={(e, data) => field.onChange(data.map((a) => a.value))}
             options={options}
             disableCloseOnSelect
             getOptionLabel={(option) => option.title} // removed optional chaining as `title` is guaranteed by MyComponentProps
             renderOption={(props, option, { selected }) => (
               <li {...props}>
-                <Checkbox {...field} style={checkboxStyle} checked={selected} />
+                <Checkbox
+                  {...field}
+                  style={checkboxStyle}
+                  checked={selected}
+                  onChange={() => {
+                    const newValue = selected
+                      ? field.value.filter((v: string) => v !== option.value)
+                      : [...field.value, option.value];
+                    field.onChange(newValue);
+                  }}
+                />
                 {option.title} {/* removed optional chaining */}
               </li>
             )}
