@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import { RouteObject } from 'react-router-dom';
-import { ErrorPage, MapBox, NavBar } from '../components';
+import { ErrorPage, MapBox, NavBar, SampleForm } from '../components';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import FormPage from './pages/FormPage';
@@ -23,7 +23,7 @@ const routes: RouteObject[] = [
     element: (
       <>
         <NavBar />
-        <FormPage />
+        <SampleForm />
       </>
     ),
     errorElement: <ErrorPage />,

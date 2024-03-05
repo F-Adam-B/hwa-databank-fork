@@ -62,10 +62,7 @@ const FormPage = () => {
     >
       <FormProvider {...methods}>
         <form>
-          <InformationForm />
-          <LocationForm />
           <SampleForm />
-          <ResultsForm />
         </form>
       </FormProvider>
     </Box>

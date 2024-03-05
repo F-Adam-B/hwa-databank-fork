@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { useLazyQuery, useQuery } from '@apollo/client';
 import {
   Autocomplete,
@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
+import { DropdownOptionsContext } from '../../Providers/DropdownSelectContext';
 import {
   ControlledAutocompleteField,
   ControlledDateField,
@@ -19,13 +20,7 @@ import {
   ControlledSelectField,
   MapBox,
 } from '../index';
-import {
-  GET_ANALYTES,
-  GET_SAMPLES,
-  GET_SEARCH_SAMPLE_FORM_FIELDS,
-} from '../../graphql/queries/sampleQueries';
-
-import { createFormDropdownObject, getUniqueValues } from '../../utilities';
+import { GET_SAMPLES } from '../../graphql/queries/sampleQueries';
 
 type SearchFormInput = {
   fromDate: string | null;
@@ -54,55 +49,12 @@ const defaultValues: SearchFormInput = {
 
 const SearchForm = () => {
   const {
-    loading: searchSampleFormFieldsLoading,
-    error: searchSampleFormFieldsError,
-    data: searchSampleFormFieldData,
-  } = useQuery(GET_SEARCH_SAMPLE_FORM_FIELDS, {
-    fetchPolicy: 'cache-and-network',
-  });
-
-  const { loading: analytesLoading, data: analytesData } =
-    useQuery(GET_ANALYTES);
-
-  let matricesOptions: TOptions[] = [],
-    stationOptions: TOptions[] = [],
-    organizationOptions: TOptions[] = [],
-    waterBodyOptions: TOptions[] = [],
-    analyteOptions: TOptions[] = [];
-
-  analyteOptions = useMemo(() => {
-    if (analytesData && analytesData.analytes.length) {
-      const arrayOfAnalyteValues = analytesData.analytes.map(
-        (analyte: { analyteName: string; __typename: string }) => {
-          return analyte?.analyteName;
-        }
-      );
-
-      const flatArrayOfAnalyteValues = getUniqueValues(
-        arrayOfAnalyteValues.flat()
-      );
-
-      return createFormDropdownObject(flatArrayOfAnalyteValues, 'title');
-    }
-    return [{ title: 'None', value: 'None' }];
-  }, [analytesData]);
-
-  if (!searchSampleFormFieldsLoading && !searchSampleFormFieldsError) {
-    const {
-      uniqueMatrices = [],
-      uniqueWaterBodies = [],
-      uniqueStationNames = [],
-      uniqueOrganizations = [],
-    } = searchSampleFormFieldData?.formFieldValues || {};
-
-    matricesOptions = createFormDropdownObject(uniqueMatrices, 'label');
-    stationOptions = createFormDropdownObject(uniqueStationNames, 'label');
-    organizationOptions = createFormDropdownObject(
-      uniqueOrganizations,
-      'label'
-    );
-    waterBodyOptions = createFormDropdownObject(uniqueWaterBodies, 'label');
-  }
+    matricesOptions,
+    stationOptions,
+    organizationOptions,
+    waterBodyOptions,
+    analyteOptions,
+  } = useContext(DropdownOptionsContext);
 
   const [selectedFromDate, setSelectedFromDate] = useState<Date | null>(null);
   const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
