@@ -163,11 +163,11 @@ const RootQuery = new GraphQLObjectType({
         fromDate: { type: GraphQLDate },
         toDate: { type: GraphQLDate },
         waterBody: { type: GraphQLString },
-        analyte: { type: GraphQLString },
+        analytes: { type: GraphQLList(GraphQLString) },
       },
       resolve(parent, args) {
         const {
-          analyte,
+          analytes,
           matrix,
           stationName,
           organization,
@@ -183,7 +183,8 @@ const RootQuery = new GraphQLObjectType({
         if (matrix) queryFilter.matrix = matrix;
         if (stationName) queryFilter.stationName = stationName;
         if (organization) queryFilter['project.organization'] = organization;
-        if (analyte) queryFilter.analyte = analyte;
+        if (analytes.length > 0)
+          queryFilter['analytesTested.analyteName'] = { $in: analytes };
         if (fromDate && toDate) {
           queryFilter.sampleDate = { $gte: fromDate, $lte: toDate };
         } else if (fromDate) {
