@@ -13,8 +13,10 @@ import ControlledAutocompleteField from './ControlledAutocompleteField/Controlle
 import ControlledSelectField from './ControlledSelectField/ControlledSelectField';
 import ControlledTimeField from './ControlledTimeField/ControlledTimeField';
 import ControlledDateField from './ControlledDateField/ControlledDateField';
+import CircularProgressIndicator from './CircularProgressIndicator/CircularProgressIndicator';
 
 export {
+  CircularProgressIndicator,
   ControlledAutocompleteField,
   ControlledDateField,
   ControlledInputField,

@@ -13,7 +13,7 @@ import Map, {
   useMap,
 } from 'react-map-gl';
 import Pin from '../Pin/Pin';
-import { SideBar } from '../index';
+import { CircularProgressIndicator, SideBar } from '../index';
 import client from '../../graphql/apollo-client';
 import {
   useGetSamplesQuery,
@@ -50,7 +50,6 @@ type TMapBoxProps = {
 };
 
 const MapBox = ({ data, loading }: TMapBoxProps) => {
-  const dispatch = useDispatch();
   const { waterSamplesMap } = useMap();
 
   const [popupInfo, setPopupInfo] = useState<SampleType | null>(null);
@@ -111,8 +110,6 @@ const MapBox = ({ data, loading }: TMapBoxProps) => {
     });
   }, [samplesWithCoordinates]);
 
-  // if (isFetching) return <div>Fetching samples...</div>;
-  // if (loading) return <div>Loading samples...</div>;
   return (
     <div className="mapContainer" style={{ height: '500px' }}>
       <SideBar />
@@ -132,7 +129,7 @@ const MapBox = ({ data, loading }: TMapBoxProps) => {
         <FullscreenControl position="top-left" />
         <NavigationControl position="top-left" />
         <ScaleControl />
-        {samplePins}
+        {loading ? <CircularProgressIndicator /> : samplePins}
 
         {popupInfo && (
           <Popup
