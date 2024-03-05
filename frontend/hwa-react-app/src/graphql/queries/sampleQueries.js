@@ -21,7 +21,7 @@ export const GET_SAMPLES = gql`
     $stationName: String
     $organization: String
     $waterBody: String
-    $analyte: String
+    $analytes: [String]
   ) {
     sample(
       fromDate: $fromDate
@@ -30,8 +30,9 @@ export const GET_SAMPLES = gql`
       stationName: $stationName
       organization: $organization
       waterBody: $waterBody
-      analyte: $analyte
+      analytes: $analytes
     ) {
+      id
       location {
         coordinates
       }
@@ -41,6 +42,8 @@ export const GET_SAMPLES = gql`
         organization
       }
       sampleDate
+      sampleNumber
+      stationName
       waterBody
       watershed
     }
@@ -61,11 +64,7 @@ export const GET_SEARCH_SAMPLE_FORM_FIELDS = gql`
 export const GET_ANALYTES = gql`
   query GetAnalytes {
     analytes {
-      characteristics {
-        name
-        description
-        value
-      }
+      analyteName
     }
   }
 `;
