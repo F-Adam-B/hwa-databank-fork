@@ -7,6 +7,7 @@
     "@date-io/date-fns": "^3.0.0",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.15.11",
     "@mui/material": "^5.15.3",
     "@mui/x-data-grid": "^6.19.1",
     "@mui/x-date-pickers": "^6.19.4",
