@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import {
   Path,
   Control,
@@ -9,9 +9,9 @@ import {
   FieldValues,
   RegisterOptions,
 } from 'react-hook-form';
-import Box from '@mui/material/Box';
+import { Box, InputAdornment, IconButton, MenuItem } from '@mui/material';
 import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
+import { Clear, ExpandMore } from '@mui/icons-material';
 
 interface FormSelectProps {
   name: string;
@@ -35,6 +35,8 @@ const ControlledSelectField = ({
   name,
   options,
 }: FormSelectProps) => {
+  const [open, setOpen] = useState(false);
+
   return (
     <Box
       component="div"
@@ -53,6 +55,35 @@ const ControlledSelectField = ({
             select
             helperText={helperText}
             variant="standard"
+            SelectProps={{
+              open: open,
+              onOpen: () => setOpen(true),
+              onClose: () => setOpen(false),
+              IconComponent: () => {
+                const showExpandIcon = !field.value ? (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        setOpen(!open);
+                      }}
+                    >
+                      <ExpandMore />
+                    </IconButton>
+                  </InputAdornment>
+                ) : null;
+                return showExpandIcon;
+              },
+            }}
+            InputProps={{
+              endAdornment: field.value ? (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => field.onChange('')} edge="end">
+                    <Clear />
+                  </IconButton>
+                </InputAdornment>
+              ) : null,
+            }}
           >
             {options.map((option) => (
               <MenuItem key={option.value} value={option.value}>

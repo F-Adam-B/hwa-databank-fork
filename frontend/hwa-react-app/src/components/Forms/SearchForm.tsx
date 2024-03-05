@@ -32,14 +32,21 @@ type SearchFormInput = {
   toDate: string | null;
   matrix: string;
   organization: string;
+  stationName: string;
   waterBody: string;
   analytes: string[];
+};
+
+export type TOptions = {
+  [key: string]: string;
+  value: string;
 };
 
 const defaultValues: SearchFormInput = {
   fromDate: null,
   toDate: null,
   matrix: '',
+  stationName: '',
   organization: '',
   waterBody: '',
   analytes: [],
@@ -57,16 +64,11 @@ const SearchForm = () => {
   const { loading: analytesLoading, data: analytesData } =
     useQuery(GET_ANALYTES);
 
-  type TOptions = {
-    [key: string]: string;
-    value: string;
-  };
-
   let matricesOptions: TOptions[] = [],
     stationOptions: TOptions[] = [],
     organizationOptions: TOptions[] = [],
     waterBodyOptions: TOptions[] = [],
-    analyteOptions: any;
+    analyteOptions: TOptions[] = [];
 
   analyteOptions = useMemo(() => {
     if (analytesData && analytesData.analytes.length) {
@@ -82,7 +84,7 @@ const SearchForm = () => {
 
       return createFormDropdownObject(flatArrayOfAnalyteValues, 'title');
     }
-    return [];
+    return [{ title: 'None', value: 'None' }];
   }, [analytesData]);
 
   if (!searchSampleFormFieldsLoading && !searchSampleFormFieldsError) {
@@ -104,7 +106,13 @@ const SearchForm = () => {
 
   const [selectedFromDate, setSelectedFromDate] = useState<Date | null>(null);
   const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
-  const { control, handleSubmit, getValues, watch } = useForm({
+  const {
+    control,
+    handleSubmit,
+    getValues,
+    watch,
+    formState: { isDirty },
+  } = useForm({
     defaultValues,
   });
 
@@ -145,8 +153,8 @@ const SearchForm = () => {
               <ControlledSelectField
                 control={control}
                 helperText="Matrix"
-                name="matrix"
                 label="Matrix"
+                name="matrix"
                 options={matricesOptions}
               />
             </Grid>
@@ -162,9 +170,9 @@ const SearchForm = () => {
             <Grid item xs={12} md={6}>
               <ControlledSelectField
                 control={control}
+                label="Organization"
                 helperText="Organization"
                 name="organization"
-                label="Organization"
                 options={organizationOptions}
               />
             </Grid>
@@ -172,9 +180,9 @@ const SearchForm = () => {
             <Grid item xs={12} md={6}>
               <ControlledSelectField
                 control={control}
+                label="Water Body"
                 helperText="Water Body"
                 name="waterBody"
-                label="Water Body"
                 options={waterBodyOptions}
               />
             </Grid>
@@ -182,14 +190,17 @@ const SearchForm = () => {
             <Grid item xs={12} md={6}>
               <ControlledAutocompleteField
                 control={control}
-                name="analytes"
                 label="Analytes"
+                multiple={true}
+                name="analytes"
                 options={analyteOptions}
                 placeholder="Analytes"
               />
             </Grid>
           </Grid>
-          <Button type="submit">Submit Query </Button>
+          <Button disabled={!isDirty} type="submit">
+            Submit Query{' '}
+          </Button>
         </form>
       </Card>
       <DevTool control={control} /> {/* set up the dev tool */}

@@ -1,12 +1,14 @@
 import { Autocomplete, Box, Checkbox, TextField } from '@mui/material';
 import { Control, Controller } from 'react-hook-form';
+import { TOptions } from '../Forms/SearchForm';
 
 type MyComponentProps = {
   control: Control<any>;
   id?: string;
   label?: string;
+  multiple: boolean;
   name: string;
-  options: { title: string; value: string }[];
+  options: TOptions[];
   placeholder: string;
 };
 
@@ -16,6 +18,7 @@ const ControlledAutocompleteField = ({
   control,
   label,
   id,
+  multiple,
   name,
   options,
   placeholder,
@@ -27,8 +30,12 @@ const ControlledAutocompleteField = ({
         control={control}
         render={({ field }) => (
           <Autocomplete
-            multiple
-            onChange={(e, data) => field.onChange(data.map((a) => a.value))}
+            multiple={multiple}
+            onChange={(e, data) =>
+              field.onChange(
+                Array.isArray(data) ? data.map((a) => a.value) : []
+              )
+            }
             options={options}
             disableCloseOnSelect
             getOptionLabel={(option) => option.title} // removed optional chaining as `title` is guaranteed by MyComponentProps
