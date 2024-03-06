@@ -7,32 +7,82 @@ import {
   SubmitHandler,
   useFormContext,
 } from 'react-hook-form';
-import { Box, Card, Grid, MenuItem, Select, Typography } from '@mui/material';
-import { ControlledInputField, ControlledSelectField } from '../index';
+import {
+  Box,
+  Button,
+  Card,
+  Grid,
+  MenuItem,
+  Select,
+  Typography,
+} from '@mui/material';
+import {
+  ControlledAutocompleteField,
+  ControlledInputField,
+  ControlledSelectField,
+} from '../index';
 import ControlledDateField from '../ControlledDateField/ControlledDateField';
 import ControlledTimeField from '../ControlledTimeField/ControlledTimeField';
 import { DevTool } from '@hookform/devtools';
-import { GET_SEARCH_SAMPLE_FORM_FIELDS } from '../../graphql/queries/sampleQueries';
-import { TOptions } from './SearchForm';
 
 type TSampleForm = {
-  dateCollected: string;
-  eventID: number;
+  analytesTested: {
+    analyteName: string;
+  }[];
+  comments?: string;
+  dateCollected: string | null;
+  elevation?: string;
+  elevationToGrade?: string;
+  eventID: number | null;
+  labID: number | null;
+  labName: string;
+  latitude: string;
+  longitude: string;
+  locationDescription?: string;
+  matrix: string;
   organization: string;
   projectName: string;
-  sampleID: number;
-  stationName: TOptions[];
-  timeCollected: string;
+  sampleID: number | null;
+  sampleType: string;
+  stationName: string;
+  stationName2?: string;
+  timeCollected: string | null;
+  waterBody: string;
+  waterBodyID: string;
+  waterCode?: string;
+  watershed: string;
+  watershedReport?: string;
+  preservationMethods?: [];
+  sampleTags?: [];
 };
 
-const defaultValues = {
+const defaultValues: TSampleForm = {
+  analytesTested: [],
+  comments: '',
   dateCollected: null,
+  elevation: '',
+  elevationToGrade: '',
   eventID: null,
+  labID: null,
+  labName: '',
+  latitude: '',
+  longitude: '',
+  locationDescription: '',
+  matrix: '',
   organization: '',
+  preservationMethods: [],
   projectName: '',
-  stationName: [],
+  sampleTags: [],
+  sampleType: '',
   sampleID: null,
+  stationName: '',
+  stationName2: '',
   timeCollected: null,
+  waterBody: '',
+  waterBodyID: '',
+  waterCode: '',
+  watershed: '',
+  watershedReport: '',
 };
 
 const SampleForm = () => {
@@ -43,6 +93,7 @@ const SampleForm = () => {
     waterBodyOptions,
     analyteOptions,
   } = useContext(DropdownOptionsContext);
+
   const {
     control,
     handleSubmit,
@@ -53,14 +104,17 @@ const SampleForm = () => {
     defaultValues,
   });
 
-  const onSubmit: SubmitHandler<TSampleForm> = (formData) => {};
+  const onSubmit = (formData: any) => {
+    // need to shape formData to WaterSample schema
+    console.log(formData, 'formData');
+  };
 
   return (
     <Box>
-      <Typography variant="h5">Sample Form</Typography>
       <Card>
-        <form>
-          <Grid container spacing={2}>
+        <Typography variant="h5">Sample Form</Typography>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Grid container spacing={6}>
             <Grid item xs={12} md={12}>
               <ControlledDateField
                 control={control}
@@ -72,13 +126,16 @@ const SampleForm = () => {
                 label="Time Collected"
                 name="timeCollected"
               />
-              <ControlledInputField
-                control={control}
-                label="Organization"
-                name="organization"
-              />
             </Grid>
             <Grid item xs={12} md={12}>
+              {/* need ability to add new */}
+              <ControlledSelectField
+                control={control}
+                label="Organization"
+                helperText="Organization"
+                name="organization"
+                options={organizationOptions}
+              />
               <ControlledInputField
                 control={control}
                 label="Project Name"
@@ -96,16 +153,147 @@ const SampleForm = () => {
                 name="sampleID"
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={12}>
+              {/* need ability to add new */}
               <ControlledSelectField
                 control={control}
                 helperText="Station Name"
                 label="Station Name"
                 name="stationName"
-                options={[{ label: 'None', value: 'None' }]}
+                options={stationOptions}
+              />
+              <ControlledSelectField
+                control={control}
+                helperText="Station Name 2"
+                label="Station Name 2"
+                name="stationName2"
+                options={stationOptions}
+              />
+            </Grid>
+            <Grid item xs={12} md={12}>
+              <ControlledInputField
+                control={control}
+                label="Location Description"
+                name="locationDescription"
+              />
+              <ControlledInputField
+                control={control}
+                label="Latitude"
+                name="latitude"
+              />
+              <ControlledInputField
+                control={control}
+                label="Longitude"
+                name="longitude"
+              />
+            </Grid>
+            <Grid item xs={12} md={12}>
+              <ControlledInputField
+                control={control}
+                label="Elevation (ft.)"
+                name="elevation"
+              />
+              <ControlledInputField
+                control={control}
+                label="Elevation to grade (ft.)"
+                name="elevationToGrade"
+              />
+              <ControlledInputField
+                control={control}
+                label="Sample Type"
+                name="sampleType"
+              />
+            </Grid>
+            <Grid item>
+              <ControlledSelectField
+                control={control}
+                label="Matrix"
+                helperText="Matrix"
+                name="matrix"
+                options={matricesOptions}
+              />
+              {/* need ability to add new */}
+              <ControlledSelectField
+                control={control}
+                label="Water Body"
+                helperText="Water Body"
+                name="waterBody"
+                options={waterBodyOptions}
+              />
+            </Grid>
+            <Grid item xs={12} md={12}>
+              <ControlledInputField
+                control={control}
+                label="Water Body ID"
+                name="waterBodyID"
+              />
+              <ControlledInputField
+                control={control}
+                label="Water Code"
+                name="waterCode"
+              />
+              <ControlledInputField
+                control={control}
+                label="Watershed"
+                name="watershed"
+              />
+              <ControlledInputField
+                control={control}
+                label="Watershed Report"
+                name="watershedReport"
+              />
+            </Grid>
+            <Grid item xs={12} md={12}>
+              <ControlledAutocompleteField
+                control={control}
+                label="Preservation Methods"
+                name="preservationMethods"
+                options={[{ title: 'Preservation1', value: 'value1' }]}
+              />
+              <ControlledAutocompleteField
+                control={control}
+                label="Sample Tags"
+                name="sampleTags"
+                options={[{ title: 'Preservation2', value: 'value2' }]}
+              />
+            </Grid>
+            <Grid item xs={12} md={12}>
+              <ControlledInputField
+                control={control}
+                label="Lab ID"
+                name="labID"
+              />
+              <ControlledInputField
+                control={control}
+                label="Lab Name"
+                name="labName"
+              />
+            </Grid>
+            <Grid item md={12}>
+              <ControlledAutocompleteField
+                control={control}
+                label="Analytes Tested"
+                multiple={true}
+                name="analytesTested"
+                placeholder="Analytes Tested"
+                options={analyteOptions}
+              />
+              <Button disabled={!isDirty}>Select Characteristics</Button>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <ControlledInputField
+                control={control}
+                fullWidth={true}
+                label="Comments"
+                multiline={true}
+                name="comments"
+                rows={4}
               />
             </Grid>
           </Grid>
+          <Button disabled={!isDirty} type="submit">
+            Submit
+          </Button>
         </form>
       </Card>
       <DevTool control={control} /> {/* set up the dev tool */}
