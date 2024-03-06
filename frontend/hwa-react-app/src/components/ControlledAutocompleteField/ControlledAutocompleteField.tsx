@@ -6,10 +6,10 @@ type MyComponentProps = {
   control: Control<any>;
   id?: string;
   label?: string;
-  multiple: boolean;
+  multiple?: boolean;
   name: string;
   options: TOptions[];
-  placeholder: string;
+  placeholder?: string;
 };
 
 const checkboxStyle = { marginRight: 8 };
@@ -38,7 +38,7 @@ const ControlledAutocompleteField = ({
             }
             options={options}
             disableCloseOnSelect
-            getOptionLabel={(option) => option.title} // removed optional chaining as `title` is guaranteed by MyComponentProps
+            getOptionLabel={(option) => option.title}
             renderOption={(props, option, { selected }) => (
               <li {...props}>
                 <Checkbox
@@ -52,7 +52,7 @@ const ControlledAutocompleteField = ({
                     field.onChange(newValue);
                   }}
                 />
-                {option.title} {/* removed optional chaining */}
+                {option.title}
               </li>
             )}
             style={{ width: 500 }}
