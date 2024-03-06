@@ -21,12 +21,16 @@ import {
 } from '@mui/material';
 
 interface FormInputProps<TFieldValues extends FieldValues> {
-  defaultValue?: TFieldValues[Path<TFieldValues>];
-  name: Path<TFieldValues>;
   control: Control<TFieldValues>;
-  rules?: RegisterOptions;
-  label?: string;
+  defaultValue?: TFieldValues[Path<TFieldValues>];
+  fullWidth?: boolean;
   helperText?: string;
+  label?: string;
+  multiline?: boolean;
+  name: Path<TFieldValues>;
+  rules?: RegisterOptions;
+  rows?: number;
+  sx?: any;
   // No default value assignments in interface definitions
   // Only the types are defined here
 }
