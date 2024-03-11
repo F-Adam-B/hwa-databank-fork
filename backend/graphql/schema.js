@@ -84,6 +84,7 @@ const SampleType = new GraphQLObjectType({
     sampleTime: { type: GraphQLString },
     sampleType: { type: GraphQLString },
     sampler: { type: GraphQLString },
+    sampleComment: { type: GraphQLString },
     stationName: { type: GraphQLString },
     stationNameTwo: { type: GraphQLString },
     waterBody: { type: GraphQLString },
@@ -202,6 +203,18 @@ const RootQuery = new GraphQLObjectType({
       type: new GraphQLList(AnalyteType),
       resolve(parent, args) {
         return Analytes.find();
+      },
+    },
+    analytesCharacteristics: {
+      type: new GraphQLList(AnalyteType),
+      args: {
+        listOfAnalyteNames: { type: GraphQLList(GraphQLString) },
+      },
+      resolve(parent, args) {
+        const { listOfAnalyteNames } = args;
+        const analyteCharQueryFilter = { analyteName: listOfAnalyteNames };
+
+        return Analytes.find(analyteCharQueryFilter);
       },
     },
   },
