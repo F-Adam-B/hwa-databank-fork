@@ -33,7 +33,12 @@ const ControlledAutocompleteField = ({
             multiple={multiple}
             onChange={(e, data) =>
               field.onChange(
-                Array.isArray(data) ? data.map((a) => a.value) : []
+                Array.isArray(data)
+                  ? data.map((a) => ({
+                      analyteName: a.value,
+                      characteristics: [],
+                    }))
+                  : []
               )
             }
             options={options}
@@ -47,8 +52,14 @@ const ControlledAutocompleteField = ({
                   checked={selected}
                   onChange={() => {
                     const newValue = selected
-                      ? field.value.filter((v: string) => v !== option.value)
-                      : [...field.value, option.value];
+                      ? field.value.filter(
+                          (v: { analyteName: string }) =>
+                            v.analyteName !== option.value
+                        )
+                      : [
+                          ...field.value,
+                          { analyteName: option.value, characteristics: [] },
+                        ];
                     field.onChange(newValue);
                   }}
                 />
