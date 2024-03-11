@@ -4,3 +4,10 @@ backend/.env
 backend/.env
 frontend/hwa-react-app/.env
 frontend/hwa-react-app/src/.env
+backend/dummy-sample-data-with-coords.json
+backend/fullyTransformedDataSet.json
+backend/modelShapedHwaDataSet.json
+backend/helpers/characteristicJSON.json
+backend/helpers/modelShapedHwaDataSet.json
+backend/routes/dummyData.json
+backend/helpers/transformedAnalytesAndChars.json
