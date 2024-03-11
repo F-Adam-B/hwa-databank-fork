@@ -28,6 +28,7 @@ interface FormInputProps<TFieldValues extends FieldValues> {
   label?: string;
   multiline?: boolean;
   name: Path<TFieldValues>;
+  onChange?: any;
   rules?: RegisterOptions;
   rows?: number;
   sx?: any;
