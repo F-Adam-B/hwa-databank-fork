@@ -5,10 +5,9 @@ import {
   DropdownOptionsProviderProps,
   IDropdownOptions,
 } from './DropdownSelectContext';
-import {
-  GET_ANALYTES,
-  GET_SEARCH_SAMPLE_FORM_FIELDS,
-} from '../graphql/queries/sampleQueries';
+import { GET_SEARCH_SAMPLE_FORM_FIELDS } from '../graphql/queries/sampleQueries';
+
+import { GET_ANALYTES } from '../graphql/queries/analyteQueries';
 
 import { getUniqueValues, createFormDropdownObject } from '../utilities';
 
