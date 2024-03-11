@@ -14,6 +14,7 @@ import ControlledSelectField from './ControlledSelectField/ControlledSelectField
 import ControlledTimeField from './ControlledTimeField/ControlledTimeField';
 import ControlledDateField from './ControlledDateField/ControlledDateField';
 import CircularProgressIndicator from './CircularProgressIndicator/CircularProgressIndicator';
+import SimpleDialog from './SimpleDialog/SimpleDialog';
 
 export {
   CircularProgressIndicator,
@@ -31,5 +32,6 @@ export {
   Pin,
   ResultsForm,
   SampleForm,
+  SimpleDialog,
   SideBar,
 };
