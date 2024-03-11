@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useLazyQuery, useQuery } from '@apollo/client';
 import { DropdownOptionsContext } from '../../Providers/DropdownSelectContext';
 import {
   Controller,
+  useFieldArray,
   useForm,
   SubmitHandler,
   useFormContext,
@@ -20,10 +21,35 @@ import {
   ControlledAutocompleteField,
   ControlledInputField,
   ControlledSelectField,
+  SimpleDialog,
 } from '../index';
 import ControlledDateField from '../ControlledDateField/ControlledDateField';
 import ControlledTimeField from '../ControlledTimeField/ControlledTimeField';
 import { DevTool } from '@hookform/devtools';
+import { GET_ANALYTE_CHARACTERISTICS_QUERY } from '../../graphql/queries/analyteQueries';
+import CharacteristicsForm from './CharacteristicsForm';
+
+type TCharacteristicsFormProps = {
+  control: any;
+  analytes: {
+    __typename: string;
+    analyteName: string;
+    characteristics: {
+      name: string;
+    }[];
+  }[];
+  register: any;
+};
+
+export interface Characteristic {
+  name: string;
+  value: string;
+}
+
+export interface Analyte {
+  analyteName: string;
+  characteristics: Characteristic[];
+}
 
 type TSampleForm = {
   analytesTested: {
@@ -86,6 +112,15 @@ const defaultValues: TSampleForm = {
 };
 
 const SampleForm = () => {
+  const [
+    getAnalyteCharacteristics,
+    {
+      loading,
+      error: getAnalyteCharacteristicsError,
+      data: analytesWithCharacteristicsData,
+    },
+  ] = useLazyQuery(GET_ANALYTE_CHARACTERISTICS_QUERY);
+
   const {
     matricesOptions,
     stationOptions,
@@ -94,20 +129,60 @@ const SampleForm = () => {
     analyteOptions,
   } = useContext(DropdownOptionsContext);
 
+  const [error, setError] = useState('');
+  const [openCharacteristicsFormDialog, setOpenCharacteristicsFormDialog] =
+    useState(false);
+
+  const [analytesToUpload, setAnalytesToUpload] = useState<Analyte[]>([]);
+
   const {
     control,
     handleSubmit,
     getValues,
+    register,
     watch,
     formState: { isDirty },
   } = useForm({
     defaultValues,
   });
 
+  const { fields, replace, update } = useFieldArray({
+    control,
+    name: 'analytesTested',
+  });
+
   const onSubmit = (formData: any) => {
     // need to shape formData to WaterSample schema
     console.log(formData, 'formData');
   };
+
+  const handleSelectCharacteristics = async () => {
+    try {
+      const listOfAnalyteNames = getValues('analytesTested').map(
+        (analyte) => analyte.analyteName
+      );
+      const response = await getAnalyteCharacteristics({
+        variables: {
+          listOfAnalyteNames,
+        },
+      });
+
+      setAnalytesToUpload(response.data.analytesCharacteristics);
+      setOpenCharacteristicsFormDialog(true);
+    } catch (error: any) {
+      console.error('Error fetching analyte characteristics:', error);
+    }
+  };
+
+  const handleCharacteristicsSave = () => {
+    replace(analytesToUpload);
+  };
+
+  if (error) return <>Error with form: {error}</>;
+  if (getAnalyteCharacteristicsError)
+    return (
+      <>Error retrieving characteristics: {getAnalyteCharacteristicsError}</>
+    );
 
   return (
     <Box>
@@ -278,7 +353,9 @@ const SampleForm = () => {
                 placeholder="Analytes Tested"
                 options={analyteOptions}
               />
-              <Button disabled={!isDirty}>Select Characteristics</Button>
+              <Button disabled={!isDirty} onClick={handleSelectCharacteristics}>
+                Select Characteristics
+              </Button>
             </Grid>
             <Grid item xs={12} md={6}>
               <ControlledInputField
@@ -296,6 +373,22 @@ const SampleForm = () => {
           </Button>
         </form>
       </Card>
+      <SimpleDialog
+        fullScreen={true}
+        handleSave={handleCharacteristicsSave}
+        onClose={() => setOpenCharacteristicsFormDialog(false)}
+        open={openCharacteristicsFormDialog}
+        children={
+          <CharacteristicsForm
+            control={control}
+            apiAnalytes={
+              analytesWithCharacteristicsData?.analytesCharacteristics
+            }
+            handleCharacteristicStateChange={setAnalytesToUpload}
+            register={register}
+          />
+        }
+      />
       <DevTool control={control} /> {/* set up the dev tool */}
     </Box>
   );
