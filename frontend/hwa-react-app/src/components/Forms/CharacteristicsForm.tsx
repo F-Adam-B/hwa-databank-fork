@@ -3,13 +3,19 @@ import {
   Controller,
   useFieldArray,
   useForm,
+  Resolver,
   SubmitHandler,
   useFormContext,
+  Control,
 } from 'react-hook-form';
+import { DevTool } from '@hookform/devtools';
+
 import {
   Box,
   Button,
   Card,
+  Dialog,
+  DialogActions,
   MenuItem,
   Select,
   TextField,
@@ -19,13 +25,12 @@ import { ControlledInputField } from '../index';
 import { Analyte, Characteristic } from './SampleForm';
 
 type TCharacteristicsFormProps = {
-  control: any;
   apiAnalytes: {
     analyteName: string;
     characteristics: Characteristic[];
   }[];
-  register: any;
-  handleCharacteristicStateChange: any;
+  control?: Control<any>;
+  handleClose: (boolean: boolean) => void;
 };
 
 type Field = {
@@ -42,67 +47,68 @@ const defaultAnalyte: Analyte = {
 
 const CharacteristicsForm = ({
   apiAnalytes = [defaultAnalyte],
-  control,
-  handleCharacteristicStateChange,
-  register,
+  control: sampleFormControl,
+  handleClose,
 }: TCharacteristicsFormProps) => {
-  // Function to handle the input change for characteristics
-  const handleCharacteristicChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-    analyteName: string,
-    charIndex: number,
-    parentIndex: number
-  ): void => {
-    const newCharValue = e.target.value;
-    handleCharacteristicStateChange((prevState: Analyte[]) => {
-      const updatedAnalytes = [...prevState];
+  const { control, register, getValues } = useForm({
+    defaultValues: {
+      selectedAnalytes: [...apiAnalytes],
+    },
+  });
 
-      const updatedCharacteristics = updatedAnalytes[
-        parentIndex
-      ].characteristics.map((characteristic: Characteristic, idx: number) =>
-        idx === charIndex
-          ? { ...characteristic, value: newCharValue }
-          : characteristic
-      );
+  const { fields } = useFieldArray({
+    control,
+    name: 'selectedAnalytes',
+  });
 
-      updatedAnalytes[parentIndex] = {
-        analyteName,
-        characteristics: updatedCharacteristics,
-      };
+  const { replace } = useFieldArray({
+    control: sampleFormControl,
+    name: 'analytesTested',
+  });
 
-      return updatedAnalytes;
-    });
+  const handleUpdateSampleForm = () => {
+    const characteristicFormValues = getValues('selectedAnalytes');
+    replace(characteristicFormValues);
+    handleClose(false);
   };
 
   return (
     <Box>
       <Card>
-        {apiAnalytes.map((analyte: Field, parentIndex: number) => (
+        {fields.map((analyte: Field, parentIndex: number) => (
           <div key={analyte.id}>
             <Typography variant="h5">{analyte.analyteName}</Typography>
             <Box
-              component="div"
+              component="form"
               sx={{
                 '& .MuiTextField-root': { m: 1, width: '25ch' },
               }}
             >
+              <input
+                key={analyte.analyteName}
+                hidden
+                {...register(
+                  `selectedAnalytes.${parentIndex}.analyteName` as const
+                )}
+                defaultValue={analyte.analyteName}
+              />
               {analyte.characteristics.map(
                 (characteristic: Characteristic, charIndex) => {
                   return (
-                    <TextField
-                      key={`char-${charIndex}`}
-                      type="text"
-                      value={characteristic.value}
-                      onChange={(e) =>
-                        handleCharacteristicChange(
-                          e,
-                          analyte.analyteName,
-                          charIndex,
-                          parentIndex
-                        )
+                    <Controller
+                      defaultValue={characteristic.value}
+                      name={
+                        `selectedAnalytes.${parentIndex}.characteristics.${charIndex}.value` as const
                       }
-                      placeholder={characteristic.name}
-                      label={characteristic.name}
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          key={`char-${charIndex}`}
+                          placeholder={characteristic.name}
+                          label={characteristic.name}
+                        />
+                      )}
                     />
                   );
                 }
@@ -110,6 +116,10 @@ const CharacteristicsForm = ({
             </Box>
           </div>
         ))}
+        <DialogActions>
+          <Button onClick={() => handleClose(false)}>Cancel</Button>
+          <Button onClick={handleUpdateSampleForm}>Save</Button>
+        </DialogActions>
       </Card>
     </Box>
   );
