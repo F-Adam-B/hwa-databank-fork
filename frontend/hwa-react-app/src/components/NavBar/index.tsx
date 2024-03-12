@@ -63,8 +63,9 @@ const NavBar = () => {
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+            {pages.map((page, idx) => (
               <Link
+                key={`${page.name}-${idx}`}
                 style={{ textDecoration: 'none', color: 'inherit' }}
                 to={page.url}
               >
