@@ -12,6 +12,8 @@ import {
   Box,
   Button,
   Card,
+  Dialog,
+  DialogActions,
   Grid,
   MenuItem,
   Select,
@@ -133,8 +135,6 @@ const SampleForm = () => {
   const [openCharacteristicsFormDialog, setOpenCharacteristicsFormDialog] =
     useState(false);
 
-  const [analytesToUpload, setAnalytesToUpload] = useState<Analyte[]>([]);
-
   const {
     control,
     handleSubmit,
@@ -144,11 +144,6 @@ const SampleForm = () => {
     formState: { isDirty },
   } = useForm({
     defaultValues,
-  });
-
-  const { fields, replace, update } = useFieldArray({
-    control,
-    name: 'analytesTested',
   });
 
   const onSubmit = (formData: any) => {
@@ -167,15 +162,10 @@ const SampleForm = () => {
         },
       });
 
-      setAnalytesToUpload(response.data.analytesCharacteristics);
       setOpenCharacteristicsFormDialog(true);
     } catch (error: any) {
       console.error('Error fetching analyte characteristics:', error);
     }
-  };
-
-  const handleCharacteristicsSave = () => {
-    replace(analytesToUpload);
   };
 
   if (error) return <>Error with form: {error}</>;
@@ -372,24 +362,16 @@ const SampleForm = () => {
             Submit
           </Button>
         </form>
-      </Card>
-      <SimpleDialog
-        fullScreen={true}
-        handleSave={handleCharacteristicsSave}
-        onClose={() => setOpenCharacteristicsFormDialog(false)}
-        open={openCharacteristicsFormDialog}
-        children={
+        <Dialog fullScreen open={openCharacteristicsFormDialog}>
           <CharacteristicsForm
-            control={control}
             apiAnalytes={
               analytesWithCharacteristicsData?.analytesCharacteristics
             }
-            handleCharacteristicStateChange={setAnalytesToUpload}
-            register={register}
+            control={control}
+            handleClose={setOpenCharacteristicsFormDialog}
           />
-        }
-      />
-      <DevTool control={control} /> {/* set up the dev tool */}
+        </Dialog>
+      </Card>
     </Box>
   );
 };
