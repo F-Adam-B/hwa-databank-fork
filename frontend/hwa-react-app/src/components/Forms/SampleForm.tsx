@@ -17,9 +17,11 @@ import {
   Grid,
   MenuItem,
   Select,
+  TextField,
   Typography,
 } from '@mui/material';
 import {
+  CircularProgressIndicator,
   ControlledAutocompleteField,
   ControlledInputField,
   ControlledSelectField,
@@ -57,57 +59,67 @@ type TSampleForm = {
   analytesTested: {
     analyteName: string;
   }[];
-  comments?: string;
+  sampleComment?: string;
   dateCollected: string | null;
   elevation?: string;
-  elevationToGrade?: string;
-  eventID: number | null;
-  labID: number | null;
-  labName: string;
-  latitude: string;
-  longitude: string;
-  locationDescription?: string;
+  eventId: string;
+  location: {
+    coordinates: [string, string];
+    county: string;
+    elevation: string;
+    elevationToGrade?: string;
+    locationDescription: string;
+  };
   matrix: string;
-  organization: string;
-  projectName: string;
-  sampleID: number | null;
+  preservationMethods?: [];
+  project: {
+    labId: string;
+    labName: string;
+    projectName: string;
+    organization: string;
+  };
+  sampler?: string;
+  sampleNumber: string;
+  sampleTags?: [];
   sampleType: string;
   stationName: string;
-  stationName2?: string;
+  stationNameTwo?: string;
   timeCollected: string | null;
   waterBody: string;
-  waterBodyID: string;
+  waterBodyId: string;
   waterCode?: string;
   watershed: string;
   watershedReport?: string;
-  preservationMethods?: [];
-  sampleTags?: [];
 };
 
 const defaultValues: TSampleForm = {
   analytesTested: [],
-  comments: '',
+  sampleComment: '',
   dateCollected: null,
   elevation: '',
-  elevationToGrade: '',
-  eventID: null,
-  labID: null,
-  labName: '',
-  latitude: '',
-  longitude: '',
-  locationDescription: '',
+  eventId: '',
+  location: {
+    coordinates: ['', ''],
+    county: '',
+    elevation: '',
+    elevationToGrade: '',
+    locationDescription: '',
+  },
   matrix: '',
-  organization: '',
-  preservationMethods: [],
-  projectName: '',
+  project: {
+    labId: '',
+    labName: '',
+    projectName: '',
+    organization: '',
+  },
+  sampleNumber: '',
   sampleTags: [],
   sampleType: '',
-  sampleID: null,
   stationName: '',
-  stationName2: '',
+  stationNameTwo: '',
   timeCollected: null,
   waterBody: '',
-  waterBodyID: '',
+  waterBodyId: '',
   waterCode: '',
   watershed: '',
   watershedReport: '',
@@ -117,7 +129,8 @@ const SampleForm = () => {
   const [
     getAnalyteCharacteristics,
     {
-      loading,
+      called: analytesWithCharacteristicsQueryCalled,
+      loading: analytesWithCharacteristicsLoading,
       error: getAnalyteCharacteristicsError,
       data: analytesWithCharacteristicsData,
     },
@@ -156,7 +169,7 @@ const SampleForm = () => {
       const listOfAnalyteNames = getValues('analytesTested').map(
         (analyte) => analyte.analyteName
       );
-      const response = await getAnalyteCharacteristics({
+      await getAnalyteCharacteristics({
         variables: {
           listOfAnalyteNames,
         },
@@ -173,6 +186,12 @@ const SampleForm = () => {
     return (
       <>Error retrieving characteristics: {getAnalyteCharacteristicsError}</>
     );
+
+  // if (
+  //   analytesWithCharacteristicsQueryCalled &&
+  //   analytesWithCharacteristicsLoading
+  // )
+  //   return <CircularProgressIndicator />;
 
   return (
     <Box>
@@ -204,18 +223,18 @@ const SampleForm = () => {
               <ControlledInputField
                 control={control}
                 label="Project Name"
-                name="projectName"
+                name="project.projectName"
               />
 
               <ControlledInputField
                 control={control}
                 label="Event ID"
-                name="eventID"
+                name="eventId"
               />
               <ControlledInputField
                 control={control}
                 label="Sample ID"
-                name="sampleID"
+                name="sampleNumber"
               />
             </Grid>
             <Grid item xs={12} md={12}>
@@ -231,7 +250,7 @@ const SampleForm = () => {
                 control={control}
                 helperText="Station Name 2"
                 label="Station Name 2"
-                name="stationName2"
+                name="stationNameTwo"
                 options={stationOptions}
               />
             </Grid>
@@ -239,17 +258,55 @@ const SampleForm = () => {
               <ControlledInputField
                 control={control}
                 label="Location Description"
-                name="locationDescription"
+                name="location.locationDescription"
               />
-              <ControlledInputField
+              <Controller
                 control={control}
-                label="Latitude"
-                name="latitude"
+                name="location.coordinates"
+                render={({ field }) => {
+                  const { onChange, value, ...restField } = field;
+
+                  const handleLatitudeChange = (e: {
+                    target: { value: string };
+                  }) => {
+                    onChange([e.target.value, value[1]]);
+                  };
+
+                  return (
+                    <TextField
+                      {...restField}
+                      label="Latitude"
+                      onChange={handleLatitudeChange}
+                      placeholder="Latitude"
+                      type="text"
+                      value={value[0] ?? ''} // Use value at index 0 for latitude
+                    />
+                  );
+                }}
               />
-              <ControlledInputField
+              <Controller
                 control={control}
-                label="Longitude"
-                name="longitude"
+                name="location.coordinates"
+                render={({ field }) => {
+                  const { onChange, value, ...restField } = field;
+
+                  const handleLongitudeChange = (e: {
+                    target: { value: string };
+                  }) => {
+                    onChange([value[0], e.target.value]);
+                  };
+
+                  return (
+                    <TextField
+                      {...restField}
+                      label="Longitude"
+                      onChange={handleLongitudeChange}
+                      placeholder="Longitude"
+                      type="text"
+                      value={value[1] ?? ''} // Use value at index 0 for latitude
+                    />
+                  );
+                }}
               />
             </Grid>
             <Grid item xs={12} md={12}>
@@ -261,7 +318,7 @@ const SampleForm = () => {
               <ControlledInputField
                 control={control}
                 label="Elevation to grade (ft.)"
-                name="elevationToGrade"
+                name="location.elevationToGrade"
               />
               <ControlledInputField
                 control={control}
@@ -290,7 +347,7 @@ const SampleForm = () => {
               <ControlledInputField
                 control={control}
                 label="Water Body ID"
-                name="waterBodyID"
+                name="waterBodyId"
               />
               <ControlledInputField
                 control={control}
@@ -326,12 +383,12 @@ const SampleForm = () => {
               <ControlledInputField
                 control={control}
                 label="Lab ID"
-                name="labID"
+                name="project.labId"
               />
               <ControlledInputField
                 control={control}
                 label="Lab Name"
-                name="labName"
+                name="project.labName"
               />
             </Grid>
             <Grid item md={12}>
@@ -353,7 +410,7 @@ const SampleForm = () => {
                 fullWidth={true}
                 label="Comments"
                 multiline={true}
-                name="comments"
+                name="sampleComment"
                 rows={4}
               />
             </Grid>
@@ -372,6 +429,7 @@ const SampleForm = () => {
           />
         </Dialog>
       </Card>
+      <DevTool control={control} />
     </Box>
   );
 };

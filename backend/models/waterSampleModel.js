@@ -42,7 +42,7 @@ const locationSchema = new Schema(
     county: String,
     elevation: Number,
     elevationToGrade: Number,
-    locationDesc: String,
+    locationDescription: String,
   },
   {
     _id: false,
@@ -53,10 +53,10 @@ const locationSchema = new Schema(
 // Schema for project
 const projectSchema = new Schema(
   {
+    labId: String,
+    labName: String,
     projectName: String,
     organization: String,
-    labName: String,
-    labId: String,
   },
   {
     _id: false,
@@ -85,9 +85,10 @@ const analytesTestedType = new Schema(
 // Define the main schema for the water sample
 const waterSampleSchema = new Schema(
   {
-    location: locationSchema,
     analytesTested: [analytesTestedType],
+    dateCollected: String,
     eventId: String,
+    location: locationSchema,
     matrix: String,
     project: projectSchema,
     sampleComment: String,
@@ -96,15 +97,17 @@ const waterSampleSchema = new Schema(
       default: Date.now,
     },
     sampleNumber: uniqueString,
+    sampler: String,
+    sampleTags: tagsSchema,
     sampleTime: String,
     sampleType: String,
-    sampler: String,
     stationName: String,
     stationNameTwo: String,
-    tags: tagsSchema,
+    timeCollected: String,
     waterBody: String,
+    waterBodyId: String,
     waterCode: String,
-    waterShed: String,
+    watershed: String,
     watershedReport: String,
   },
   { timestamps: true }

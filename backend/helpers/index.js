@@ -20,6 +20,7 @@ const mongoUrl = `mongodb+srv://${username}:${password}@cluster0.hzdku2o.mongodb
 const dbName = 'HWA-Water-Sample-DB';
 const collectionName = 'water_sample';
 
+// used to reshape analyte characteristics
 const transformCharsJson = (input) => {
   return input.reduce((accumulator, currentValue) => {
     let analyteEntry = accumulator.find(
@@ -73,11 +74,22 @@ const transformData = (input, idx) => {
 
   // Build project information
   const project = {
-    projectName: input.Organization + ' - ' + input.Year, // Assuming projectName is combination of Organization and Year
+    projectName: input.ProjectName, // Assuming projectName is combination of Organization and Year
     organization: input.Organization,
     labName: input.LabName,
     labId: input.LabID,
   };
+
+  // Build tag information
+
+  const tags = {
+    sampletag1: input.sampletag1,
+    sampletag2: input.sampletag2,
+    sampletag3: input.sampletag3,
+    sampletag4: input.sampletag4,
+    sampletag5: input.sampletag5,
+  };
+
   // Create the transformed water sample object
   const transformedSample = {
     location: {
@@ -86,7 +98,7 @@ const transformData = (input, idx) => {
       county: input.County,
       elevation: input.Elevation,
       elevationToGrade: input.ElevationToGrade,
-      locationDesc: input.LocationDesc,
+      locationDescription: input.LocationDesc,
     },
     analytesTested: analytesTested,
     eventId: input.EventID,
@@ -98,8 +110,9 @@ const transformData = (input, idx) => {
     sampleTime: input.SampleTime,
     sampleType: input.SampleType,
     sampler: input.Sampler,
-    stationName: input.StationName,
+    stationNameOne: input.StationName,
     stationNameTwo: input.StationName2,
+    sampleTags: tags,
     waterBody: input.WaterBody,
     waterBodyId: input.WaterBodyId,
     waterCode: input.WaterCode,

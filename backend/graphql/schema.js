@@ -38,7 +38,7 @@ const LocationType = new GraphQLObjectType({
     county: { type: GraphQLString },
     elevation: { type: GraphQLString },
     elevationToGrade: { type: GraphQLString },
-    locationDesc: { type: GraphQLString },
+    locationDescription: { type: GraphQLString },
   }),
 });
 
