@@ -59,8 +59,7 @@ type TSampleForm = {
   analytesTested: {
     analyteName: string;
   }[];
-  sampleComment?: string;
-  dateCollected: string | null;
+  dateCollected?: string | null;
   elevation?: string;
   eventId: string;
   location: {
@@ -79,6 +78,7 @@ type TSampleForm = {
     organization: string;
   };
   sampler?: string;
+  sampleComment?: string;
   sampleNumber: string;
   sampleTags?: [];
   sampleType: string;
@@ -217,7 +217,7 @@ const SampleForm = () => {
                 control={control}
                 label="Organization"
                 helperText="Organization"
-                name="organization"
+                name="project.organization"
                 options={organizationOptions}
               />
               <ControlledInputField
