@@ -32,12 +32,12 @@ const locationSchema = new Schema(
     type: {
       type: String,
       enum: ['Point'],
-      required: true,
+      // required: true,f
     },
     // The coordinates array should contain latitude (lat), then longitude (long)
     coordinates: {
-      type: [Number],
-      default: ['', ''],
+      type: [],
+      default: [null, null],
     },
     county: String,
     elevation: Number,
@@ -98,7 +98,7 @@ const waterSampleSchema = new Schema(
     },
     sampleNumber: uniqueString,
     sampler: String,
-    sampleTags: tagsSchema,
+    sampleTags: [String],
     sampleTime: String,
     sampleType: String,
     stationName: String,

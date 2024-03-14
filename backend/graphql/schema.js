@@ -7,103 +7,19 @@ import {
   GraphQLNonNull,
   GraphQLEnumType,
   GraphQLScalarType,
+  GraphQLInputObjectType,
+  GraphQLFloat,
 } from 'graphql';
 
 import { WaterSample } from '../models/waterSampleModel.js';
 import { Analytes } from '../models/analyteModel.js';
-
-const GraphQLDate = new GraphQLScalarType({
-  name: 'Date',
-  description: 'Date custom scalar type',
-  serialize(value) {
-    return value.toISOString(); // Convert outgoing Date to ISO string
-  },
-  parseValue(value) {
-    return new Date(value); // Convert incoming ISO string to Date
-  },
-  parseLiteral(ast) {
-    if (ast.kind === Kind.STRING) {
-      return new Date(ast.value); // Convert AST literal to Date
-    }
-    return null;
-  },
-});
-
-const LocationType = new GraphQLObjectType({
-  name: 'Location',
-  fields: () => ({
-    coordinates: {
-      type: GraphQLList(GraphQLString),
-    },
-    county: { type: GraphQLString },
-    elevation: { type: GraphQLString },
-    elevationToGrade: { type: GraphQLString },
-    locationDescription: { type: GraphQLString },
-  }),
-});
-
-const ProjectType = new GraphQLObjectType({
-  name: 'Project',
-  fields: () => ({
-    projectName: { type: GraphQLString },
-    organization: { type: GraphQLString },
-    labName: { type: GraphQLString },
-    labId: { type: GraphQLString },
-  }),
-});
-
-const CharacteristicType = new GraphQLObjectType({
-  name: 'Characteristic',
-  fields: () => ({
-    name: { type: GraphQLString },
-    description: { type: GraphQLString },
-    value: { type: GraphQLString },
-  }),
-});
-
-const AnalyteType = new GraphQLObjectType({
-  name: 'Analyte',
-  fields: () => ({
-    analyteName: { type: GraphQLString },
-    characteristics: { type: new GraphQLList(CharacteristicType) },
-  }),
-});
-
-const SampleType = new GraphQLObjectType({
-  name: 'Sample',
-  fields: () => ({
-    id: { type: GraphQLID },
-    analytesTested: { type: new GraphQLList(AnalyteType) },
-    eventId: { type: GraphQLString },
-    location: { type: LocationType },
-    matrix: { type: GraphQLString },
-    project: { type: ProjectType },
-    sampleComment: { type: GraphQLString },
-    sampleDate: { type: GraphQLDate },
-    sampleNumber: { type: GraphQLString },
-    sampleTime: { type: GraphQLString },
-    sampleType: { type: GraphQLString },
-    sampler: { type: GraphQLString },
-    sampleComment: { type: GraphQLString },
-    stationName: { type: GraphQLString },
-    stationNameTwo: { type: GraphQLString },
-    waterBody: { type: GraphQLString },
-    waterBodyId: { type: GraphQLString },
-    waterCode: { type: GraphQLString },
-    watershed: { type: GraphQLString },
-    watershedReport: { type: GraphQLString },
-  }),
-});
-
-const FormFieldType = new GraphQLObjectType({
-  name: 'FormField',
-  fields: () => ({
-    uniqueStationNames: { type: GraphQLList(GraphQLString) },
-    uniqueOrganizations: { type: GraphQLList(GraphQLString) },
-    uniqueMatrices: { type: GraphQLList(GraphQLString) },
-    uniqueWaterBodies: { type: GraphQLList(GraphQLString) },
-  }),
-});
+import { SampleFormValuesInputType } from './inputTypes.js';
+import {
+  AnalyteType,
+  FormFieldType,
+  SampleType,
+  GraphQLDate,
+} from './types.js';
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -220,6 +136,30 @@ const RootQuery = new GraphQLObjectType({
   },
 });
 
+const RootMutation = new GraphQLObjectType({
+  name: 'RootMutationType',
+  fields: {
+    addSampleMutation: {
+      type: SampleType,
+      args: {
+        sampleFormValues: {
+          type: new GraphQLNonNull(SampleFormValuesInputType),
+        },
+      },
+      resolve: async (parent, args) => {
+        try {
+          const newSample = new WaterSample(args.sampleFormValues);
+          await newSample.save();
+        } catch (error) {
+          console.error('Error adding sample to database', error);
+          return new Error(error);
+        }
+      },
+    },
+  },
+});
+
 export const schema = new GraphQLSchema({
   query: RootQuery,
+  mutation: RootMutation,
 });
