@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { DropdownOptionsContext } from '../../Providers/DropdownSelectContext';
 import {
   Controller,
@@ -31,6 +31,7 @@ import ControlledDateField from '../ControlledDateField/ControlledDateField';
 import ControlledTimeField from '../ControlledTimeField/ControlledTimeField';
 import { DevTool } from '@hookform/devtools';
 import { GET_ANALYTE_CHARACTERISTICS_QUERY } from '../../graphql/queries/analyteQueries';
+import { ADD_SAMPLE_MUTATION } from '../../graphql/mutations/sampleMutations';
 import CharacteristicsForm from './CharacteristicsForm';
 
 type TCharacteristicsFormProps = {
@@ -136,6 +137,15 @@ const SampleForm = () => {
     },
   ] = useLazyQuery(GET_ANALYTE_CHARACTERISTICS_QUERY);
 
+  const [
+    addSampleMutation,
+    {
+      data: addSampleMutationData,
+      loading: addSampleMutationLoading,
+      error: addSampleMutationError,
+    },
+  ] = useMutation(ADD_SAMPLE_MUTATION);
+
   const {
     matricesOptions,
     stationOptions,
@@ -159,9 +169,17 @@ const SampleForm = () => {
     defaultValues,
   });
 
-  const onSubmit = (formData: any) => {
+  const onSubmit = async (formData: any) => {
     // need to shape formData to WaterSample schema
     console.log(formData, 'formData');
+
+    try {
+      await addSampleMutation({
+        variables: { sampleFormValues: { id: '123', ...formData } },
+      });
+    } catch (error) {
+      console.error('Error adding sample: ', error);
+    }
   };
 
   const handleSelectCharacteristics = async () => {
@@ -269,7 +287,7 @@ const SampleForm = () => {
                   const handleLatitudeChange = (e: {
                     target: { value: string };
                   }) => {
-                    onChange([e.target.value, value[1]]);
+                    onChange([parseFloat(e.target.value), value[1]]);
                   };
 
                   return (
@@ -293,7 +311,7 @@ const SampleForm = () => {
                   const handleLongitudeChange = (e: {
                     target: { value: string };
                   }) => {
-                    onChange([value[0], e.target.value]);
+                    onChange([value[0], parseFloat(e.target.value)]);
                   };
 
                   return (

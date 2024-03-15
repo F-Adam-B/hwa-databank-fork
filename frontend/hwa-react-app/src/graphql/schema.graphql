@@ -1,0 +1,111 @@
+scalar Date
+
+type Query {
+  analytes: [AnalyteType]
+  analytesCharacteristics(listOfAnalyteNames: [String]!): [AnalyteType]
+  formFieldValues: FormFieldValueType
+  sample(
+    fromDate: Date
+    toDate: Date
+    matrix: String
+    stationName: String
+    organization: String
+    waterBody: String
+    analytes: [String]
+  ): [Sample]
+  samples: [Sample]
+}
+
+type Mutation {
+  addSampleMutation(sampleFormValues: SampleFormValuesInputType): Sample
+}
+
+type FormFieldValueType {
+  uniqueMatrices: [String]
+  uniqueWaterBodies: [String]
+  uniqueStationNames: [String]
+  uniqueOrganizations: [String]
+}
+
+type Sample {
+  id: ID
+  location: Location
+  matrix: String
+  project: Project
+  sampleDate: Date
+  sampleNumber: String
+  stationName: String
+  waterBody: String
+  watershed: String
+}
+
+type Location {
+  coordinates: [Float] # Using Float as a placeholder; assuming it's defined elsewhere or it should be GraphQL Float
+}
+
+type Project {
+  projectName: String
+  organization: String
+}
+
+type AnalyteType {
+  analyteName: String!
+  characteristics: [CharacteristicType]
+}
+
+type CharacteristicType {
+  name: String
+  description: String
+  value: String
+}
+
+input SampleFormValuesInputType {
+  analytesTested: [AnalyteInputType]
+  dateCollected: String
+  elevation: String
+  eventId: String
+  id: ID
+  location: LocationInputType
+  matrix: String
+  preservationMethods: [String]
+  project: ProjectInputType
+  sampler: String
+  sampleComment: String
+  sampleNumber: String
+  sampleTags: [String]
+  sampleType: String
+  stationName: String
+  stationNameTwo: String
+  timeCollected: String
+  waterBody: String
+  waterBodyId: String
+  waterCode: String
+  watershed: String
+  watershedReport: String
+}
+
+input AnalyteInputType {
+  analyteName: String
+  characteristics: [CharacteristicInput]
+}
+
+input CharacteristicInput {
+  name: String
+  description: String
+  value: String
+}
+
+input LocationInputType {
+  coordinates: [Float]
+  county: String
+  elevation: String
+  elevationToGrade: String
+  locationDescription: String
+}
+
+input ProjectInputType {
+  projectName: String
+  organization: String
+  labName: String
+  labId: String
+}
