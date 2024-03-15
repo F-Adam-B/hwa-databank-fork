@@ -149,7 +149,9 @@ const RootMutation = new GraphQLObjectType({
       resolve: async (parent, args) => {
         try {
           const newSample = new WaterSample(args.sampleFormValues);
-          await newSample.save();
+          const response = await newSample.save();
+
+          return response;
         } catch (error) {
           console.error('Error adding sample to database', error);
           return new Error(error);
