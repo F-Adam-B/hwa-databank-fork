@@ -60,13 +60,13 @@ type CharacteristicType {
 }
 
 input SampleFormValuesInputType {
-  analytesTested: [AnalyteInputType]
-  dateCollected: String
+  analytesTested: [AnalyteInputType]!
+  dateCollected: String!
   elevation: String
   eventId: String
   id: ID
   location: LocationInputType
-  matrix: String
+  matrix: String!
   preservationMethods: [String]
   project: ProjectInputType
   sampler: String
@@ -76,8 +76,8 @@ input SampleFormValuesInputType {
   sampleType: String
   stationName: String
   stationNameTwo: String
-  timeCollected: String
-  waterBody: String
+  timeCollected: String!
+  waterBody: String!
   waterBodyId: String
   waterCode: String
   watershed: String
@@ -96,16 +96,16 @@ input CharacteristicInput {
 }
 
 input LocationInputType {
-  coordinates: [Float]
-  county: String
+  coordinates: [Float]!
+  county: String!
   elevation: String
   elevationToGrade: String
   locationDescription: String
 }
 
 input ProjectInputType {
-  projectName: String
-  organization: String
+  projectName: String!
+  organization: String!
   labName: String
   labId: String
 }
