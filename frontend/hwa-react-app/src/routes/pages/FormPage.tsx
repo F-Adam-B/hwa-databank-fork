@@ -52,7 +52,6 @@ const FormPage = () => {
     defaultValues,
   });
 
-  // console.log(methods.watch(), 'avlues');
   return (
     <Box
       sx={{

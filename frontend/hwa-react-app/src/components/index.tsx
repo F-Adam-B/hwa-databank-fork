@@ -1,3 +1,4 @@
+import BlogPost from './BlogPost/BlogPost';
 import ControlledInputField from './ControlledInputField/ControlledInputField';
 import DataGridMUI from './DataGridMUI/DataGridMUI';
 import ErrorPage from './ErrorPage/ErrorPage';
@@ -17,6 +18,7 @@ import CircularProgressIndicator from './CircularProgressIndicator/CircularProgr
 import SimpleDialog from './SimpleDialog/SimpleDialog';
 
 export {
+  BlogPost,
   CircularProgressIndicator,
   ControlledAutocompleteField,
   ControlledDateField,
