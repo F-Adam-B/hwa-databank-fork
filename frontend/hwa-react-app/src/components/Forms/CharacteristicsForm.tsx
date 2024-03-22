@@ -22,12 +22,12 @@ import {
   Typography,
 } from '@mui/material';
 import { ControlledInputField } from '../index';
-import { Analyte, Characteristic } from './SampleForm';
+import { AnalyteType, CharacteristicType } from '../../graphql/types';
 
 type TCharacteristicsFormProps = {
   apiAnalytes: {
     analyteName: string;
-    characteristics: Characteristic[];
+    characteristics: CharacteristicType[];
   }[];
   control?: Control<any>;
   handleClose: (boolean: boolean) => void;
@@ -36,11 +36,11 @@ type TCharacteristicsFormProps = {
 type Field = {
   id?: string;
   analyteName: string;
-  characteristics: Characteristic[];
+  characteristics: CharacteristicType[];
   onChange?: any;
 };
 
-const defaultAnalyte: Analyte = {
+const defaultAnalyte: AnalyteType = {
   analyteName: '',
   characteristics: [{ name: '', value: '' }],
 };
@@ -93,10 +93,13 @@ const CharacteristicsForm = ({
                 defaultValue={analyte.analyteName}
               />
               {analyte.characteristics.map(
-                (characteristic: Characteristic, charIndex) => {
+                (characteristic: CharacteristicType, charIndex) => {
                   return (
                     <Controller
                       defaultValue={characteristic.value}
+                      key={
+                        `selectedAnalytes.${parentIndex}.characteristics.${charIndex}.value` as const
+                      }
                       name={
                         `selectedAnalytes.${parentIndex}.characteristics.${charIndex}.value` as const
                       }

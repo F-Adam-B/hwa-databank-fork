@@ -22,7 +22,7 @@ interface Sample {
   id: ID;
   location?: Location;
   matrix?: string;
-  project?: Project;
+  project?: ProjectType;
   sampleDate?: Date;
   sampleNumber?: string;
   stationName?: string;
@@ -34,57 +34,33 @@ interface Location {
   coordinates?: Float[]; // Assuming it's an optional array of floats for latitude and longitude
 }
 
-interface Project {
-  projectName?: string;
+export interface ProjectType {
+  labId: string;
+  labName: string;
   organization?: string;
+  projectName?: string;
 }
 
-// Input Types
-export interface SampleFormValuesInputType {
-  analytesTested?: AnalyteInputType[];
-  dateCollected?: string;
-  elevation?: string;
-  eventId?: string;
-  id?: ID;
-  location?: LocationInputType;
-  matrix?: string;
-  preservationMethods?: string[];
-  project: ProjectInputType;
-  sampler?: string;
-  sampleComment?: string;
-  sampleNumber: string;
-  sampleTags?: string[];
-  sampleType?: string;
-  stationName?: string;
-  stationNameTwo?: string;
-  timeCollected?: string;
-  waterBody?: string;
-  waterBodyId?: string;
-  waterCode?: string;
-  watershed?: string;
-  watershedReport?: string;
-}
-
-interface CharacteristicInput {
-  name?: string;
+export interface CharacteristicType {
+  name: string;
   description?: string;
-  value?: string;
+  value: string;
 }
 
-interface AnalyteInputType {
-  analyteName?: string;
-  characteristics?: CharacteristicInput[];
+export interface AnalyteType {
+  analyteName: string;
+  characteristics: CharacteristicType[];
 }
 
-interface LocationInputType {
-  coordinates?: Float[];
+export interface LocationType {
+  coordinates?: string[];
   county: string;
   elevation?: string;
   elevationToGrade?: string;
   locationDescription?: string;
 }
 
-interface ProjectInputType {
+export interface ProjectInputType {
   projectName?: string;
   organization?: string;
   labName?: string;
