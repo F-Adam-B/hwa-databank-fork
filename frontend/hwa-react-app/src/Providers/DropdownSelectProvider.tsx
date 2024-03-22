@@ -24,7 +24,7 @@ export const DropdownOptionsProvider = ({
 
   const {
     data: analytesData,
-    loading: analytesLoading, // You might not be using this variable if you don't want to show a loading spinner.
+    loading: analytesLoading,
     error: analytesError,
   } = useQuery(GET_ANALYTES);
 
