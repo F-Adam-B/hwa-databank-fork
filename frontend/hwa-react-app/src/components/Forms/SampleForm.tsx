@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useMemo } from 'react';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { DropdownOptionsContext } from '../../Providers/DropdownSelectContext';
 import {
@@ -14,6 +14,7 @@ import {
   Card,
   Dialog,
   DialogActions,
+  FormHelperText,
   Grid,
   MenuItem,
   Select,
@@ -33,51 +34,19 @@ import { DevTool } from '@hookform/devtools';
 import { GET_ANALYTE_CHARACTERISTICS_QUERY } from '../../graphql/queries/analyteQueries';
 import { ADD_SAMPLE_MUTATION } from '../../graphql/mutations/sampleMutations';
 import CharacteristicsForm from './CharacteristicsForm';
+import { AnalyteType, LocationType, ProjectType } from '../../graphql/types';
+import { cleanFormData } from '../../utilities/dataTransformations';
 
-type TCharacteristicsFormProps = {
-  control: any;
-  analytes: {
-    __typename: string;
-    analyteName: string;
-    characteristics: {
-      name: string;
-    }[];
-  }[];
-  register: any;
-};
-
-export interface Characteristic {
-  name: string;
-  value: string;
-}
-
-export interface Analyte {
-  analyteName: string;
-  characteristics: Characteristic[];
-}
-
-type TSampleForm = {
-  analytesTested: {
-    analyteName: string;
-  }[];
+export type TSampleForm = {
+  analytesTested: AnalyteType[];
   dateCollected?: string | null;
   elevation?: string;
   eventId: string;
-  location: {
-    coordinates: [string, string];
-    county: string;
-    elevation: string;
-    elevationToGrade?: string;
-    locationDescription: string;
-  };
+  // id???
+  location: LocationType;
   matrix: string;
   preservationMethods?: [];
-  project: {
-    labId: string;
-    labName: string;
-    projectName: string;
-    organization: string;
-  };
+  project: ProjectType;
   sampler?: string;
   sampleComment?: string;
   sampleNumber: string;
@@ -169,13 +138,12 @@ const SampleForm = () => {
     defaultValues,
   });
 
-  const onSubmit = async (formData: any) => {
-    // need to shape formData to WaterSample schema
-    console.log(formData, 'formData');
-
+  const onSubmit = async (formData: TSampleForm) => {
+    const reshapedFormData = cleanFormData(formData);
+    console.log(reshapedFormData, 'reshaped');
     try {
       await addSampleMutation({
-        variables: { sampleFormValues: { id: '123', ...formData } },
+        variables: { sampleFormValues: { id: '123', ...reshapedFormData } },
       });
     } catch (error) {
       console.error('Error adding sample: ', error);
@@ -222,6 +190,7 @@ const SampleForm = () => {
                 control={control}
                 label="Date Collected"
                 name="dateCollected"
+                required={true}
               />
               <ControlledTimeField
                 control={control}
@@ -281,48 +250,83 @@ const SampleForm = () => {
               <Controller
                 control={control}
                 name="location.coordinates"
-                render={({ field }) => {
+                rules={{
+                  validate: {
+                    pattern: (value: any) =>
+                      value.every((val: string) =>
+                        /^[+-]?\d*(\.\d*)?$/.test(val)
+                      ) || 'Invalid Latitude format.',
+                  },
+                }}
+                render={({ field, fieldState }) => {
                   const { onChange, value, ...restField } = field;
-
                   const handleLatitudeChange = (e: {
                     target: { value: string };
                   }) => {
-                    onChange([parseFloat(e.target.value), value[1]]);
+                    const inputValue = e.target.value;
+                    onChange([inputValue, value ? value[1] : '']);
                   };
 
                   return (
-                    <TextField
-                      {...restField}
-                      label="Latitude"
-                      onChange={handleLatitudeChange}
-                      placeholder="Latitude"
-                      type="text"
-                      value={value[0] ?? ''} // Use value at index 0 for latitude
-                    />
+                    <>
+                      <TextField
+                        {...restField}
+                        error={!!fieldState.error?.message}
+                        label="Latitude"
+                        onChange={handleLatitudeChange}
+                        placeholder="Required"
+                        required
+                        type="text"
+                        value={value ? value[0] : ''}
+                      />
+                      {fieldState.error && (
+                        <FormHelperText>
+                          {fieldState.error.message}
+                        </FormHelperText>
+                      )}
+                    </>
                   );
                 }}
               />
               <Controller
                 control={control}
                 name="location.coordinates"
-                render={({ field }) => {
+                rules={{
+                  validate: {
+                    pattern: (value: any) =>
+                      value.every((val: string) =>
+                        /^[+-]?\d*(\.\d*)?$/.test(val)
+                      ) || 'Invalid Longitude format.',
+                  },
+                }}
+                render={({ field, fieldState }) => {
                   const { onChange, value, ...restField } = field;
 
                   const handleLongitudeChange = (e: {
                     target: { value: string };
                   }) => {
-                    onChange([value[0], parseFloat(e.target.value)]);
+                    let inputValue = e.target.value;
+                    onChange([value ? value[0] : '', inputValue]);
                   };
 
                   return (
-                    <TextField
-                      {...restField}
-                      label="Longitude"
-                      onChange={handleLongitudeChange}
-                      placeholder="Longitude"
-                      type="text"
-                      value={value[1] ?? ''} // Use value at index 0 for latitude
-                    />
+                    <Box>
+                      <TextField
+                        {...restField}
+                        label="Longitude"
+                        error={!!fieldState.error?.message}
+                        onChange={handleLongitudeChange}
+                        placeholder="Required"
+                        required={true}
+                        type="text"
+                        value={value ? value[1] : ''}
+                      />
+                      {fieldState.error && (
+                        <FormHelperText>
+                          {fieldState.error.message}
+                        </FormHelperText>
+                      )}
+                    </Box>
                   );
                 }}
               />
