@@ -66,3 +66,17 @@ export interface ProjectInputType {
   labName?: string;
   labId?: string;
 }
+
+export type User = {
+  username: string;
+  email: string;
+  isAdmin: string;
+  createdAt?: string;
+};
+
+export type BlogPost = {
+  authorId: ID;
+  content: string;
+  createdAt?: string;
+  title: string;
+};

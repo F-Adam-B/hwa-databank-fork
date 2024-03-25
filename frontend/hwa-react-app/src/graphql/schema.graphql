@@ -18,6 +18,8 @@ type Query {
 
 type Mutation {
   addSampleMutation(sampleFormValues: SampleFormValuesInputType): Sample
+  addUserMutation(userFormValues: UserFormValuesInputType): User
+  addBlogPost(blogFormValues: BlogPostValuesInputType): BlogPost
 }
 
 type FormFieldValueType {
@@ -53,10 +55,23 @@ type AnalyteType {
   characteristics: [CharacteristicType]
 }
 
+type BlogPost {
+  authorId: ID
+  content: String
+  title: String
+}
+
 type CharacteristicType {
   name: String
   description: String
   value: String
+}
+
+type User {
+  username: String
+  email: String
+  isAdmin: String
+  createdAt: Date
 }
 
 input SampleFormValuesInputType {
@@ -89,6 +104,12 @@ input AnalyteInputType {
   characteristics: [CharacteristicInput]
 }
 
+input BlogPostValuesInputType {
+  title: String!
+  content: String!
+  authorId: ID!
+}
+
 input CharacteristicInput {
   name: String
   description: String
@@ -108,4 +129,9 @@ input ProjectInputType {
   organization: String!
   labName: String
   labId: String
+}
+
+input UserFormValuesInputType {
+  username: String!
+  email: String!
 }
