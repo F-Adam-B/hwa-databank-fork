@@ -84,7 +84,7 @@ const SampleFormValuesInputType = new GraphQLInputObjectType({
 });
 
 const UserInputType = new GraphQLInputObjectType({
-  name: 'UserFormInput',
+  name: 'UserFormValuesInputType',
   fields: () => ({
     username: { type: new GraphQLNonNull(GraphQLString) },
     email: { type: new GraphQLNonNull(GraphQLString) },
@@ -92,7 +92,7 @@ const UserInputType = new GraphQLInputObjectType({
 });
 
 const BlogPostInputType = new GraphQLInputObjectType({
-  name: 'BlogPostInput',
+  name: 'BlogPostValuesInputType',
   fields: () => ({
     title: { type: new GraphQLNonNull(GraphQLString) },
     content: { type: new GraphQLNonNull(GraphQLString) },

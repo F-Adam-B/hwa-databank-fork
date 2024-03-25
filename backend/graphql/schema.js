@@ -169,14 +169,14 @@ const RootMutation = new GraphQLObjectType({
     addUserMutation: {
       type: UserType,
       args: {
-        userFormInputValues: {
+        userFormValues: {
           type: new GraphQLNonNull(UserInputType),
         },
       },
       resolve: async (_parent, args) => {
         try {
           const newUser = new User({
-            ...args.userFormInputValues,
+            ...args.userFormValues,
             isAdmin: true,
           });
           const response = await newUser.save();
@@ -190,12 +190,12 @@ const RootMutation = new GraphQLObjectType({
     addBlogPost: {
       type: BlogType,
       args: {
-        blogFormInputValues: {
+        blogFormValues: {
           type: new GraphQLNonNull(BlogPostInputType),
         },
       },
-      resolve: async (_parent, { blogFormInputValues }) => {
-        const { authorId, ...rest } = blogFormInputValues;
+      resolve: async (_parent, { blogFormValues }) => {
+        const { authorId, ...rest } = blogFormValues;
         try {
           const authorExists = await User.findById(authorId);
 
