@@ -11,22 +11,30 @@ import {
   GraphQLFloat,
 } from 'graphql';
 
-import { WaterSample } from '../models/waterSampleModel.js';
 import { Analytes } from '../models/analyteModel.js';
-import { SampleFormValuesInputType } from './inputTypes.js';
+import { User } from '../models/userModel.js';
+import { WaterSample } from '../models/waterSampleModel.js';
+import {
+  BlogPostInputType,
+  SampleFormValuesInputType,
+  UserInputType,
+} from './inputTypes.js';
 import {
   AnalyteType,
   FormFieldType,
   SampleType,
   GraphQLDate,
+  UserType,
+  BlogType,
 } from './types.js';
+import { BlogPost } from '../models/blogModel.js';
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
     formFieldValues: {
       type: FormFieldType,
-      resolve: async (parent, args) => {
+      resolve: async () => {
         try {
           const result = await WaterSample.aggregate([
             {
@@ -65,7 +73,7 @@ const RootQuery = new GraphQLObjectType({
     },
     samples: {
       type: new GraphQLList(SampleType),
-      resolve(parent, args) {
+      resolve() {
         return WaterSample.find({
           'location.coordinates': { $ne: [null, null] },
         });
@@ -82,7 +90,7 @@ const RootQuery = new GraphQLObjectType({
         waterBody: { type: GraphQLString },
         analytes: { type: GraphQLList(GraphQLString) },
       },
-      resolve(parent, args) {
+      resolve(_parent, args) {
         const {
           analytes,
           matrix,
@@ -146,7 +154,7 @@ const RootMutation = new GraphQLObjectType({
           type: new GraphQLNonNull(SampleFormValuesInputType),
         },
       },
-      resolve: async (parent, args) => {
+      resolve: async (_parent, args) => {
         try {
           const newSample = new WaterSample(args.sampleFormValues);
           const response = await newSample.save();
@@ -155,6 +163,52 @@ const RootMutation = new GraphQLObjectType({
         } catch (error) {
           console.error('Error adding sample to database', error);
           return new Error(error);
+        }
+      },
+    },
+    addUserMutation: {
+      type: UserType,
+      args: {
+        userFormInputValues: {
+          type: new GraphQLNonNull(UserInputType),
+        },
+      },
+      resolve: async (_parent, args) => {
+        try {
+          const newUser = new User({
+            ...args.userFormInputValues,
+            isAdmin: true,
+          });
+          const response = await newUser.save();
+          return response;
+        } catch (error) {
+          console.error('Error adding user to database', error);
+          return new Error(error);
+        }
+      },
+    },
+    addBlogPost: {
+      type: BlogType,
+      args: {
+        blogFormInputValues: {
+          type: new GraphQLNonNull(BlogPostInputType),
+        },
+      },
+      resolve: async (_parent, { blogFormInputValues }) => {
+        const { authorId, ...rest } = blogFormInputValues;
+        try {
+          const authorExists = await User.findById(authorId);
+
+          const newBlogPost = new BlogPost({
+            authorId: authorExists['_id'],
+            ...rest,
+          });
+
+          const response = await newBlogPost.save();
+          return response;
+        } catch (error) {
+          console.error('Error adding blog post');
+          throw new Error(error);
         }
       },
     },

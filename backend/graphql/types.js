@@ -9,6 +9,7 @@ import {
   GraphQLScalarType,
   GraphQLInputObjectType,
   GraphQLFloat,
+  GraphQLBoolean,
 } from 'graphql';
 
 const AnalyteType = new GraphQLObjectType({
@@ -104,12 +105,34 @@ const SampleType = new GraphQLObjectType({
   }),
 });
 
+const UserType = new GraphQLObjectType({
+  name: 'User',
+  fields: () => ({
+    username: { type: GraphQLString },
+    email: { type: GraphQLString },
+    isAdmin: { type: GraphQLBoolean },
+    createdAt: { type: GraphQLDate },
+  }),
+});
+
+const BlogType = new GraphQLObjectType({
+  name: 'BlogPost',
+  fields: () => ({
+    authorId: { type: GraphQLID },
+    content: { type: GraphQLString },
+    createdAt: { type: GraphQLDate },
+    title: { type: GraphQLString },
+  }),
+});
+
 export {
   AnalyteType,
+  BlogType,
   CharacteristicType,
   FormFieldType,
   GraphQLDate,
   LocationType,
   ProjectType,
   SampleType,
+  UserType,
 };
