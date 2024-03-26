@@ -187,7 +187,7 @@ const RootMutation = new GraphQLObjectType({
         }
       },
     },
-    addBlogPost: {
+    addBlogPostMutation: {
       type: BlogType,
       args: {
         blogFormValues: {
