@@ -73,8 +73,8 @@ const RootQuery = new GraphQLObjectType({
     },
     samples: {
       type: new GraphQLList(SampleType),
-      resolve() {
-        return WaterSample.find({
+      resolve: async () => {
+        return await WaterSample.find({
           'location.coordinates': { $ne: [null, null] },
         });
       },
@@ -90,7 +90,7 @@ const RootQuery = new GraphQLObjectType({
         waterBody: { type: GraphQLString },
         analytes: { type: GraphQLList(GraphQLString) },
       },
-      resolve(_parent, args) {
+      resolve: async (_parent, args) => {
         const {
           analytes,
           matrix,
@@ -120,13 +120,13 @@ const RootQuery = new GraphQLObjectType({
         if (waterBody) queryFilter.waterBody = waterBody;
         // Return the filtered water samples
 
-        return WaterSample.find(queryFilter);
+        return await WaterSample.find(queryFilter);
       },
     },
     analytes: {
       type: new GraphQLList(AnalyteType),
-      resolve(parent, args) {
-        return Analytes.find();
+      resolve: async (parent, args) => {
+        return await Analytes.find();
       },
     },
     analytesCharacteristics: {
@@ -134,11 +134,17 @@ const RootQuery = new GraphQLObjectType({
       args: {
         listOfAnalyteNames: { type: GraphQLList(GraphQLString) },
       },
-      resolve(parent, args) {
+      resolve: async (_parent, args) => {
         const { listOfAnalyteNames } = args;
         const analyteCharQueryFilter = { analyteName: listOfAnalyteNames };
 
-        return Analytes.find(analyteCharQueryFilter);
+        return await Analytes.find(analyteCharQueryFilter);
+      },
+    },
+    users: {
+      type: new GraphQLList(UserType),
+      resolve: async () => {
+        return await User.find();
       },
     },
   },
