@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 // Define basic scalar types that might be represented differently on the server-side.
 // For dates, a string in ISO format could be used on the client-side.
 type Date = string;
@@ -79,4 +80,8 @@ export type BlogPost = {
   content: string;
   createdAt?: string;
   title: string;
+};
+
+export type TChildrenProps = {
+  children: ReactNode;
 };
