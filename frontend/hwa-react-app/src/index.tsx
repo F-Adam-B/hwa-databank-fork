@@ -16,6 +16,7 @@ import { MapProvider } from 'react-map-gl';
 import { NavBar } from './components';
 import client from './graphql/apollo-client';
 import { DropdownOptionsProvider } from './Providers/DropdownSelectProvider';
+import UsersProvider from './Providers/UsersContext';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -24,13 +25,15 @@ root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <Provider store={store}>
-        <DropdownOptionsProvider>
-          <MapProvider>
-            {/* <ThemeProvider theme={themeOptions}> */}
-            {/* <App /> */}
-            <RouterProvider router={router} />
-          </MapProvider>
-        </DropdownOptionsProvider>
+        <UsersProvider>
+          <DropdownOptionsProvider>
+            <MapProvider>
+              {/* <ThemeProvider theme={themeOptions}> */}
+              {/* <App /> */}
+              <RouterProvider router={router} />
+            </MapProvider>
+          </DropdownOptionsProvider>
+        </UsersProvider>
       </Provider>
     </ApolloProvider>
     {/* </ThemeProvider> */}

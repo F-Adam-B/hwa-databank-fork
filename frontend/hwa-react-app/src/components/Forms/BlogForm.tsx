@@ -6,6 +6,8 @@ import { DevTool } from '@hookform/devtools';
 
 import { BlogPost } from '../../graphql/types';
 import { ADD_BLOG_POST_MUTATION } from '../../graphql/mutations/blogMutations';
+import { useContext } from 'react';
+import { UsersContext } from '../../Providers/UsersContext';
 
 type TBlogPostForm = {
   title: string;
@@ -18,6 +20,8 @@ const defaultValues: TBlogPostForm = {
 };
 
 const BlogForm = () => {
+  const listOfUsers = useContext(UsersContext);
+
   const [addBlogPostMutation, { data: addBlogPostData }] = useMutation(
     ADD_BLOG_POST_MUTATION
   );
