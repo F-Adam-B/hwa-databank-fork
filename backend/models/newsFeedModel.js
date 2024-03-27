@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
-const blogPostSchema = new Schema({
+const NewsFeedSchema = new Schema({
   title: {
     type: String,
     required: true,
@@ -15,10 +15,13 @@ const blogPostSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
   },
+  image: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now, // Automatically sets to current date/time on creation
   },
 });
 
-export const BlogPost = mongoose.model('BlogPost', blogPostSchema);
+export const NewsFeed = mongoose.model('NewsFeed', NewsFeedSchema);

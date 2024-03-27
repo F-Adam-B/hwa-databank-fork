@@ -15,7 +15,7 @@ import MenuItem from '@mui/material/MenuItem';
 const pages = [
   { name: 'Dashboard', url: '/' },
   { name: 'Map', url: '/map' },
-  { name: 'Blog', url: '/blog' },
+  { name: 'News Feed', url: '/newsfeed' },
   { name: 'Sample Form', url: '/sampleForm' },
   { name: 'About', url: '/about' },
 ];
@@ -24,7 +24,7 @@ const menuItems = [
   { name: 'Account', url: '/account' },
   { name: 'Dashboard', url: '/dashboard' },
   { name: 'Login', url: '/login' },
-  { name: 'BlogForm', url: '/blogform' },
+  { name: 'News Feed Form', url: '/newsfeedform' },
 ];
 
 const NavBar = () => {

@@ -19,7 +19,7 @@ type Query {
 type Mutation {
   addSampleMutation(sampleFormValues: SampleFormValuesInputType): Sample
   addUserMutation(userFormValues: UserFormValuesInputType): User
-  addBlogPostMutation(blogFormValues: BlogPostValuesInputType): BlogPost
+  addNewsFeedMutation(newsFeedValues: NewsFeedValuesInputType): NewsFeed
 }
 
 type FormFieldValueType {
@@ -55,7 +55,7 @@ type AnalyteType {
   characteristics: [CharacteristicType]
 }
 
-type BlogPost {
+type NewsFeed {
   authorId: ID
   content: String
   title: String
@@ -87,7 +87,11 @@ input SampleFormValuesInputType {
   sampler: String
   sampleComment: String
   sampleNumber: String
-  sampleTags: [String]
+  sampleTag1: String
+  sampleTag2: String
+  sampleTag3: String
+  sampleTag4: String
+  sampleTag5: String
   sampleType: String
   stationName: String
   stationNameTwo: String
@@ -104,7 +108,7 @@ input AnalyteInputType {
   characteristics: [CharacteristicInput]
 }
 
-input BlogPostValuesInputType {
+input NewsFeedValuesInputType {
   title: String!
   content: String!
   authorId: ID!

@@ -6,7 +6,7 @@ import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 
-interface BlogPostProps {
+interface NewsFeedProps {
   post: {
     date: string;
     content: string;
@@ -16,7 +16,7 @@ interface BlogPostProps {
   };
 }
 
-const BlogPost = () => {
+const NewsFeed = () => {
   const posts = [
     {
       title: 'Blog1',
@@ -53,4 +53,4 @@ const BlogPost = () => {
   );
 };
 
-export default BlogPost;
+export default NewsFeed;

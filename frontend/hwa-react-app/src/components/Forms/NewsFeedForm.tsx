@@ -4,34 +4,34 @@ import { useForm } from 'react-hook-form';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { DevTool } from '@hookform/devtools';
 
-import { BlogPost } from '../../graphql/types';
+import { NewsFeed } from '../../graphql/types';
 import { ADD_BLOG_POST_MUTATION } from '../../graphql/mutations/blogMutations';
 import { useContext } from 'react';
 import { UsersContext } from '../../Providers/UsersContext';
 
-type TBlogPostForm = {
+type TNewsFeedForm = {
   title: string;
   content: string;
 };
 
-const defaultValues: TBlogPostForm = {
+const defaultValues: TNewsFeedForm = {
   title: '',
   content: '',
 };
 
-const BlogForm = () => {
+const NewsFeedForm = () => {
   const listOfUsers = useContext(UsersContext);
 
-  const [addBlogPostMutation, { data: addBlogPostData }] = useMutation(
+  const [addNewsFeedMutation, { data: addNewsFeedData }] = useMutation(
     ADD_BLOG_POST_MUTATION
   );
   const { control, handleSubmit } = useForm({ defaultValues });
 
-  const onSubmit = async (formValues: TBlogPostForm) => {
+  const onSubmit = async (formValues: TNewsFeedForm) => {
     try {
-      await addBlogPostMutation({
+      await addNewsFeedMutation({
         variables: {
-          blogFormValues: {
+          newsFeedValues: {
             authorId: '6601e3d09329a7cb0f73d989', // TODO - fetch current user
             ...formValues,
           },
@@ -44,7 +44,7 @@ const BlogForm = () => {
 
   return (
     <Container>
-      <Typography>Blog Form</Typography>
+      <Typography>News Feed Form</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <ControlledInputField control={control} name="title" label="Title" />
         <Divider />
@@ -65,4 +65,4 @@ const BlogForm = () => {
   );
 };
 
-export default BlogForm;
+export default NewsFeedForm;

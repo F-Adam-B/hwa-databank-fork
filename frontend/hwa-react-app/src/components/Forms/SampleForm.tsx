@@ -50,7 +50,11 @@ export type TSampleForm = {
   sampler?: string;
   sampleComment?: string;
   sampleNumber: string;
-  sampleTags?: [];
+  sampleTag1?: string;
+  sampleTag2?: string;
+  sampleTag3?: string;
+  sampleTag4?: string;
+  sampleTag5?: string;
   sampleType: string;
   stationName: string;
   stationNameTwo?: string;
@@ -83,7 +87,11 @@ const defaultValues: TSampleForm = {
     organization: '',
   },
   sampleNumber: '',
-  sampleTags: [],
+  sampleTag1: '',
+  sampleTag2: '',
+  sampleTag3: '',
+  sampleTag4: '',
+  sampleTag5: '',
   sampleType: '',
   stationName: '',
   stationNameTwo: '',
@@ -140,7 +148,6 @@ const SampleForm = () => {
 
   const onSubmit = async (formData: TSampleForm) => {
     const reshapedFormData = cleanFormData(formData);
-    console.log(reshapedFormData, 'reshaped');
     try {
       await addSampleMutation({
         variables: { sampleFormValues: { id: '123', ...reshapedFormData } },
@@ -386,20 +393,39 @@ const SampleForm = () => {
                 label="Watershed Report"
                 name="watershedReport"
               />
-            </Grid>
-            <Grid item xs={12} md={12}>
               <ControlledAutocompleteField
                 control={control}
                 label="Preservation Methods"
                 name="preservationMethods"
                 options={[{ title: 'Preservation1', value: 'value1' }]}
               />
-              <ControlledAutocompleteField
-                control={control}
-                label="Sample Tags"
-                name="sampleTags"
-                options={[{ title: 'Preservation2', value: 'value2' }]}
-              />
+              <Grid item xs={12} md={12}>
+                <ControlledInputField
+                  control={control}
+                  label="Sample Tag 1"
+                  name="sampleTag1"
+                />
+                <ControlledInputField
+                  control={control}
+                  label="Sample Tag 2"
+                  name="sampleTag2"
+                />
+                <ControlledInputField
+                  control={control}
+                  label="Sample Tag 3"
+                  name="sampleTag3"
+                />
+                <ControlledInputField
+                  control={control}
+                  label="Sample Tag 4"
+                  name="sampleTag4"
+                />
+                <ControlledInputField
+                  control={control}
+                  label="Sample Tag 5"
+                  name="sampleTag5"
+                />
+              </Grid>
             </Grid>
             <Grid item xs={12} md={12}>
               <ControlledInputField

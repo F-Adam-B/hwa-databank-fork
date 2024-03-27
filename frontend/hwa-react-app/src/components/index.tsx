@@ -1,4 +1,4 @@
-import BlogPost from './BlogPost/BlogPost';
+import NewsFeed from './NewsFeedPost/NewsFeedPost';
 import ControlledInputField from './ControlledInputField/ControlledInputField';
 import DataGridMUI from './DataGridMUI/DataGridMUI';
 import ErrorPage from './ErrorPage/ErrorPage';
@@ -18,7 +18,7 @@ import CircularProgressIndicator from './CircularProgressIndicator/CircularProgr
 import SimpleDialog from './SimpleDialog/SimpleDialog';
 
 export {
-  BlogPost,
+  NewsFeed,
   CircularProgressIndicator,
   ControlledAutocompleteField,
   ControlledDateField,

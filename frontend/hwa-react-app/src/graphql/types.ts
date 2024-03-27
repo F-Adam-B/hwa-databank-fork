@@ -75,7 +75,7 @@ export type User = {
   createdAt?: string;
 };
 
-export type BlogPost = {
+export type NewsFeed = {
   authorId: ID;
   content: string;
   createdAt?: string;
