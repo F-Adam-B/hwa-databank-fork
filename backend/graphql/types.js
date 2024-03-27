@@ -1,138 +1,162 @@
-import {
-  GraphQLObjectType,
-  GraphQLID,
-  GraphQLString,
-  GraphQLSchema,
-  GraphQLList,
-  GraphQLNonNull,
-  GraphQLEnumType,
-  GraphQLScalarType,
-  GraphQLInputObjectType,
-  GraphQLFloat,
-  GraphQLBoolean,
-} from 'graphql';
+import { gql } from 'apollo-server';
 
-const AnalyteType = new GraphQLObjectType({
-  name: 'Analyte',
-  fields: () => ({
-    analyteName: { type: GraphQLString },
-    characteristics: { type: new GraphQLList(CharacteristicType) },
-  }),
-});
+const typeDefs = gql`
+  scalar Date
+  scalar Upload
 
-const CharacteristicType = new GraphQLObjectType({
-  name: 'Characteristic',
-  fields: () => ({
-    name: { type: GraphQLString },
-    description: { type: GraphQLString },
-    value: { type: GraphQLString },
-  }),
-});
+  type Query {
+    analytes: [AnalyteType]
+    analytesCharacteristics(listOfAnalyteNames: [String]!): [AnalyteType]!
+    formFieldValues: FormFieldType
+    sample(
+      fromDate: Date
+      toDate: Date
+      matrix: String
+      stationName: String
+      organization: String
+      waterBody: String
+      analytes: [String]
+    ): [Sample]
+    samples: [Sample]
+    users: [UserType]
+  }
 
-const FormFieldType = new GraphQLObjectType({
-  name: 'FormField',
-  fields: () => ({
-    uniqueStationNames: { type: GraphQLList(GraphQLString) },
-    uniqueOrganizations: { type: GraphQLList(GraphQLString) },
-    uniqueMatrices: { type: GraphQLList(GraphQLString) },
-    uniqueWaterBodies: { type: GraphQLList(GraphQLString) },
-  }),
-});
+  type Mutation {
+    addSampleMutation(sampleFormValues: SampleFormValuesInputType): Sample
+    addUserMutation(userFormValues: UserFormValuesInputType): UserType
+    addNewsFeedMutation(newsFeedValues: NewsFeedValuesInputType): NewsFeed
+  }
 
-const GraphQLDate = new GraphQLScalarType({
-  name: 'Date',
-  description: 'Date custom scalar type',
-  serialize(value) {
-    return value.toISOString(); // Convert outgoing Date to ISO string
-  },
-  parseValue(value) {
-    return new Date(value); // Convert incoming ISO string to Date
-  },
-  parseLiteral(ast) {
-    if (ast.kind === Kind.STRING) {
-      return new Date(ast.value); // Convert AST literal to Date
-    }
-    return null;
-  },
-});
+  type AnalyteType {
+    analyteName: String
+    characteristics: [Characteristic]
+  }
 
-const LocationType = new GraphQLObjectType({
-  name: 'Location',
-  fields: () => ({
-    coordinates: {
-      type: GraphQLList(GraphQLFloat),
-    },
-    county: { type: GraphQLString },
-    elevation: { type: GraphQLString },
-    elevationToGrade: { type: GraphQLString },
-    locationDescription: { type: GraphQLString },
-  }),
-});
+  type Characteristic {
+    name: String
+    description: String
+    value: String
+  }
 
-const ProjectType = new GraphQLObjectType({
-  name: 'Project',
-  fields: () => ({
-    projectName: { type: GraphQLString },
-    organization: { type: GraphQLString },
-    labName: { type: GraphQLString },
-    labId: { type: GraphQLString },
-  }),
-});
+  type FormFieldType {
+    uniqueStationNames: [String]
+    uniqueOrganizations: [String]
+    uniqueMatrices: [String]
+    uniqueWaterBodies: [String]
+  }
 
-const SampleType = new GraphQLObjectType({
-  name: 'Sample',
-  fields: () => ({
-    analytesTested: { type: new GraphQLList(AnalyteType) },
-    dateCollected: { type: GraphQLString },
-    elevation: { type: GraphQLString },
-    eventId: { type: GraphQLString },
-    location: { type: LocationType },
-    matrix: { type: GraphQLString },
-    project: { type: ProjectType },
-    sampleComment: { type: GraphQLString },
-    sampleDate: { type: GraphQLDate },
-    sampleNumber: { type: GraphQLString },
-    sampler: { type: GraphQLString },
-    sampleTime: { type: GraphQLString },
-    sampleType: { type: GraphQLString },
-    stationName: { type: GraphQLString },
-    stationNameTwo: { type: GraphQLString },
-    waterBody: { type: GraphQLString },
-    waterBodyId: { type: GraphQLString },
-    waterCode: { type: GraphQLString },
-    watershed: { type: GraphQLString },
-    watershedReport: { type: GraphQLString },
-  }),
-});
+  type Location {
+    coordinates: [Float]
+    county: String
+    elevation: String
+    elevationToGrade: String
+    locationDescription: String
+  }
 
-const UserType = new GraphQLObjectType({
-  name: 'User',
-  fields: () => ({
-    username: { type: GraphQLString },
-    email: { type: GraphQLString },
-    isAdmin: { type: GraphQLBoolean },
-    createdAt: { type: GraphQLDate },
-  }),
-});
+  type Project {
+    projectName: String
+    organization: String
+    labName: String
+    labId: String
+  }
 
-const BlogType = new GraphQLObjectType({
-  name: 'BlogPost',
-  fields: () => ({
-    authorId: { type: GraphQLID },
-    content: { type: GraphQLString },
-    createdAt: { type: GraphQLDate },
-    title: { type: GraphQLString },
-  }),
-});
+  type Sample {
+    analytesTested: [AnalyteType]
+    dateCollected: String
+    elevation: String
+    eventId: String
+    location: Location
+    matrix: String
+    project: Project
+    sampleComment: String
+    sampleDate: Date
+    sampleNumber: String
+    sampler: String
+    sampleTime: String
+    sampleType: String
+    stationName: String
+    stationNameTwo: String
+    waterBody: String
+    waterBodyId: String
+    waterCode: String
+    watershed: String
+    watershedReport: String
+  }
 
-export {
-  AnalyteType,
-  BlogType,
-  CharacteristicType,
-  FormFieldType,
-  GraphQLDate,
-  LocationType,
-  ProjectType,
-  SampleType,
-  UserType,
-};
+  type UserType {
+    username: String
+    email: String
+    isAdmin: Boolean
+    createdAt: Date
+  }
+
+  type NewsFeed {
+    authorId: ID
+    content: String
+    createdAt: Date
+    title: String
+  }
+
+  input AnalyteInput {
+    analyteName: String
+    characteristics: [CharacteristicInput]
+  }
+
+  input CharacteristicInput {
+    name: String
+    description: String
+    value: String
+  }
+
+  input LocationInput {
+    coordinates: [Float]
+    county: String
+    elevation: String
+    elevationToGrade: String
+    locationDescription: String
+  }
+
+  input ProjectInput {
+    projectName: String
+    organization: String
+    labName: String
+    labId: String
+  }
+
+  input SampleFormValuesInputType {
+    analytesTested: [AnalyteInput]
+    dateCollected: String
+    elevation: String
+    eventId: String
+    id: ID
+    location: LocationInput
+    matrix: String
+    preservationMethods: [String]
+    project: ProjectInput
+    sampler: String
+    sampleComment: String
+    sampleNumber: String
+    sampleType: String
+    stationName: String
+    stationNameTwo: String
+    timeCollected: String
+    waterBody: String
+    waterBodyId: String
+    waterCode: String
+    watershed: String
+    watershedReport: String
+  }
+
+  input UserFormValuesInputType {
+    username: String!
+    email: String!
+  }
+
+  input NewsFeedValuesInputType {
+    title: String!
+    content: String!
+    authorId: ID!
+  }
+`;
+
+export default typeDefs;

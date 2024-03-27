@@ -1,50 +1,40 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
-import { graphqlHTTP } from 'express-graphql';
+// import { graphqlUploadExpress } from 'graphql-upload';
+import { ApolloServer } from 'apollo-server-express';
 // import {expressGraphQL} from ('express-graphql');
-import { schema } from './graphql/schema.js';
 import cors from 'cors';
-import { createServer } from 'http';
-import { router as waterSampleRouter } from './routes/waterSampleRouter.js';
 import { dbConnect } from './db-mongoose.js';
-import { main } from './helpers/index.js';
-const app = express();
+// import { main } from './helpers/index.js';
+import typeDefs from './graphql/types.js';
+import resolvers from './graphql/resolvers.js';
 
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const startApolloServer = async (typeDefs, resolvers) => {
+  const app = express();
+  app.use(cors());
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
-// app.use('/', router);
-// app.use('/', waterSampleRouter);
-// const root = {
-//   samples: () => {
-//     return 'Hello World!!';
-//   },
-// };
-app.use(
-  '/graphql',
-  graphqlHTTP({
-    schema,
-    graphiql: true,
-  })
-);
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+  });
 
-var port = process.env.PORT || 8000;
+  await server.start();
 
-/**
- * Create HTTP server.
- */
+  server.applyMiddleware({ app, path: '/graphql' });
 
-const server = createServer(app);
+  // app.use(graphqlUploadExpress());
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+  var port = process.env.PORT || 8000;
+  (async () => {
+    await dbConnect(process.env.DATABASE_URL);
+  })();
 
-await dbConnect(process.env.DATABASE_URL);
+  app.listen(port, () => {
+    console.log(`Server running on http://localhost:8000`);
+  });
+};
 
-// main();
-server.listen(port, () => {
-  console.log(`Server running on http://localhost:8000`);
-});
+startApolloServer(typeDefs, resolvers);
