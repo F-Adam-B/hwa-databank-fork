@@ -80,16 +80,6 @@ const transformData = (input, idx) => {
     labId: input.LabID,
   };
 
-  // Build tag information
-
-  const tags = {
-    sampletag1: input.sampletag1,
-    sampletag2: input.sampletag2,
-    sampletag3: input.sampletag3,
-    sampletag4: input.sampletag4,
-    sampletag5: input.sampletag5,
-  };
-
   // Create the transformed water sample object
   const transformedSample = {
     location: {
@@ -112,7 +102,11 @@ const transformData = (input, idx) => {
     sampler: input.Sampler,
     stationNameOne: input.StationName,
     stationNameTwo: input.StationName2,
-    sampleTags: tags,
+    sampleTag1: input.Sampletag1,
+    sampleTag2: input.Sampletag2,
+    sampleTag3: input.Sampletag3,
+    sampleTag4: input.Sampletag4,
+    sampleTag5: input.Sampletag5,
     waterBody: input.WaterBody,
     waterBodyId: input.WaterBodyId,
     waterCode: input.WaterCode,
