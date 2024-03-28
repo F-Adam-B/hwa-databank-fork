@@ -4,8 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { ThemeProvider } from '@mui/material/styles';
-import { Provider } from 'react-redux';
-import { store } from './app/store';
+
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
@@ -24,17 +23,15 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <Provider store={store}>
-        <UsersProvider>
-          <DropdownOptionsProvider>
-            <MapProvider>
-              {/* <ThemeProvider theme={themeOptions}> */}
-              {/* <App /> */}
-              <RouterProvider router={router} />
-            </MapProvider>
-          </DropdownOptionsProvider>
-        </UsersProvider>
-      </Provider>
+      <UsersProvider>
+        <DropdownOptionsProvider>
+          <MapProvider>
+            {/* <ThemeProvider theme={themeOptions}> */}
+            {/* <App /> */}
+            <RouterProvider router={router} />
+          </MapProvider>
+        </DropdownOptionsProvider>
+      </UsersProvider>
     </ApolloProvider>
     {/* </ThemeProvider> */}
   </React.StrictMode>

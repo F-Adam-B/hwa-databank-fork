@@ -10,13 +10,10 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 
-import { removeSelectedSample } from '../../features/samples/sampleSlice';
-
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
 const SideBar = () => {
   const selectedSample = useSelector((state: any) => state.sample);
-  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
 
   const toggleDrawer =
@@ -28,8 +25,6 @@ const SideBar = () => {
       ) {
         return;
       }
-
-      dispatch(removeSelectedSample({}));
     };
 
   const list = (anchor: Anchor) => (
