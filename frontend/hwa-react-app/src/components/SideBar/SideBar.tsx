@@ -1,5 +1,4 @@
 import React, { useState, KeyboardEvent, MouseEvent, Fragment } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
@@ -13,7 +12,6 @@ import ListItemText from '@mui/material/ListItemText';
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
 const SideBar = () => {
-  const selectedSample = useSelector((state: any) => state.sample);
   const [open, setOpen] = useState(false);
 
   const toggleDrawer =
@@ -59,7 +57,7 @@ const SideBar = () => {
         {/* <Button onClick={toggleDrawer('right', true)}>{anchor}</Button> */}
         <Drawer
           anchor={'right'}
-          open={!!selectedSample['_id']}
+          open={open}
           onClose={toggleDrawer('right', false)}
         >
           {list('right')}
