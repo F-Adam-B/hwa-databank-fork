@@ -19,7 +19,7 @@ interface Query {
 }
 
 // Sample Types
-interface Sample {
+export interface Sample {
   id: ID;
   location?: Location;
   matrix?: string;
@@ -30,6 +30,43 @@ interface Sample {
   waterBody?: string;
   watershed?: string;
 }
+
+export interface NewsFeedProps {
+  author: string;
+  date: string;
+  content: string;
+  imageUrl: string;
+  imageLabel: string;
+  title: string;
+}
+
+export type SampleType = {
+  _id: number | null;
+  id: number | null;
+  createdAt: string;
+  elementsTested: {
+    description: string;
+    elementName: string;
+    value: string;
+  }[];
+  location: {
+    coordinates: [number, number];
+    county: string;
+    type: string;
+  };
+  matrix: string;
+  project: {
+    _id: number | null;
+    organization: string;
+    projectName: string;
+  };
+  sampleDate: string;
+  sampleNumber: string;
+  sampleTime: string;
+  stationName: string;
+  stationNameTwo: string;
+  updatedAt: string;
+};
 
 interface Location {
   coordinates?: Float[]; // Assuming it's an optional array of floats for latitude and longitude
