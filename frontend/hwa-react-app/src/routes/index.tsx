@@ -27,6 +27,7 @@ const routes: RouteObject[] = [
         <NewsFeed />
       </>
     ),
+    errorElement: <ErrorPage />,
   },
   {
     path: '/newsfeedform',
