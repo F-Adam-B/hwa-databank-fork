@@ -1,7 +1,9 @@
+import { startSession } from 'mongoose';
 import { Analytes } from '../models/analyteModel.js';
 import { NewsFeed } from '../models/newsFeedModel.js';
 import { User } from '../models/userModel.js';
 import { WaterSample } from '../models/waterSampleModel.js';
+import { storeUpload } from '../utils/index.js';
 
 const resolvers = {
   Query: {
@@ -113,20 +115,39 @@ const resolvers = {
   },
   Mutation: {
     addNewsFeedMutation: async (_parent, { newsFeedValues }) => {
-      const { authorId, ...rest } = newsFeedValues;
+      const { authorId, content, imageFile } = newsFeedValues;
+      const session = await startSession();
       try {
-        const authorExists = await User.findById(authorId);
+        session.startTransaction();
+        const authorExists = await User.findById(authorId).session(session);
+        if (!authorExists) {
+          throw new Error('User does not exist');
+        }
+
+        let outFile;
+        if (imageFile) {
+          const {
+            file: { createReadStream, filename },
+          } = await imageFile;
+          // Store the file in the filesystem.
+          outFile = await storeUpload({ createReadStream, filename });
+        }
 
         const newNewsFeed = new NewsFeed({
           authorId: authorExists['_id'],
-          ...rest,
+          content,
+          imageUrl: outFile,
         });
+        const response = await newNewsFeed.save({ session });
+        await session.commitTransaction();
 
-        const response = await newNewsFeed.save();
         return response;
       } catch (error) {
         console.log('Error adding blog post', error);
-        throw new Error(error);
+        await session.abortTransaction();
+        throw new Error('Error saving blog post');
+      } finally {
+        await session.endSession();
       }
     },
     addSampleMutation: async (_parent, args) => {
