@@ -4,6 +4,12 @@ const typeDefs = gql`
   scalar Date
   scalar Upload
 
+  input File {
+    name: String!
+    type: String!
+    size: Int!
+  }
+
   type Query {
     analytes: [AnalyteType]
     analytesCharacteristics(listOfAnalyteNames: [String]!): [AnalyteType]!
@@ -94,7 +100,7 @@ const typeDefs = gql`
     authorId: ID
     content: String
     createdAt: Date
-    title: String
+    imageUrl: String
   }
 
   input AnalyteInput {
@@ -153,9 +159,9 @@ const typeDefs = gql`
   }
 
   input NewsFeedValuesInputType {
-    title: String!
     content: String!
     authorId: ID!
+    imageFile: Upload
   }
 `;
 

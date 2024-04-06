@@ -60,7 +60,7 @@ type NewsFeed {
   authorId: ID
   content: String
   createdAt: Date
-  imageFile: String
+  imageUrl: String
 }
 
 type CharacteristicType {
@@ -119,7 +119,7 @@ input File {
 input NewsFeedValuesInputType {
   content: String!
   authorId: ID!
-  imageFile: File
+  imageFile: Upload
 }
 
 input CharacteristicInput {
