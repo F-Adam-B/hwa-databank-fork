@@ -3,10 +3,6 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const NewsFeedSchema = new Schema({
-  title: {
-    type: String,
-    required: true,
-  },
   content: {
     type: String,
     required: true,
@@ -15,7 +11,7 @@ const NewsFeedSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
   },
-  image: {
+  imageUrl: {
     type: String,
   },
   createdAt: {
