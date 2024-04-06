@@ -48,6 +48,7 @@ const defaultValues: TNewsFeedForm = {
 
 const NewsFeedForm = () => {
   const listOfUsers = useContext(UsersContext);
+
   const { control, handleSubmit, register, setValue } = useForm();
   const hiddenFileInput = useRef<HTMLInputElement>(null);
 
@@ -56,21 +57,20 @@ const NewsFeedForm = () => {
   );
 
   const onSubmit = async (formValues: any) => {
-    const { content, image, ...rest } = formValues;
-    const uploadedFile = image[0];
+    const { content, image } = formValues;
+
+    let uploadedFile;
+    if (image) {
+      uploadedFile = image[0];
+    }
 
     try {
       await addNewsFeedMutation({
         variables: {
           newsFeedValues: {
-            authorId: '6601e3d09329a7cb0f73d989', // TODO - fetch current user
+            authorId: '6601e3d09329a7cb0f73d989', // TODO - fetch current user & add check if authorized
             content,
-            imageFile: {
-              lastModified: uploadedFile?.lastModified,
-              name: uploadedFile?.name,
-              size: uploadedFile?.size,
-              type: uploadedFile?.type,
-            },
+            imageFile: uploadedFile,
           },
         },
       });
