@@ -5,7 +5,7 @@ export const ADD_BLOG_POST_MUTATION = gql`
     addNewsFeedMutation(newsFeedValues: $newsFeedValues) {
       authorId
       content
-      title
+      imageFile
     }
   }
 `;

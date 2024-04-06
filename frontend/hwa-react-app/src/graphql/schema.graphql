@@ -1,4 +1,5 @@
 scalar Date
+scalar Upload
 
 type Query {
   analytes: [AnalyteType]
@@ -58,7 +59,8 @@ type AnalyteType {
 type NewsFeed {
   authorId: ID
   content: String
-  title: String
+  createdAt: Date
+  imageFile: String
 }
 
 type CharacteristicType {
@@ -108,10 +110,16 @@ input AnalyteInputType {
   characteristics: [CharacteristicInput]
 }
 
+input File {
+  name: String!
+  type: String!
+  size: Int!
+}
+
 input NewsFeedValuesInputType {
-  title: String!
   content: String!
   authorId: ID!
+  imageFile: File
 }
 
 input CharacteristicInput {

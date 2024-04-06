@@ -1,55 +1,42 @@
-import * as React from 'react';
-import { Box, Divider, Typography } from '@mui/material';
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
+import { Container } from '@mui/material';
+import { NewsFeedCard, NewsFeedForm } from '../index';
 
-interface NewsFeedProps {
-  post: {
-    date: string;
-    content: string;
-    image: string;
-    imageLabel: string;
-    title: string;
-  };
-}
+import img from './IMG_0090.jpeg';
 
 const NewsFeed = () => {
   const posts = [
     {
+      id: '1',
       title: 'Blog1',
       date: 'June 2, 3939',
-      content: 'Some blog description',
+      content:
+        'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica',
       imageLabel: 'Image label',
+      imageUrl: img,
+      author: 'Adam Bradbury',
+    },
+    {
+      id: '2',
+      title: 'Blog2',
+      date: 'June 4, 3939',
+      content:
+        'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica',
+      imageLabel: 'Image label',
+      imageUrl: img,
+      author: 'Cara Bradbury',
     },
   ];
   return (
-    <Grid
-      item
-      xs={12}
-      md={8}
-      sx={{
-        '& .markdown': {
-          py: 3,
-        },
-      }}
-    >
-      {posts.map((post) => (
-        <Box>
-          <Typography variant="h6" gutterBottom>
-            {post.title}
-          </Typography>
-          <Divider />
-          <Card>
-            <CardContent className="markdown" key={post.title}>
-              {post.content}
-            </CardContent>
-          </Card>
-        </Box>
-      ))}
-    </Grid>
+    <>
+      <NewsFeedForm />
+      <Container sx={{ marginBottom: '5em' }}>
+        {posts.map((post) => (
+          <>
+            <NewsFeedCard {...post} />
+          </>
+        ))}
+      </Container>
+    </>
   );
 };
 

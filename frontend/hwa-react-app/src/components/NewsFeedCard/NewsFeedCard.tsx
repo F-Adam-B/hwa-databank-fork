@@ -13,7 +13,7 @@ const NewsFeedCard = (post: NewsFeedProps) => {
     <Card sx={{ marginTop: '2em' }}>
       <CardHeader subheader={post.date} title={post.author} />
       <CardMedia
-        sx={{ height: 140 }}
+        sx={{ height: 200 }}
         image={post.imageUrl}
         title="fuel sensor"
       />
@@ -22,6 +22,11 @@ const NewsFeedCard = (post: NewsFeedProps) => {
           {post.content}
         </Typography>
       </CardContent>
+      <CardActions>
+        <Button color="error" size="small">
+          Delete
+        </Button>
+      </CardActions>
     </Card>
   );
 };
