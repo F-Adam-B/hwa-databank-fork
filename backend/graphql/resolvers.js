@@ -120,8 +120,9 @@ const resolvers = {
       try {
         session.startTransaction();
         const authorExists = await User.findById(authorId).session(session);
-        if (!authorExists) {
-          throw new Error('User does not exist');
+        console.log(!!authorExists, authorExists);
+        if (!authorExists || !authorExists.isAdmin) {
+          throw new Error('User does not exist or is not authorized to post');
         }
 
         let outFile;
