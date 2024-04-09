@@ -43,10 +43,20 @@ const resolvers = {
         throw new Error('Error fetching distinct values'); // Propagate the error up to GraphQL
       }
     },
+    newsFeedPosts: async () => {
+      try {
+        const response = await NewsFeed.find();
+        return response;
+      } catch (error) {
+        console.error('Error retrieving news feed posts: ', error);
+        throw new Error(error);
+      }
+    },
     samples: async () => {
-      return await WaterSample.find({
+      const response = await WaterSample.find({
         'location.coordinates': { $ne: [null, null] },
       });
+      return response;
     },
     sample: async (_parent, args) => {
       const {
