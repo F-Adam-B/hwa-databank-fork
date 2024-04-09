@@ -14,6 +14,7 @@ const typeDefs = gql`
     analytes: [AnalyteType]
     analytesCharacteristics(listOfAnalyteNames: [String]!): [AnalyteType]!
     formFieldValues: FormFieldType
+    newsFeedPosts: [NewsFeed]
     sample(
       fromDate: Date
       toDate: Date

@@ -5,6 +5,7 @@ type Query {
   analytes: [AnalyteType]
   analytesCharacteristics(listOfAnalyteNames: [String]!): [AnalyteType]
   formFieldValues: FormFieldValueType
+  newsFeedPosts: [NewsFeed]
   sample(
     fromDate: Date
     toDate: Date
