@@ -3,7 +3,7 @@ import { Analytes } from '../models/analyteModel.js';
 import { NewsFeed } from '../models/newsFeedModel.js';
 import { User } from '../models/userModel.js';
 import { WaterSample } from '../models/waterSampleModel.js';
-import { storeUpload } from '../utils/index.js';
+import { storeUpload, updateImageUrls } from '../utils/index.js';
 
 const resolvers = {
   Query: {
@@ -46,7 +46,8 @@ const resolvers = {
     newsFeedPosts: async () => {
       try {
         const response = await NewsFeed.find();
-        return response;
+        const updatedResponse = updateImageUrls(response, process.env.BASE_URL);
+        return updatedResponse;
       } catch (error) {
         console.error('Error retrieving news feed posts: ', error);
         throw new Error(error);
