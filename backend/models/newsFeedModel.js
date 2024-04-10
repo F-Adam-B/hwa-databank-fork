@@ -5,11 +5,11 @@ const { Schema } = mongoose;
 const NewsFeedSchema = new Schema({
   content: {
     type: String,
-    required: true,
   },
   authorId: {
     type: Schema.Types.ObjectId,
     ref: 'User',
+    required: true,
   },
   imageUrl: {
     type: String,
