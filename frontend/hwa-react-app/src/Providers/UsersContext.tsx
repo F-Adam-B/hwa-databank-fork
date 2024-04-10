@@ -6,9 +6,18 @@ import { GET_USERS_QUERY } from '../graphql/queries/userQueries';
 export const UsersContext = createContext<User[]>([]);
 
 const UsersProvider = ({ children }: TChildrenProps) => {
-  const { data } = useQuery(GET_USERS_QUERY);
+  const { data, loading, error } = useQuery(GET_USERS_QUERY);
+  if (error) {
+    return <div>Error fetching users! {error.message}</div>;
+  }
 
-  return <UsersContext.Provider value={data}>{children}</UsersContext.Provider>;
+  if (!data?.users) {
+    return null;
+  }
+
+  return (
+    <UsersContext.Provider value={data.users}>{children}</UsersContext.Provider>
+  );
 };
 
 export default UsersProvider;
