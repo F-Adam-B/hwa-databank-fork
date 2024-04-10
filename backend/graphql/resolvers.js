@@ -5,6 +5,13 @@ import { User } from '../models/userModel.js';
 import { WaterSample } from '../models/waterSampleModel.js';
 import { storeUpload, updateNewsFeedResponse } from '../utils/index.js';
 
+import { unlink } from 'fs/promises';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const resolvers = {
   Query: {
     formFieldValues: async () => {
@@ -185,6 +192,32 @@ const resolvers = {
       } catch (error) {
         console.error('Error adding user to database', error);
         return new Error(error);
+      }
+    },
+    deleteNewsFeed: async (_parent, args) => {
+      const { id } = args;
+
+      try {
+        const newsFeedToBeDeleted = await NewsFeed.findById(id);
+        if (!newsFeedToBeDeleted) {
+          throw new Error('Post not found');
+        }
+        if (newsFeedToBeDeleted.imageUrl) {
+          const imagePath = path.join(
+            __dirname,
+            '..',
+            newsFeedToBeDeleted.imageUrl
+          );
+
+          await unlink(imagePath);
+        }
+
+        const newsFeedDeletedResponse = await NewsFeed.findByIdAndDelete(id);
+
+        return newsFeedDeletedResponse;
+      } catch (error) {
+        console.error('Error deleting news feed post: ', error);
+        throw new Error(error);
       }
     },
   },
