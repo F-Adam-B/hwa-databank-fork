@@ -15,7 +15,7 @@ const storeUpload = async ({ createReadStream, filename }) => {
   return filePath;
 };
 
-const updateImageUrls = (dataArray, baseUrl) => {
+const updateNewsFeedResponse = (dataArray, baseUrl) => {
   return dataArray.map((item) => {
     if (item.imageUrl && item.imageUrl.startsWith('public/')) {
       item.imageUrl = `${baseUrl}${item.imageUrl.substring('public/'.length)}`;
@@ -24,4 +24,4 @@ const updateImageUrls = (dataArray, baseUrl) => {
   });
 };
 
-export { storeUpload, updateImageUrls };
+export { storeUpload, updateNewsFeedResponse };
