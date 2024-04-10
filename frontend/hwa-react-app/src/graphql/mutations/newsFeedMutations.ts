@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const ADD_BLOG_POST_MUTATION = gql`
+export const SAVE_NEWS_FEED_POST = gql`
   mutation AddNewsFeedMutation($newsFeedValues: NewsFeedValuesInputType!) {
     addNewsFeedMutation(newsFeedValues: $newsFeedValues) {
       authorId
