@@ -120,7 +120,7 @@ input File {
 }
 
 input NewsFeedValuesInputType {
-  content: String!
+  content: String
   authorId: ID!
   imageFile: Upload
 }

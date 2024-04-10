@@ -162,7 +162,7 @@ const typeDefs = gql`
   }
 
   input NewsFeedValuesInputType {
-    content: String!
+    content: String
     authorId: ID!
     imageFile: Upload
   }
