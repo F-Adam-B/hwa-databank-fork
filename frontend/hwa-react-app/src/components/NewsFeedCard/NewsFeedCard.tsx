@@ -20,14 +20,30 @@ const NewsFeedCard = (post: NewsFeedCardProps) => {
         title={post.authorName}
       />
       {post.imageUrl && (
-        <CardMedia
-          sx={{ height: 200 }}
-          image={post.imageUrl}
-          title="fuel sensor"
-        />
+        <Container
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '400px',
+          }}
+        >
+          <CardMedia
+            component="img"
+            sx={{
+              maxHeight: '100%',
+              maxWidth: '100%',
+              width: 'auto',
+              height: 'auto',
+              objectFit: 'contain',
+            }}
+            image={post.imageUrl}
+            alt={`Post by ${post.authorName}`}
+          />
+        </Container>
       )}
       <CardContent>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" align="center">
           {post.content}
         </Typography>
       </CardContent>
