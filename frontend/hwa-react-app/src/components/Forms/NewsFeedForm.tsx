@@ -47,8 +47,6 @@ const defaultValues: TNewsFeedForm = {
 };
 
 const NewsFeedForm = () => {
-  const listOfUsers = useContext(UsersContext);
-
   const { control, handleSubmit, register, setValue } = useForm();
   const hiddenFileInput = useRef<HTMLInputElement>(null);
 
