@@ -91,6 +91,7 @@ const typeDefs = gql`
   }
 
   type UserType {
+    id: ID!
     username: String
     email: String
     isAdmin: Boolean
@@ -98,6 +99,7 @@ const typeDefs = gql`
   }
 
   type NewsFeed {
+    id: ID!
     authorId: ID
     content: String
     createdAt: Date
