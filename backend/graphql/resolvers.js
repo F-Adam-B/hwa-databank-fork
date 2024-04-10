@@ -134,7 +134,6 @@ const resolvers = {
       try {
         session.startTransaction();
         const authorExists = await User.findById(authorId).session(session);
-        console.log(!!authorExists, authorExists);
         if (!authorExists || !authorExists.isAdmin) {
           throw new Error('User does not exist or is not authorized to post');
         }
@@ -158,9 +157,9 @@ const resolvers = {
 
         return response;
       } catch (error) {
-        console.log('Error adding blog post', error);
+        console.error('Error adding news feed post', error);
         await session.abortTransaction();
-        throw new Error('Error saving blog post');
+        throw new Error('Error saving news feed post');
       } finally {
         await session.endSession();
       }
