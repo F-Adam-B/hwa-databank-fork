@@ -45,7 +45,7 @@ const resolvers = {
     },
     newsFeedPosts: async () => {
       try {
-        const response = await NewsFeed.find();
+        const response = await NewsFeed.find().sort({ createdAt: -1 });
         const updatedResponse = updateNewsFeedResponse(
           response,
           process.env.BASE_URL
