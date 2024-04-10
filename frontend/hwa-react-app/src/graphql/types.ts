@@ -32,12 +32,11 @@ export interface Sample {
 }
 
 export interface NewsFeedProps {
-  author: string;
-  date: string;
+  id: ID;
+  authorId: string;
+  createdAt: string;
   content: string;
   imageUrl: string;
-  imageLabel: string;
-  title: string;
 }
 
 export type SampleType = {
@@ -106,6 +105,7 @@ export interface ProjectInputType {
 }
 
 export type User = {
+  id: ID;
   username: string;
   email: string;
   isAdmin: string;
@@ -122,3 +122,15 @@ export type NewsFeed = {
 export type TChildrenProps = {
   children: ReactNode;
 };
+
+export type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: JsonValue }
+  | JsonValue[];
+
+export interface GenericObject {
+  [key: string]: JsonValue;
+}

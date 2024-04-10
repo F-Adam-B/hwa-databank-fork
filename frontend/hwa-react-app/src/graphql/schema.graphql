@@ -58,6 +58,7 @@ type AnalyteType {
 }
 
 type NewsFeed {
+  id: ID!
   authorId: ID
   content: String
   createdAt: Date
@@ -71,6 +72,7 @@ type CharacteristicType {
 }
 
 type User {
+  id: ID
   username: String
   email: String
   isAdmin: String
