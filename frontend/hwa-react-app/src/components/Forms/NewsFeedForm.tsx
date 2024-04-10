@@ -16,6 +16,7 @@ import {
   Paper,
   InputBase,
   IconButton,
+  Alert,
 } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -30,28 +31,38 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import { DevTool } from '@hookform/devtools';
 
 import { NewsFeed } from '../../graphql/types';
-import { ADD_BLOG_POST_MUTATION } from '../../graphql/mutations/blogMutations';
+import { SAVE_NEWS_FEED_POST } from '../../graphql/mutations/newsFeedMutations';
 import { UsersContext } from '../../Providers/UsersContext';
 import FileUploader from '../FileUploader/FileUploader';
+import { NEWS_FEED_QUERY } from '../../graphql/queries/newFeedQueries';
 
 type TNewsFeedForm = {
   content: string;
-  file?: File | undefined;
-  title: string;
+  image?: File | undefined;
 };
 
 const defaultValues: TNewsFeedForm = {
   content: '',
-  file: undefined,
-  title: '',
+  image: undefined,
 };
 
 const NewsFeedForm = () => {
-  const { control, handleSubmit, register, setValue } = useForm();
+  const { control, handleSubmit, reset, register, setValue, watch } = useForm({
+    defaultValues,
+  });
   const hiddenFileInput = useRef<HTMLInputElement>(null);
+  const [file, setFile] = useState<File | null>();
 
-  const [addNewsFeedMutation, { data: addNewsFeedData }] = useMutation(
-    ADD_BLOG_POST_MUTATION
+  const [
+    addNewsFeedMutation,
+    { data: addNewsFeedData, error: addNewsFeedError },
+  ] = useMutation(SAVE_NEWS_FEED_POST, {
+    refetchQueries: [NEWS_FEED_QUERY],
+  });
+
+  const watchAllFields = watch();
+  const atLeastOneFieldFilledIn = Object.values(watchAllFields).some(
+    (value) => value
   );
 
   const onSubmit = async (formValues: any) => {
@@ -59,21 +70,23 @@ const NewsFeedForm = () => {
 
     let uploadedFile;
     if (image) {
-      uploadedFile = image[0];
+      uploadedFile = image;
     }
 
     try {
       await addNewsFeedMutation({
         variables: {
           newsFeedValues: {
-            authorId: '6601e3d09329a7cb0f73d989', // TODO - fetch current user & add check if authorized
+            authorId: '6604977667d171225cec046f', // TODO - fetch current user & add check if authorized
             content,
             imageFile: uploadedFile,
           },
         },
       });
+      reset();
+      setFile(null);
     } catch (error) {
-      console.error('Error saving blog post: ', error);
+      console.error('Error saving news feed post: ', error);
     }
   };
 
@@ -85,7 +98,8 @@ const NewsFeedForm = () => {
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      setValue('image', event.target.files);
+      setFile(event.target.files[0]);
+      setValue('image', event.target.files[0]);
     }
   };
 
@@ -94,8 +108,8 @@ const NewsFeedForm = () => {
   }, [register]);
 
   return (
-    <Container sx={{ display: 'flex' }}>
-      <Box sx={{ marginTop: '2em', width: '55em' }}>
+    <Container sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ marginTop: '2em' }}>
         <Paper
           component="form"
           id="newsFeedForm"
@@ -122,7 +136,13 @@ const NewsFeedForm = () => {
         </Paper>
       </Box>
 
-      <Box sx={{ marginTop: '2em' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+        }}
+      >
         <IconButton
           type="button"
           onClick={handleUploadClick}
@@ -131,10 +151,21 @@ const NewsFeedForm = () => {
         >
           <UploadIcon />
         </IconButton>
+        <Typography variant="caption">{file?.name}</Typography>
         <DevTool control={control} />
-        <Button form="newsFeedForm" type="submit">
+        <Button
+          form="newsFeedForm"
+          type="submit"
+          disabled={!atLeastOneFieldFilledIn}
+        >
           Save Post
         </Button>
+      </Box>
+      <Box>
+        {addNewsFeedData && <Alert severity="success">News feed saved</Alert>}
+        {addNewsFeedError && (
+          <Alert severity="error">Error saving news feed post</Alert>
+        )}
       </Box>
     </Container>
   );
