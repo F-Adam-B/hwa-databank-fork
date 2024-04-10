@@ -1,40 +1,46 @@
-import { Container } from '@mui/material';
+import { useContext } from 'react';
+import { Card, CardContent, Container, Typography } from '@mui/material';
 import { NewsFeedCard, NewsFeedForm } from '../index';
+import { useQuery } from '@apollo/client';
 
-import img from './IMG_0090.jpeg';
+import { UsersContext } from '../../Providers/UsersContext';
+import { NEWS_FEED_QUERY } from '../../graphql/queries/newFeedQueries';
+import { NewsFeedProps } from '../../graphql/types';
+
+const EmptyNewsFeedDisplay = () => {
+  return (
+    <Container>
+      <Card sx={{ marginTop: '2em' }}>
+        <CardContent>
+          <Typography variant="body2" color="text.secondary">
+            No News Feed Posts to Display
+          </Typography>
+        </CardContent>
+      </Card>
+    </Container>
+  );
+};
 
 const NewsFeed = () => {
-  const posts = [
-    {
-      id: '1',
-      title: 'Blog1',
-      date: 'June 2, 3939',
-      content:
-        'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica',
-      imageLabel: 'Image label',
-      imageUrl: img,
-      author: 'Adam Bradbury',
-    },
-    {
-      id: '2',
-      title: 'Blog2',
-      date: 'June 4, 3939',
-      content:
-        'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica',
-      imageLabel: 'Image label',
-      imageUrl: img,
-      author: 'Cara Bradbury',
-    },
-  ];
+  const listOfUsers = useContext(UsersContext);
+
+  const { data, loading } = useQuery(NEWS_FEED_QUERY);
+
+  if (loading) return <>Loading...</>;
+  if (!data?.newsFeedPosts.length) return <EmptyNewsFeedDisplay />;
   return (
     <>
       <NewsFeedForm />
       <Container sx={{ marginBottom: '5em' }}>
-        {posts.map((post) => (
-          <>
-            <NewsFeedCard {...post} />
-          </>
-        ))}
+        {data.newsFeedPosts.map(({ authorId, ...rest }: NewsFeedProps) => {
+          // TODO: Will need to get actual name from Auth0;
+          const authorName = listOfUsers.find(
+            (user) => user.id === authorId
+          )?.username;
+          return (
+            <NewsFeedCard key={rest.id} authorName={authorName} {...rest} />
+          );
+        })}
       </Container>
     </>
   );
