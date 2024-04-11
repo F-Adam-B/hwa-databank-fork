@@ -47,6 +47,13 @@ const defaultValues: TNewsFeedForm = {
   image: undefined,
 };
 
+const currentUser = {
+  id: '6601e3d09329a7cb0f73d989',
+  username: 'fadambrad',
+  isAdmin: true,
+  __typename: 'UserType',
+};
+
 const NewsFeedForm = () => {
   const { control, handleSubmit, reset, register, setValue, watch } = useForm({
     defaultValues,
@@ -165,9 +172,15 @@ const NewsFeedForm = () => {
         </Button>
       </Box>
       <Box>
-        {addNewsFeedData && <Alert severity="success">News feed saved</Alert>}
-        {addNewsFeedError && (
-          <Alert severity="error">Error saving news feed post</Alert>
+        {currentUser.isAdmin && (
+          <>
+            {addNewsFeedData && (
+              <Alert severity="success">News feed saved</Alert>
+            )}
+            {addNewsFeedError && (
+              <Alert severity="error">Error saving news feed post</Alert>
+            )}
+          </>
         )}
       </Box>
     </Container>
