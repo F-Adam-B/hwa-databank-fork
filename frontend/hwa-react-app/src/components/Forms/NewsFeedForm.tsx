@@ -17,6 +17,7 @@ import {
   InputBase,
   IconButton,
   Alert,
+  Tooltip,
 } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -143,14 +144,16 @@ const NewsFeedForm = () => {
           alignItems: 'center',
         }}
       >
-        <IconButton
-          type="button"
-          onClick={handleUploadClick}
-          sx={{ p: '10px' }}
-          aria-label="upload image"
-        >
-          <UploadIcon />
-        </IconButton>
+        <Tooltip title="Upload Image">
+          <IconButton
+            type="button"
+            onClick={handleUploadClick}
+            sx={{ p: '10px' }}
+            aria-label="upload image"
+          >
+            <UploadIcon />
+          </IconButton>
+        </Tooltip>
         <Typography variant="caption">{file?.name}</Typography>
         <DevTool control={control} />
         <Button
