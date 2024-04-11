@@ -108,7 +108,7 @@ export type User = {
   id: ID;
   username: string;
   email: string;
-  isAdmin: string;
+  isAdmin: boolean;
   createdAt?: string;
 };
 
