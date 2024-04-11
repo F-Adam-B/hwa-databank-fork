@@ -32,7 +32,7 @@ const typeDefs = gql`
     addSampleMutation(sampleFormValues: SampleFormValuesInputType): Sample
     addUserMutation(userFormValues: UserFormValuesInputType): UserType
     addNewsFeedMutation(newsFeedValues: NewsFeedValuesInputType): NewsFeed
-    deleteNewsFeed(id: ID!): NewsFeed
+    deleteNewsFeedMutation(id: ID!): NewsFeed
   }
 
   type AnalyteType {

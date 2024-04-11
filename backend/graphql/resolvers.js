@@ -194,7 +194,7 @@ const resolvers = {
         return new Error(error);
       }
     },
-    deleteNewsFeed: async (_parent, args) => {
+    deleteNewsFeedMutation: async (_parent, args) => {
       const { id } = args;
 
       try {
