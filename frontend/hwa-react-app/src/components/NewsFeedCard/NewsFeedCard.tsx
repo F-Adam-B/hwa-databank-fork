@@ -10,16 +10,18 @@ import { NewsFeedProps } from '../../graphql/types';
 
 interface NewsFeedCardProps extends Omit<NewsFeedProps, 'authorId'> {
   authorName?: string;
+  onDelete: (id: string) => void;
 }
 
 const NewsFeedCard = (post: NewsFeedCardProps) => {
+  const { authorName, createdAt, imageUrl, onDelete, id } = post;
   return (
-    <Card sx={{ marginTop: '2em' }}>
+    <Card sx={{ marginTop: '2em', maxWidth: '600px', maxHeight: '800px' }}>
       <CardHeader
-        subheader={formatTimestamp(post.createdAt)}
+        subheader={formatTimestamp(createdAt)}
         title={post.authorName}
       />
-      {post.imageUrl && (
+      {imageUrl && (
         <Container
           sx={{
             display: 'flex',
@@ -37,8 +39,8 @@ const NewsFeedCard = (post: NewsFeedCardProps) => {
               height: 'auto',
               objectFit: 'contain',
             }}
-            image={post.imageUrl}
-            alt={`Post by ${post.authorName}`}
+            image={imageUrl}
+            alt={`Post by ${authorName}`}
           />
         </Container>
       )}
@@ -48,7 +50,7 @@ const NewsFeedCard = (post: NewsFeedCardProps) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button color="error" size="small">
+        <Button onClick={() => onDelete(id)} color="error" size="small">
           Delete
         </Button>
       </CardActions>
