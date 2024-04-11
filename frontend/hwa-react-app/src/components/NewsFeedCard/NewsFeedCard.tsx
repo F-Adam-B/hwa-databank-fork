@@ -16,7 +16,7 @@ interface NewsFeedCardProps extends Omit<NewsFeedProps, 'authorId'> {
 const NewsFeedCard = (post: NewsFeedCardProps) => {
   const { authorName, createdAt, imageUrl, onDelete, id } = post;
   return (
-    <Card sx={{ marginTop: '2em', maxWidth: '600px', maxHeight: '800px' }}>
+    <Card sx={{ marginTop: '2em', maxWidth: '600px' }}>
       <CardHeader
         subheader={formatTimestamp(createdAt)}
         title={post.authorName}
