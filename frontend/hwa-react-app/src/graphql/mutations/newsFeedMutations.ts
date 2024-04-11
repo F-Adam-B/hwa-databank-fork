@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const SAVE_NEWS_FEED_POST = gql`
+const SAVE_NEWS_FEED_POST = gql`
   mutation AddNewsFeedMutation($newsFeedValues: NewsFeedValuesInputType!) {
     addNewsFeedMutation(newsFeedValues: $newsFeedValues) {
       authorId
@@ -9,3 +9,16 @@ export const SAVE_NEWS_FEED_POST = gql`
     }
   }
 `;
+
+const DELETE_NEWS_FEED_POST = gql`
+  mutation DeleteNewsFeed($id: ID!) {
+    deleteNewsFeedMutation(id: $id) {
+      createdAt
+      content
+      authorId
+      imageUrl
+      id
+    }
+  }
+`;
+export { DELETE_NEWS_FEED_POST, SAVE_NEWS_FEED_POST };
