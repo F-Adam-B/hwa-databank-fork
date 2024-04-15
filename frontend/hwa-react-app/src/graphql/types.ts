@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 // Define basic scalar types that might be represented differently on the server-side.
 // For dates, a string in ISO format could be used on the client-side.
 type Date = string;
@@ -18,7 +19,7 @@ interface Query {
 }
 
 // Sample Types
-interface Sample {
+export interface Sample {
   id: ID;
   location?: Location;
   matrix?: string;
@@ -29,6 +30,42 @@ interface Sample {
   waterBody?: string;
   watershed?: string;
 }
+
+export interface NewsFeedProps {
+  id: ID;
+  authorId: string;
+  createdAt: string;
+  content: string;
+  imageUrl: string;
+}
+
+export type SampleType = {
+  _id: number | null;
+  id: number | null;
+  createdAt: string;
+  elementsTested: {
+    description: string;
+    elementName: string;
+    value: string;
+  }[];
+  location: {
+    coordinates: [number, number];
+    county: string;
+    type: string;
+  };
+  matrix: string;
+  project: {
+    _id: number | null;
+    organization: string;
+    projectName: string;
+  };
+  sampleDate: string;
+  sampleNumber: string;
+  sampleTime: string;
+  stationName: string;
+  stationNameTwo: string;
+  updatedAt: string;
+};
 
 interface Location {
   coordinates?: Float[]; // Assuming it's an optional array of floats for latitude and longitude
@@ -65,4 +102,35 @@ export interface ProjectInputType {
   organization?: string;
   labName?: string;
   labId?: string;
+}
+
+export type User = {
+  id: ID;
+  username: string;
+  email: string;
+  isAdmin: boolean;
+  createdAt?: string;
+};
+
+export type NewsFeed = {
+  authorId: ID;
+  content: string;
+  createdAt?: string;
+  title: string;
+};
+
+export type TChildrenProps = {
+  children: ReactNode;
+};
+
+export type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: JsonValue }
+  | JsonValue[];
+
+export interface GenericObject {
+  [key: string]: JsonValue;
 }

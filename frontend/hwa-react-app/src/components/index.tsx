@@ -1,3 +1,7 @@
+import NewsFeed from './NewsFeedPost/NewsFeedPost';
+import NewsFeedForm from './Forms/NewsFeedForm';
+import NewsFeedCard from './NewsFeedCard/NewsFeedCard';
+import FileUploader from './FileUploader/FileUploader';
 import ControlledInputField from './ControlledInputField/ControlledInputField';
 import DataGridMUI from './DataGridMUI/DataGridMUI';
 import ErrorPage from './ErrorPage/ErrorPage';
@@ -17,7 +21,11 @@ import CircularProgressIndicator from './CircularProgressIndicator/CircularProgr
 import SimpleDialog from './SimpleDialog/SimpleDialog';
 
 export {
+  NewsFeed,
+  NewsFeedCard,
+  NewsFeedForm,
   CircularProgressIndicator,
+  FileUploader,
   ControlledAutocompleteField,
   ControlledDateField,
   ControlledInputField,

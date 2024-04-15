@@ -1,11 +1,12 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import { RouteObject } from 'react-router-dom';
-import { ErrorPage, MapBox, NavBar, SampleForm } from '../components';
+import { NewsFeed, ErrorPage, MapBox, NavBar, SampleForm } from '../components';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import FormPage from './pages/FormPage';
 import SearchForm from '../components/Forms/SearchForm';
+import NewsFeedForm from '../components/Forms/NewsFeedForm';
 
 const routes: RouteObject[] = [
   {
@@ -17,6 +18,25 @@ const routes: RouteObject[] = [
       </>
     ),
     errorElement: <ErrorPage />,
+  },
+  {
+    path: '/newsfeed',
+    element: (
+      <>
+        <NavBar />
+        <NewsFeed />
+      </>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: '/newsfeedform',
+    element: (
+      <>
+        <NavBar />
+        <NewsFeedForm />
+      </>
+    ),
   },
   {
     path: '/sampleForm',

@@ -11,3 +11,4 @@ backend/helpers/characteristicJSON.json
 backend/helpers/modelShapedHwaDataSet.json
 backend/routes/dummyData.json
 backend/helpers/transformedAnalytesAndChars.json
+backend/package-lock.json

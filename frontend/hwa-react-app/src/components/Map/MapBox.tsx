@@ -15,18 +15,9 @@ import Map, {
 import Pin from '../Pin/Pin';
 import { CircularProgressIndicator, SideBar } from '../index';
 import client from '../../graphql/apollo-client';
-import {
-  useGetSamplesQuery,
-  SampleType,
-} from '../../features/samples/samplesApi';
-import {
-  addSelectedSample,
-  removeSelectedSample,
-} from '../../features/samples/sampleSlice';
-import {
-  GET_ALL_SAMPLES,
-  GET_SAMPLES,
-} from '../../graphql/queries/sampleQueries';
+
+import { SampleType } from '../../graphql/types';
+
 import { formatTimestamp } from '../../utilities';
 
 const MAPBOX_API_KEY = process.env.REACT_APP_MAPBOX_API_TOKEN || '';

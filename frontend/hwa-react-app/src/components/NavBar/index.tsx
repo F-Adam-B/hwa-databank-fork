@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink, Router, Outlet, Link } from 'react-router-dom';
+import { NavLink, Router, Outlet, Link, useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -15,13 +15,21 @@ import MenuItem from '@mui/material/MenuItem';
 const pages = [
   { name: 'Dashboard', url: '/' },
   { name: 'Map', url: '/map' },
-  { name: 'Blog', url: '/blog' },
+  { name: 'News Feed', url: '/newsfeed' },
   { name: 'Sample Form', url: '/sampleForm' },
   { name: 'About', url: '/about' },
 ];
-const settings = ['Profile', 'Account', 'Dashboard', 'Login'];
+const menuItems = [
+  { name: 'Profile', url: '/profile' },
+  { name: 'Account', url: '/account' },
+  { name: 'Dashboard', url: '/dashboard' },
+  { name: 'Login', url: '/login' },
+  { name: 'News Feed Form', url: '/newsfeedform' },
+];
 
 const NavBar = () => {
+  const navigate = useNavigate();
+
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -36,7 +44,10 @@ const NavBar = () => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (url?: string) => {
+    if (url) {
+      navigate(url);
+    }
     setAnchorElUser(null);
   };
 
@@ -101,11 +112,14 @@ const NavBar = () => {
                 horizontal: 'right',
               }}
               open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+              onClose={() => handleCloseUserMenu()}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+              {menuItems.map((item) => (
+                <MenuItem
+                  key={item.name}
+                  onClick={() => handleCloseUserMenu(item.url)}
+                >
+                  <Typography textAlign="center">{item.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>

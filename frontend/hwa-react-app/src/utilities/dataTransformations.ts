@@ -1,17 +1,5 @@
 import { TSampleForm } from '../components/Forms/SampleForm';
-
-type JsonValue =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: JsonValue }
-  | JsonValue[];
-
-interface GenericObject {
-  [key: string]: JsonValue;
-}
-
+import { GenericObject, JsonValue } from '../graphql/types';
 const isNonEmpty = (value: JsonValue): boolean => {
   if (value === '' || value === undefined) return false;
   if (Array.isArray(value)) return value.some(isNonEmpty); // Check if there's any non-empty item in array

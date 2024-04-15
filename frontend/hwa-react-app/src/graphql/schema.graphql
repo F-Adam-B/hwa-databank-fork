@@ -1,9 +1,11 @@
 scalar Date
+scalar Upload
 
 type Query {
   analytes: [AnalyteType]
   analytesCharacteristics(listOfAnalyteNames: [String]!): [AnalyteType]
   formFieldValues: FormFieldValueType
+  newsFeedPosts: [NewsFeed]
   sample(
     fromDate: Date
     toDate: Date
@@ -18,6 +20,9 @@ type Query {
 
 type Mutation {
   addSampleMutation(sampleFormValues: SampleFormValuesInputType): Sample
+  addUserMutation(userFormValues: UserFormValuesInputType): User
+  addNewsFeedMutation(newsFeedValues: NewsFeedValuesInputType): NewsFeed
+  deleteNewsFeedMutation(id: ID!): NewsFeed
 }
 
 type FormFieldValueType {
@@ -53,10 +58,26 @@ type AnalyteType {
   characteristics: [CharacteristicType]
 }
 
+type NewsFeed {
+  id: ID!
+  authorId: ID
+  content: String
+  createdAt: Date
+  imageUrl: String
+}
+
 type CharacteristicType {
   name: String
   description: String
   value: String
+}
+
+type User {
+  id: ID
+  username: String
+  email: String
+  isAdmin: Boolean
+  createdAt: Date
 }
 
 input SampleFormValuesInputType {
@@ -72,7 +93,11 @@ input SampleFormValuesInputType {
   sampler: String
   sampleComment: String
   sampleNumber: String
-  sampleTags: [String]
+  sampleTag1: String
+  sampleTag2: String
+  sampleTag3: String
+  sampleTag4: String
+  sampleTag5: String
   sampleType: String
   stationName: String
   stationNameTwo: String
@@ -87,6 +112,18 @@ input SampleFormValuesInputType {
 input AnalyteInputType {
   analyteName: String
   characteristics: [CharacteristicInput]
+}
+
+input File {
+  name: String!
+  type: String!
+  size: Int!
+}
+
+input NewsFeedValuesInputType {
+  content: String
+  authorId: ID!
+  imageFile: Upload
 }
 
 input CharacteristicInput {
@@ -108,4 +145,9 @@ input ProjectInputType {
   organization: String!
   labName: String
   labId: String
+}
+
+input UserFormValuesInputType {
+  username: String!
+  email: String!
 }
