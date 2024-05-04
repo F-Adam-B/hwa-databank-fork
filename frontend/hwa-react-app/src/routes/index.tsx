@@ -1,74 +1,54 @@
 import React from 'react';
-import { createBrowserRouter } from 'react-router-dom';
-import { RouteObject } from 'react-router-dom';
-import { NewsFeed, ErrorPage, MapBox, NavBar, SampleForm } from '../components';
+import { createBrowserRouter, RouteObject } from 'react-router-dom';
+import { NewsFeed, ErrorPage, NavBar, SampleForm } from '../components';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import FormPage from './pages/FormPage';
 import SearchForm from '../components/Forms/SearchForm';
 import NewsFeedForm from '../components/Forms/NewsFeedForm';
 
+const withNavBar = (Component: React.ReactNode) => (
+  <>
+    <NavBar />
+    {Component}
+  </>
+);
+
+const defaultErrorElement = <ErrorPage />;
+
 const routes: RouteObject[] = [
   {
     index: true,
-    element: (
-      <>
-        <NavBar />
-        <HomePage />
-      </>
-    ),
-    errorElement: <ErrorPage />,
+    element: withNavBar(<HomePage />),
+    errorElement: defaultErrorElement,
   },
   {
     path: '/newsfeed',
-    element: (
-      <>
-        <NavBar />
-        <NewsFeed />
-      </>
-    ),
-    errorElement: <ErrorPage />,
+    element: withNavBar(<NewsFeed />),
+    errorElement: defaultErrorElement,
   },
   {
     path: '/newsfeedform',
-    element: (
-      <>
-        <NavBar />
-        <NewsFeedForm />
-      </>
-    ),
+    element: withNavBar(<NewsFeedForm />),
+    errorElement: defaultErrorElement,
   },
   {
     path: '/sampleForm',
-    element: (
-      <>
-        <NavBar />
-        <SampleForm />
-      </>
-    ),
-    errorElement: <ErrorPage />,
+    element: withNavBar(<SampleForm />),
+    errorElement: defaultErrorElement,
   },
   {
     path: '/map',
-    element: (
-      <>
-        <NavBar />
-        <SearchForm />
-      </>
-    ),
-    errorElement: <ErrorPage />,
+    element: withNavBar(<SearchForm />),
+    errorElement: defaultErrorElement,
   },
   {
     path: '/about',
-    element: (
-      <>
-        <NavBar />
-        <AboutPage />
-      </>
-    ),
-    errorElement: <ErrorPage />,
+    element: withNavBar(<AboutPage />),
+    errorElement: defaultErrorElement,
   },
 ];
+
 const router = createBrowserRouter(routes);
 
 export default router;
