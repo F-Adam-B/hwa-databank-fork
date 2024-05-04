@@ -74,7 +74,13 @@ const NewsFeed = () => {
             (user) => user.id === authorId
           )?.username;
           return (
-            <Grid item spacing={3}>
+            <Grid
+              key={rest.id}
+              item
+              spacing={3}
+              container
+              justifyContent="center"
+            >
               <NewsFeedCard
                 authorName={authorName}
                 {...rest}
