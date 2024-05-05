@@ -142,6 +142,16 @@ export interface LocationType {
   locationDescription?: string;
 }
 
+export type TAutocompleteProps = {
+  control: Control<any>;
+  id?: string;
+  label?: string;
+  multiple?: boolean;
+  name: string;
+  options: TOptions[];
+  placeholder?: string;
+};
+
 export type DataGridProps = {
   rows: GridRowsProp[];
   columns: GridColDef[];
