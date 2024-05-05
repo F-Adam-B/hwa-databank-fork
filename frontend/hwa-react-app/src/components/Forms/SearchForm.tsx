@@ -1,36 +1,17 @@
-import React, { useContext, useMemo, useState } from 'react';
-import { useLazyQuery, useQuery } from '@apollo/client';
-import {
-  Autocomplete,
-  Checkbox,
-  Box,
-  Card,
-  Typography,
-  Grid,
-  Button,
-  TextField,
-} from '@mui/material';
+import { useContext, memo } from 'react';
+import { useLazyQuery } from '@apollo/client';
+import { Box, Card, Typography, Grid, Button } from '@mui/material';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
 import { DropdownOptionsContext } from '../../Providers/DropdownSelectContext';
 import {
   ControlledAutocompleteField,
   ControlledDateField,
-  ControlledInputField,
   ControlledSelectField,
   MapBox,
 } from '../index';
 import { GET_SAMPLES } from '../../graphql/queries/sampleQueries';
-
-type SearchFormInput = {
-  fromDate: string | null;
-  toDate: string | null;
-  matrix: string;
-  organization: string;
-  stationName: string;
-  waterBody: string;
-  analytes: string[];
-};
+import { SearchFormInput } from '../../types';
 
 const defaultValues: SearchFormInput = {
   fromDate: null,
@@ -51,19 +32,15 @@ const SearchForm = () => {
     analyteOptions,
   } = useContext(DropdownOptionsContext);
 
-  const [selectedFromDate, setSelectedFromDate] = useState<string>('');
-  const [selectedEndDate, setSelectedEndDate] = useState<string>('');
   const {
     control,
     handleSubmit,
-    getValues,
-    watch,
     formState: { isDirty },
   } = useForm({
     defaultValues,
   });
 
-  const [getSample, { loading, error, data }] = useLazyQuery(GET_SAMPLES);
+  const [getSample, { loading, data }] = useLazyQuery(GET_SAMPLES);
 
   const onSubmit: SubmitHandler<SearchFormInput> = (formData) => {
     getSample({
@@ -146,9 +123,11 @@ const SearchForm = () => {
           </Button>
         </form>
       </Card>
-      <DevTool control={control} /> {/* set up the dev tool */}
+      {!process.env.NODE_ENV || process.env.NODE_ENV === 'development' ? (
+        <DevTool control={control} />
+      ) : null}
     </Box>
   );
 };
 
-export default SearchForm;
+export default memo(SearchForm);

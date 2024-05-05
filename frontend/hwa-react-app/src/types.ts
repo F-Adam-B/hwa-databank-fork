@@ -20,6 +20,16 @@ export interface Sample {
   watershed?: string;
 }
 
+export type SearchFormInput = {
+  fromDate: string | null;
+  toDate: string | null;
+  matrix: string;
+  organization: string;
+  stationName: string;
+  waterBody: string;
+  analytes: string[];
+};
+
 export type InfoFormInput = {
   characteristic: string;
   characteristicGroup: string;
