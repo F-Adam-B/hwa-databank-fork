@@ -203,3 +203,19 @@ export type JsonValue =
 export interface GenericObject {
   [key: string]: JsonValue;
 }
+
+export type TOptions = {
+  [key: string]: string;
+  value: string;
+};
+export interface IDropdownOptions {
+  matricesOptions: TOptions[];
+  stationOptions: TOptions[];
+  organizationOptions: TOptions[];
+  waterBodyOptions: TOptions[];
+  analyteOptions: TOptions[];
+}
+
+export type DropdownOptionsProviderProps = {
+  children: ReactNode;
+};
