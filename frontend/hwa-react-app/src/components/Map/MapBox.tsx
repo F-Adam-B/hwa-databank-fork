@@ -1,20 +1,16 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useApolloClient, useQuery } from '@apollo/client';
-import { useDispatch } from 'react-redux';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { debounce } from 'lodash';
 import Map, {
-  Layer,
   Marker,
   Popup,
   NavigationControl,
   FullscreenControl,
   ScaleControl,
-  Source,
   GeolocateControl,
   useMap,
 } from 'react-map-gl';
 import Pin from '../Pin/Pin';
 import { CircularProgressIndicator, SideBar } from '../index';
-import client from '../../graphql/apollo-client';
 
 import { SampleType } from '../../types';
 
@@ -24,14 +20,6 @@ const MAPBOX_API_KEY = process.env.REACT_APP_MAPBOX_API_TOKEN || '';
 
 // Need pin clustering option?
 // Cache pin data as they don't change often
-// Need to debounce map movement events to it only fires a few milliseconds after the user stops dragging the curser
-
-type LngLatBounds = {
-  sw: [number, number];
-  ne: [number, number];
-  _sw: [number, number];
-  _ne: [number, number];
-};
 
 type TMapBoxProps = {
   data: {
@@ -47,6 +35,14 @@ const MapBox = ({ data, loading }: TMapBoxProps) => {
   const [mapBounds, setMapBounds] = useState<any>(null);
   const [error, setError] = useState<boolean>(false);
 
+  const updateBounds = useCallback(
+    debounce((bounds) => {
+      setMapBounds(bounds);
+      // setError(false);
+    }, 200),
+    []
+  );
+
   useEffect(() => {
     if (!waterSamplesMap) {
       return undefined;
@@ -54,24 +50,23 @@ const MapBox = ({ data, loading }: TMapBoxProps) => {
 
     const onMove = () => {
       const bounds = waterSamplesMap.getBounds();
-      setMapBounds(bounds);
-      setError(false);
+      updateBounds(bounds);
     };
+
     waterSamplesMap.on('move', onMove);
-    onMove();
 
     return () => {
       waterSamplesMap.off('move', onMove);
     };
   }, [waterSamplesMap]);
 
-  const samplesWithCoordinates = useMemo(() => {
-    return data
-      ? data?.sample.filter((s: SampleType) =>
-          s.location.coordinates.every((coord) => coord !== null)
-        ) || []
-      : [];
-  }, [data]);
+  const samplesWithCoordinates = useMemo(
+    () =>
+      data?.sample.filter((s: SampleType) =>
+        s.location.coordinates.every((coord) => coord !== null)
+      ) || [],
+    [data]
+  );
 
   const samplePins = useMemo(() => {
     return samplesWithCoordinates.map((s: SampleType) => {
@@ -107,7 +102,7 @@ const MapBox = ({ data, loading }: TMapBoxProps) => {
       <Map
         id="waterSamplesMap"
         initialViewState={{
-          latitude: 37.84283055189627,
+          latitude: 37.84283055189627, // lat/long of Creed, CO
           longitude: -106.90655228410716,
           zoom: 10.5,
           bearing: 0,
