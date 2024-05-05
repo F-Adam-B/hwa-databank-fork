@@ -1,44 +1,40 @@
 import { Autocomplete, Box, Checkbox, TextField } from '@mui/material';
 import { Control, Controller } from 'react-hook-form';
-import { TOptions } from '../Forms/SearchForm';
 
-type MyComponentProps = {
-  control: Control<any>;
-  id?: string;
-  label?: string;
-  multiple?: boolean;
-  name: string;
-  options: TOptions[];
-  placeholder?: string;
-};
-
+// Move styles to a constant outside the component to avoid re-creation on each render
 const checkboxStyle = { marginRight: 8 };
+const autocompleteStyle = { width: 500 };
 
 const ControlledAutocompleteField = ({
   control,
   label,
-  id,
-  multiple,
   name,
+  multiple,
   options,
   placeholder,
-}: MyComponentProps) => {
+}: {
+  control: Control<any>;
+  label: string;
+  name: string;
+  multiple?: boolean;
+  options: {}[];
+  placeholder?: string;
+}) => {
   return (
-    <Box component="div">
+    <Box>
       <Controller
         name={name}
         control={control}
         render={({ field }) => (
           <Autocomplete
+            {...field} // Spread the field props directly to the Autocomplete to ensure all necessary hooks are passed
             multiple={multiple}
-            onChange={(e, data) =>
+            onChange={(_, data) =>
               field.onChange(
-                Array.isArray(data)
-                  ? data.map((a) => ({
-                      analyteName: a.value,
-                      characteristics: [],
-                    }))
-                  : []
+                data.map((option: { value: string }) => ({
+                  analyteName: option.value,
+                  characteristics: [],
+                }))
               )
             }
             options={options}
@@ -47,33 +43,27 @@ const ControlledAutocompleteField = ({
             renderOption={(props, option, { selected }) => (
               <li {...props}>
                 <Checkbox
-                  {...field}
                   style={checkboxStyle}
                   checked={selected}
-                  onChange={() => {
-                    const newValue = selected
-                      ? field.value.filter(
-                          (v: { analyteName: string }) =>
-                            v.analyteName !== option.value
-                        )
-                      : [
+                  onChange={(event) => {
+                    const newValue = event.target.checked
+                      ? [
                           ...field.value,
                           { analyteName: option.value, characteristics: [] },
-                        ];
+                        ]
+                      : field.value.filter(
+                          (v: { analyteName: string }) =>
+                            v.analyteName !== option.value
+                        );
                     field.onChange(newValue);
                   }}
                 />
                 {option.title}
               </li>
             )}
-            style={{ width: 500 }}
+            sx={autocompleteStyle}
             renderInput={(params) => (
-              <TextField
-                {...field}
-                {...params}
-                label={label}
-                placeholder={placeholder}
-              />
+              <TextField {...params} label={label} placeholder={placeholder} />
             )}
           />
         )}
