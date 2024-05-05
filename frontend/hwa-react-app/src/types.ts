@@ -1,23 +1,11 @@
 import { ReactNode } from 'react';
 import { GridRowsProp, GridColDef } from '@mui/x-data-grid';
+import { Control } from 'react-hook-form';
 // Define basic scalar types that might be represented differently on the server-side.
 // For dates, a string in ISO format could be used on the client-side.
 type Date = string;
 type Float = number;
 type ID = string;
-
-// Query Types
-interface Query {
-  sample(
-    fromDate: Date,
-    toDate: Date,
-    matrix: string,
-    stationName: string,
-    organization: string,
-    waterBody: string,
-    analytes: string[]
-  ): Sample[];
-}
 
 // Sample Types
 export interface Sample {
@@ -157,6 +145,23 @@ export interface ProjectInputType {
   labName?: string;
   labId?: string;
 }
+
+export type TCharacteristicsFormProps = {
+  apiAnalytes: {
+    analyteName: string;
+    characteristics: CharacteristicType[];
+  }[];
+  control?: Control<any>;
+  handleClose: (boolean: boolean) => void;
+  open: boolean;
+};
+
+export type TCharField = {
+  id?: string;
+  analyteName: string;
+  characteristics: CharacteristicType[];
+  onChange?: any;
+};
 
 export type User = {
   id: ID;

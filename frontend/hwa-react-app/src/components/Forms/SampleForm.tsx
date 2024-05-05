@@ -438,15 +438,12 @@ const SampleForm = () => {
             Submit
           </Button>
         </form>
-        <Dialog fullScreen open={openCharacteristicsFormDialog}>
-          <CharacteristicsForm
-            apiAnalytes={
-              analytesWithCharacteristicsData?.analytesCharacteristics
-            }
-            control={control}
-            handleClose={setOpenCharacteristicsFormDialog}
-          />
-        </Dialog>
+        <CharacteristicsForm
+          apiAnalytes={analytesWithCharacteristicsData?.analytesCharacteristics}
+          control={control}
+          handleClose={setOpenCharacteristicsFormDialog}
+          open={openCharacteristicsFormDialog}
+        />
       </Card>
       <DevTool control={control} />
     </Box>
