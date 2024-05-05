@@ -13,14 +13,17 @@ interface NewsFeedCardProps extends Omit<NewsFeedProps, 'authorId'> {
   onDelete: (id: string) => void;
 }
 
-const NewsFeedCard = (post: NewsFeedCardProps) => {
-  const { authorName, createdAt, imageUrl, onDelete, id } = post;
+const NewsFeedCard = ({
+  authorName,
+  content,
+  createdAt,
+  imageUrl,
+  onDelete,
+  id,
+}: NewsFeedCardProps) => {
   return (
     <Card sx={{ marginTop: '2em', maxWidth: '600px' }}>
-      <CardHeader
-        subheader={formatTimestamp(createdAt)}
-        title={post.authorName}
-      />
+      <CardHeader subheader={formatTimestamp(createdAt)} title={authorName} />
       {imageUrl && (
         <Container
           sx={{
@@ -46,7 +49,7 @@ const NewsFeedCard = (post: NewsFeedCardProps) => {
       )}
       <CardContent>
         <Typography variant="body2" color="text.secondary" align="center">
-          {post.content}
+          {content}
         </Typography>
       </CardContent>
       <CardActions>

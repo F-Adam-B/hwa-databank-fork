@@ -1,27 +1,41 @@
 import { gql } from '@apollo/client';
 
-export const GET_ALL_SAMPLES = gql`
-  query GetAllSamples {
-    samples {
-      id
-      location {
-        coordinates
-      }
-      sampleNumber
-      stationName
+const SAMPLE_LOCATION_FRAGMENT = gql`
+  fragment SampleLocation on Sample {
+    location {
+      coordinates
     }
   }
 `;
 
+const SAMPLE_DETAILS_FRAGMENT = gql`
+  fragment SampleDetails on Sample {
+    id
+    sampleNumber
+    stationName
+    ...SampleLocation
+  }
+  ${SAMPLE_LOCATION_FRAGMENT}
+`;
+
+export const GET_ALL_SAMPLES = gql`
+  query GetAllSamples {
+    samples {
+      ...SampleDetails
+    }
+  }
+  ${SAMPLE_DETAILS_FRAGMENT}
+`;
+
 export const GET_SAMPLES = gql`
   query GetSamples(
-    $fromDate: Date
-    $toDate: Date
+    $fromDate: DateTime
+    $toDate: DateTime
     $matrix: String
     $stationName: String
     $organization: String
     $waterBody: String
-    $analytes: [String]
+    $analytes: [String!]
   ) {
     sample(
       fromDate: $fromDate
@@ -32,10 +46,7 @@ export const GET_SAMPLES = gql`
       waterBody: $waterBody
       analytes: $analytes
     ) {
-      id
-      location {
-        coordinates
-      }
+      ...SampleLocation
       matrix
       project {
         projectName
@@ -48,6 +59,7 @@ export const GET_SAMPLES = gql`
       watershed
     }
   }
+  ${SAMPLE_LOCATION_FRAGMENT}
 `;
 
 export const GET_SEARCH_SAMPLE_FORM_FIELDS = gql`

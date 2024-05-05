@@ -23,7 +23,7 @@ import { formatTimestamp } from '../../utilities';
 const MAPBOX_API_KEY = process.env.REACT_APP_MAPBOX_API_TOKEN || '';
 
 // Need pin clustering option?
-// Cache pin data as the don't change often
+// Cache pin data as they don't change often
 // Need to debounce map movement events to it only fires a few milliseconds after the user stops dragging the curser
 
 type LngLatBounds = {
