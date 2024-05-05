@@ -45,7 +45,7 @@ type Sample {
 }
 
 type Location {
-  coordinates: [Float] # Using Float as a placeholder; assuming it's defined elsewhere or it should be GraphQL Float
+  coordinates: [Float]
 }
 
 type Project {
