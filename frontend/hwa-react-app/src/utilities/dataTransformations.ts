@@ -1,4 +1,9 @@
-import { GenericObject, JsonValue } from '../types';
+import {
+  AnalyteType,
+  CharacteristicType,
+  GenericObject,
+  JsonValue,
+} from '../types';
 const isNonEmpty = (value: JsonValue): boolean => {
   if (value === '' || value === undefined) return false;
   if (Array.isArray(value)) return value.some(isNonEmpty); // Check if there's any non-empty item in array
@@ -50,11 +55,11 @@ const cleanFormData = (formData: any) => {
     formData;
 
   const cleanedAnalytes = analytesTested.map(
-    ({ characteristics, ...restAnalyte }: any) => {
+    ({ characteristics, ...restAnalyte }: AnalyteType) => {
       return {
         ...restAnalyte,
         characteristics: characteristics.filter(
-          (a: any) => a.value !== undefined
+          (a: CharacteristicType) => a.value !== undefined
         ),
       };
     }
