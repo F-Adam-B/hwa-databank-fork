@@ -27,7 +27,7 @@ const ControlledAutocompleteField = ({
         control={control}
         render={({ field }) => (
           <Autocomplete
-            {...field} // Spread the field props directly to the Autocomplete to ensure all necessary hooks are passed
+            {...field}
             multiple={multiple}
             onChange={(_, data) =>
               field.onChange(
