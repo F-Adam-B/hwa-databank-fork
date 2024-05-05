@@ -22,7 +22,7 @@ import {
   Typography,
 } from '@mui/material';
 import { ControlledInputField } from '../index';
-import { AnalyteType, CharacteristicType } from '../../graphql/types';
+import { AnalyteType, CharacteristicType } from '../../types';
 
 type TCharacteristicsFormProps = {
   apiAnalytes: {

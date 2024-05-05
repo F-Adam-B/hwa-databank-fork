@@ -32,11 +32,6 @@ type SearchFormInput = {
   analytes: string[];
 };
 
-export type TOptions = {
-  [key: string]: string;
-  value: string;
-};
-
 const defaultValues: SearchFormInput = {
   fromDate: null,
   toDate: null,
@@ -56,8 +51,8 @@ const SearchForm = () => {
     analyteOptions,
   } = useContext(DropdownOptionsContext);
 
-  const [selectedFromDate, setSelectedFromDate] = useState<Date | null>(null);
-  const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
+  const [selectedFromDate, setSelectedFromDate] = useState<string>('');
+  const [selectedEndDate, setSelectedEndDate] = useState<string>('');
   const {
     control,
     handleSubmit,
@@ -88,8 +83,6 @@ const SearchForm = () => {
                 control={control}
                 name="fromDate"
                 label="From Date"
-                value={selectedFromDate}
-                onChange={setSelectedFromDate}
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -97,8 +90,6 @@ const SearchForm = () => {
                 control={control}
                 name="toDate"
                 label="To Date"
-                value={selectedEndDate}
-                onChange={setSelectedEndDate}
               />
             </Grid>
             <Grid item xs={12} md={6}>

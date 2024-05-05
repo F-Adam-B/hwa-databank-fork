@@ -16,7 +16,7 @@ import Pin from '../Pin/Pin';
 import { CircularProgressIndicator, SideBar } from '../index';
 import client from '../../graphql/apollo-client';
 
-import { SampleType } from '../../graphql/types';
+import { SampleType } from '../../types';
 
 import { formatTimestamp } from '../../utilities';
 
