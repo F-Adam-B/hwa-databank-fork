@@ -13,7 +13,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { UsersContext } from '../../Providers/UsersContext';
 import { NEWS_FEED_QUERY } from '../../graphql/queries/newFeedQueries';
 import { DELETE_NEWS_FEED_POST } from '../../graphql/mutations/newsFeedMutations';
-import { NewsFeedProps } from '../../graphql/types';
+import { NewsFeedProps } from '../../types';
 
 const EmptyNewsFeedDisplay = () => (
   <Container>
