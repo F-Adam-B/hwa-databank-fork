@@ -1,18 +1,8 @@
-import React from 'react';
-import {
-  Controller,
-  useForm,
-  SubmitHandler,
-  useFormContext,
-} from 'react-hook-form';
-import { Box, Card, Input, MenuItem, Select, Typography } from '@mui/material';
+import { Controller, useFormContext } from 'react-hook-form';
+import { Box, Card, Typography } from '@mui/material';
 import { ControlledInputField } from '../index';
-type InfoFormInput = {
-  organizationName: string;
-  projectName: string;
-};
 
-const defaultValues: InfoFormInput = {
+const defaultValues: { organizationName: string; projectName: string } = {
   organizationName: '',
   projectName: '',
 };
