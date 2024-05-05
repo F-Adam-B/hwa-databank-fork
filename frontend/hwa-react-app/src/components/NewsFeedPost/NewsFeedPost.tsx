@@ -46,7 +46,6 @@ const NewsFeed = () => {
     }
   };
 
-  // Memoizing the function to find an author's username to avoid recomputing on each render
   const getAuthorName = useMemo(
     () => (authorId: string) =>
       listOfUsers.find((user) => user.id === authorId)?.username,
