@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { DevTool } from '@hookform/devtools';
+import { useFieldArray, useForm } from 'react-hook-form';
 
 import {
   Box,
@@ -13,7 +11,6 @@ import {
 } from '@mui/material';
 import {
   AnalyteType,
-  CharacteristicType,
   TCharacteristicsFormProps,
   TCharField,
 } from '../../types';
