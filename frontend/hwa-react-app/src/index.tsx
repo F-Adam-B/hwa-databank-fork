@@ -4,6 +4,8 @@ import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { ThemeProvider } from '@mui/material/styles';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -24,13 +26,15 @@ root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <UsersProvider>
-        <DropdownOptionsProvider>
-          <MapProvider>
-            {/* <ThemeProvider theme={themeOptions}> */}
-            {/* <App /> */}
-            <RouterProvider router={router} />
-          </MapProvider>
-        </DropdownOptionsProvider>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DropdownOptionsProvider>
+            <MapProvider>
+              {/* <ThemeProvider theme={themeOptions}> */}
+              {/* <App /> */}
+              <RouterProvider router={router} />
+            </MapProvider>
+          </DropdownOptionsProvider>
+        </LocalizationProvider>
       </UsersProvider>
     </ApolloProvider>
     {/* </ThemeProvider> */}
