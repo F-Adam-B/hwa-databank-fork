@@ -1,11 +1,5 @@
-import React from 'react';
-import {
-  Controller,
-  useForm,
-  SubmitHandler,
-  useFormContext,
-} from 'react-hook-form';
-import { Box, Card, MenuItem, Select, Typography } from '@mui/material';
+import { Controller, useFormContext } from 'react-hook-form';
+import { Box, Card, Typography } from '@mui/material';
 import { ControlledInputField } from '../index';
 
 const LocationForm = () => {

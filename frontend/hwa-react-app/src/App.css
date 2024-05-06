@@ -26,6 +26,11 @@
   color: rgb(112, 76, 182);
 }
 
+.nav-link {
+  text-decoration: none;
+  color: inherit;
+}
+
 @keyframes App-logo-float {
   0% {
     transform: translateY(0);

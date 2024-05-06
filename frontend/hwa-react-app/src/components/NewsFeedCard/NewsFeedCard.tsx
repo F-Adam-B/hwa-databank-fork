@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { CardHeader, Container } from '@mui/material';
 import { formatTimestamp } from '../../utilities';
-import { NewsFeedProps } from '../../graphql/types';
+import { NewsFeedProps } from '../../types';
 
 interface NewsFeedCardProps extends Omit<NewsFeedProps, 'authorId'> {
   authorName?: string;

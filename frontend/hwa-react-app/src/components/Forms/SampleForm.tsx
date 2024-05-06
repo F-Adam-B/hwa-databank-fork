@@ -1,32 +1,20 @@
-import React, { useContext, useEffect, useState, useMemo } from 'react';
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
+import { useContext, useState } from 'react';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { DropdownOptionsContext } from '../../Providers/DropdownSelectContext';
-import {
-  Controller,
-  useFieldArray,
-  useForm,
-  SubmitHandler,
-  useFormContext,
-} from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import {
   Box,
   Button,
   Card,
-  Dialog,
-  DialogActions,
   FormHelperText,
   Grid,
-  MenuItem,
-  Select,
   TextField,
   Typography,
 } from '@mui/material';
 import {
-  CircularProgressIndicator,
   ControlledAutocompleteField,
   ControlledInputField,
   ControlledSelectField,
-  SimpleDialog,
 } from '../index';
 import ControlledDateField from '../ControlledDateField/ControlledDateField';
 import ControlledTimeField from '../ControlledTimeField/ControlledTimeField';
@@ -34,42 +22,13 @@ import { DevTool } from '@hookform/devtools';
 import { GET_ANALYTE_CHARACTERISTICS_QUERY } from '../../graphql/queries/analyteQueries';
 import { ADD_SAMPLE_MUTATION } from '../../graphql/mutations/sampleMutations';
 import CharacteristicsForm from './CharacteristicsForm';
-import { AnalyteType, LocationType, ProjectType } from '../../graphql/types';
+import { TSampleForm } from '../../types';
 import { cleanFormData } from '../../utilities/dataTransformations';
-
-export type TSampleForm = {
-  analytesTested: AnalyteType[];
-  dateCollected?: string | null;
-  elevation?: string;
-  eventId: string;
-  // id???
-  location: LocationType;
-  matrix: string;
-  preservationMethods?: [];
-  project: ProjectType;
-  sampler?: string;
-  sampleComment?: string;
-  sampleNumber: string;
-  sampleTag1?: string;
-  sampleTag2?: string;
-  sampleTag3?: string;
-  sampleTag4?: string;
-  sampleTag5?: string;
-  sampleType: string;
-  stationName: string;
-  stationNameTwo?: string;
-  timeCollected: string | null;
-  waterBody: string;
-  waterBodyId: string;
-  waterCode?: string;
-  watershed: string;
-  watershedReport?: string;
-};
 
 const defaultValues: TSampleForm = {
   analytesTested: [],
   sampleComment: '',
-  dateCollected: null,
+  dateCollected: '',
   elevation: '',
   eventId: '',
   location: {
@@ -95,7 +54,7 @@ const defaultValues: TSampleForm = {
   sampleType: '',
   stationName: '',
   stationNameTwo: '',
-  timeCollected: null,
+  timeCollected: '',
   waterBody: '',
   waterBodyId: '',
   waterCode: '',
@@ -467,17 +426,14 @@ const SampleForm = () => {
             Submit
           </Button>
         </form>
-        <Dialog fullScreen open={openCharacteristicsFormDialog}>
-          <CharacteristicsForm
-            apiAnalytes={
-              analytesWithCharacteristicsData?.analytesCharacteristics
-            }
-            control={control}
-            handleClose={setOpenCharacteristicsFormDialog}
-          />
-        </Dialog>
+        <CharacteristicsForm
+          apiAnalytes={analytesWithCharacteristicsData?.analytesCharacteristics}
+          control={control}
+          handleClose={setOpenCharacteristicsFormDialog}
+          open={openCharacteristicsFormDialog}
+        />
       </Card>
-      <DevTool control={control} />
+      {/* <DevTool control={control} /> */}
     </Box>
   );
 };

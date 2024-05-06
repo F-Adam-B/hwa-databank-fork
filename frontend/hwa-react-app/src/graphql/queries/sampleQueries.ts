@@ -29,8 +29,8 @@ export const GET_ALL_SAMPLES = gql`
 
 export const GET_SAMPLES = gql`
   query GetSamples(
-    $fromDate: DateTime
-    $toDate: DateTime
+    $fromDate: Date
+    $toDate: Date
     $matrix: String
     $stationName: String
     $organization: String

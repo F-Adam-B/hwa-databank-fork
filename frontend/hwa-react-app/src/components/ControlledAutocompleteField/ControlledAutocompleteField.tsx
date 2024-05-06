@@ -1,19 +1,9 @@
 import { Autocomplete, Box, Checkbox, TextField } from '@mui/material';
 import { Control, Controller } from 'react-hook-form';
-import { TOptions } from '../Forms/SearchForm';
-
-type MyComponentProps = {
-  control: Control<any>;
-  id?: string;
-  label?: string;
-  multiple?: boolean;
-  name: string;
-  options: TOptions[];
-  placeholder?: string;
-};
+import { TAutocompleteProps } from '../../types';
 
 const checkboxStyle = { marginRight: 8 };
-
+const autocompleteStyle = { width: 500 };
 const ControlledAutocompleteField = ({
   control,
   label,
@@ -22,7 +12,7 @@ const ControlledAutocompleteField = ({
   name,
   options,
   placeholder,
-}: MyComponentProps) => {
+}: TAutocompleteProps) => {
   return (
     <Box component="div">
       <Controller
@@ -31,7 +21,7 @@ const ControlledAutocompleteField = ({
         render={({ field }) => (
           <Autocomplete
             multiple={multiple}
-            onChange={(e, data) =>
+            onChange={(_, data) =>
               field.onChange(
                 Array.isArray(data)
                   ? data.map((a) => ({
@@ -66,7 +56,7 @@ const ControlledAutocompleteField = ({
                 {option.title}
               </li>
             )}
-            style={{ width: 500 }}
+            style={autocompleteStyle}
             renderInput={(params) => (
               <TextField
                 {...field}

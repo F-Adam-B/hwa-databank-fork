@@ -1,24 +1,19 @@
-import React, { useState, FormEvent, ChangeEvent } from 'react';
+import { FormEvent, useCallback } from 'react';
 import { Control, Controller } from 'react-hook-form';
-export type TFileUploaderProps = {
-  control: Control<any>;
-  submit: (event: FormEvent<HTMLFormElement>, file: File | undefined) => void;
-};
 
-const FileUploader = ({ control, submit }: TFileUploaderProps) => {
-  const [file, setFile] = useState<File>();
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    submit(event, file);
-  };
-
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const fileList = event.target.files;
-    if (fileList) {
-      setFile(fileList[0]);
-    }
-  };
+const FileUploader = ({
+  control,
+  submit,
+}: {
+  control: Control;
+  submit: () => void;
+}) => {
+  const handleSubmit = useCallback(
+    (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+    },
+    [submit]
+  );
 
   return (
     <div className="row">
@@ -27,11 +22,12 @@ const FileUploader = ({ control, submit }: TFileUploaderProps) => {
           name="file"
           control={control}
           defaultValue=""
-          render={({ field: { onChange, onBlur, value, ref } }) => (
+          render={({ field: { onChange, onBlur, ref } }) => (
             <input
               onChange={(e) => {
-                onChange(e);
-                handleFileChange(e);
+                if (e.target.files) {
+                  onChange(e.target.files[0]); //
+                }
               }}
               onBlur={onBlur}
               type="file"
@@ -40,6 +36,7 @@ const FileUploader = ({ control, submit }: TFileUploaderProps) => {
             />
           )}
         />
+        <button type="submit">Upload</button>
       </form>
     </div>
   );
