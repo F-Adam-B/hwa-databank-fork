@@ -1,10 +1,8 @@
-import React, { ReactNode, createContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
-import {
-  DropdownOptionsContext,
-  DropdownOptionsProviderProps,
-  IDropdownOptions,
-} from './DropdownSelectContext';
+import { DropdownOptionsContext } from './DropdownSelectContext';
+
+import { DropdownOptionsProviderProps, IDropdownOptions } from '../types';
 import { GET_SEARCH_SAMPLE_FORM_FIELDS } from '../graphql/queries/sampleQueries';
 
 import { GET_ANALYTES } from '../graphql/queries/analyteQueries';

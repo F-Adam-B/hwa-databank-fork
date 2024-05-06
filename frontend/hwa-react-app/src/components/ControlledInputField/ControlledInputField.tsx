@@ -32,8 +32,6 @@ interface FormInputProps<TFieldValues extends FieldValues> {
   rules?: RegisterOptions;
   rows?: number;
   sx?: any;
-  // No default value assignments in interface definitions
-  // Only the types are defined here
 }
 
 const ControlledInputField = <TFieldValues extends FieldValues>({

@@ -1,5 +1,5 @@
 import { To } from 'react-router';
-import { TOptions } from '../components/Forms/SearchForm';
+// import { TOptions } from '../components/Forms/SearchForm';
 
 export const formatTimestamp = (timestamp: string): string => {
   const date = new Date(timestamp);
@@ -20,10 +20,7 @@ export const formatTimestamp = (timestamp: string): string => {
   return legibleDate;
 };
 
-export const createFormDropdownObject = (
-  arr: string[],
-  key: string
-): TOptions[] => {
+export const createFormDropdownObject = (arr: string[], key: string) => {
   const sortedArray = [...arr].sort((a, b) =>
     a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
   );

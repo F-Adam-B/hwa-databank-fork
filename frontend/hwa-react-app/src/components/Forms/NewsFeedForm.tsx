@@ -1,50 +1,28 @@
+import { ChangeEvent, useCallback, useRef } from 'react';
 import {
-  ChangeEvent,
-  FormEvent,
-  useContext,
-  useEffect,
-  useState,
-  useRef,
-} from 'react';
-import {
+  Alert,
   Box,
   Button,
   Container,
-  Divider,
-  Grid,
-  Typography,
-  Paper,
-  InputBase,
   IconButton,
-  Alert,
+  InputBase,
+  Paper,
   Tooltip,
+  Typography,
 } from '@mui/material';
-import ImageIcon from '@mui/icons-material/Image';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import DirectionsIcon from '@mui/icons-material/Directions';
 import UploadIcon from '@mui/icons-material/Upload';
-import { Controller } from 'react-hook-form';
 
-import ControlledInputField from '../ControlledInputField/ControlledInputField';
 import { useForm } from 'react-hook-form';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { DevTool } from '@hookform/devtools';
 
-import { NewsFeed } from '../../graphql/types';
 import { SAVE_NEWS_FEED_POST } from '../../graphql/mutations/newsFeedMutations';
-import { UsersContext } from '../../Providers/UsersContext';
-import FileUploader from '../FileUploader/FileUploader';
 import { NEWS_FEED_QUERY } from '../../graphql/queries/newFeedQueries';
+import { TNewsFeedFormProps } from '../../types';
 
-type TNewsFeedForm = {
-  content: string;
-  image?: File | undefined;
-};
-
-const defaultValues: TNewsFeedForm = {
+const defaultValues: TNewsFeedFormProps = {
   content: '',
-  image: undefined,
+  image: null,
 };
 
 const currentUser = {
@@ -57,9 +35,10 @@ const currentUser = {
 const NewsFeedForm = () => {
   const { control, handleSubmit, reset, register, setValue, watch } = useForm({
     defaultValues,
+    mode: 'onChange',
   });
+
   const hiddenFileInput = useRef<HTMLInputElement>(null);
-  const [file, setFile] = useState<File | null>();
 
   const [
     addNewsFeedMutation,
@@ -73,47 +52,45 @@ const NewsFeedForm = () => {
     (value) => value
   );
 
-  const onSubmit = async (formValues: any) => {
-    const { content, image } = formValues;
+  const onSubmit = useCallback(
+    async (formValues: TNewsFeedFormProps) => {
+      const { content, image: uploadedFile } = formValues;
 
-    let uploadedFile;
-    if (image) {
-      uploadedFile = image;
-    }
-
-    try {
-      await addNewsFeedMutation({
-        variables: {
-          newsFeedValues: {
-            authorId: '6604977667d171225cec046f', // TODO - fetch current user & add check if authorized
-            content,
-            imageFile: uploadedFile,
+      try {
+        await addNewsFeedMutation({
+          variables: {
+            newsFeedValues: {
+              authorId: currentUser.id,
+              content,
+              imageFile: uploadedFile,
+            },
           },
-        },
-      });
-      reset();
-      setFile(null);
-    } catch (error) {
-      console.error('Error saving news feed post: ', error);
-    }
-  };
+        });
+        reset();
+      } catch (error) {
+        console.error('Error saving news feed post: ', error);
+      }
+    },
+    [addNewsFeedMutation, currentUser.id, reset]
+  );
 
-  const handleUploadClick = () => {
-    if (hiddenFileInput.current) {
-      hiddenFileInput.current.click();
-    }
-  };
+  const handleUploadClick = useCallback(() => {
+    hiddenFileInput.current?.click();
+  }, []);
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      setFile(event.target.files[0]);
-      setValue('image', event.target.files[0]);
-    }
-  };
+  const handleFileChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        setValue('image', file, { shouldValidate: true });
+      }
+    },
+    [setValue]
+  );
 
-  useEffect(() => {
-    register('image');
-  }, [register]);
+  register('image');
+
+  const fileName = watch('image');
 
   return (
     <Container sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -161,7 +138,9 @@ const NewsFeedForm = () => {
             <UploadIcon />
           </IconButton>
         </Tooltip>
-        <Typography variant="caption">{file?.name}</Typography>
+        <Typography variant="caption">
+          {fileName && typeof fileName === 'object' ? fileName.name : ''}
+        </Typography>{' '}
         <DevTool control={control} />
         <Button
           form="newsFeedForm"

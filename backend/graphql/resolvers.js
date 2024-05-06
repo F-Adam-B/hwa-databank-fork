@@ -138,14 +138,14 @@ const resolvers = {
     addNewsFeedMutation: async (_parent, { newsFeedValues }) => {
       const { authorId, content, imageFile } = newsFeedValues;
       const session = await startSession();
+      let outFile;
       try {
         session.startTransaction();
         const authorExists = await User.findById(authorId).session(session);
-        if (!authorExists || !authorExists.isAdmin) {
+        if (!authorExists?.isAdmin) {
           throw new Error('User does not exist or is not authorized to post');
         }
 
-        let outFile;
         if (imageFile) {
           const {
             file: { createReadStream, filename },
@@ -155,20 +155,20 @@ const resolvers = {
         }
 
         const newNewsFeed = new NewsFeed({
-          authorId: authorExists['_id'],
+          authorId: authorExists.id,
           content,
           imageUrl: outFile,
         });
+
         const response = await newNewsFeed.save({ session });
         await session.commitTransaction();
-
         return response;
       } catch (error) {
-        console.error('Error adding news feed post', error);
+        console.error(`Error adding news feed post: ${error.message}`);
         await session.abortTransaction();
-        throw new Error('Error saving news feed post');
+        throw new Error('Failed to save news feed post');
       } finally {
-        await session.endSession();
+        session.endSession();
       }
     },
     addSampleMutation: async (_parent, args) => {
@@ -221,6 +221,5 @@ const resolvers = {
       }
     },
   },
-  // If you have custom types with their own resolvers, you would define them here as well.
 };
 export default resolvers;

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { NavLink, Router, Outlet, Link, useNavigate } from 'react-router-dom';
+import React, { useCallback, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -44,12 +44,15 @@ const NavBar = () => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = (url?: string) => {
-    if (url) {
-      navigate(url);
-    }
-    setAnchorElUser(null);
-  };
+  const handleCloseUserMenu = useCallback(
+    (url?: string) => {
+      setAnchorElUser(null);
+      if (url) {
+        navigate(url);
+      }
+    },
+    [navigate]
+  );
 
   return (
     <AppBar position="static" color="primary">
@@ -76,8 +79,8 @@ const NavBar = () => {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page, idx) => (
               <Link
+                className="nav-link"
                 key={`${page.name}-${idx}`}
-                style={{ textDecoration: 'none', color: 'inherit' }}
                 to={page.url}
               >
                 <Button

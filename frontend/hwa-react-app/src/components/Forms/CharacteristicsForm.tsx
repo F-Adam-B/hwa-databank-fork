@@ -1,13 +1,5 @@
-import React, { useState } from 'react';
-import {
-  Controller,
-  useFieldArray,
-  useForm,
-  Resolver,
-  SubmitHandler,
-  useFormContext,
-  Control,
-} from 'react-hook-form';
+import { useEffect } from 'react';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
 
 import {
@@ -16,29 +8,14 @@ import {
   Card,
   Dialog,
   DialogActions,
-  MenuItem,
-  Select,
   TextField,
   Typography,
 } from '@mui/material';
-import { ControlledInputField } from '../index';
-import { AnalyteType, CharacteristicType } from '../../graphql/types';
-
-type TCharacteristicsFormProps = {
-  apiAnalytes: {
-    analyteName: string;
-    characteristics: CharacteristicType[];
-  }[];
-  control?: Control<any>;
-  handleClose: (boolean: boolean) => void;
-};
-
-type Field = {
-  id?: string;
-  analyteName: string;
-  characteristics: CharacteristicType[];
-  onChange?: any;
-};
+import {
+  AnalyteType,
+  TCharacteristicsFormProps,
+  TCharField,
+} from '../../types';
 
 const defaultAnalyte: AnalyteType = {
   analyteName: '',
@@ -49,10 +26,11 @@ const CharacteristicsForm = ({
   apiAnalytes = [defaultAnalyte],
   control: sampleFormControl,
   handleClose,
+  open,
 }: TCharacteristicsFormProps) => {
-  const { control, register, getValues } = useForm({
+  const { control, register, getValues, reset } = useForm({
     defaultValues: {
-      selectedAnalytes: [...apiAnalytes],
+      selectedAnalytes: apiAnalytes,
     },
   });
 
@@ -60,6 +38,12 @@ const CharacteristicsForm = ({
     control,
     name: 'selectedAnalytes',
   });
+
+  useEffect(() => {
+    reset({
+      selectedAnalytes: apiAnalytes,
+    });
+  }, [apiAnalytes, reset]);
 
   const { replace } = useFieldArray({
     control: sampleFormControl,
@@ -73,58 +57,48 @@ const CharacteristicsForm = ({
   };
 
   return (
-    <Box>
-      <Card>
-        {fields.map((analyte: Field, parentIndex: number) => (
-          <div key={analyte.id}>
-            <Typography variant="h5">{analyte.analyteName}</Typography>
-            <Box
-              component="form"
-              sx={{
-                '& .MuiTextField-root': { m: 1, width: '25ch' },
-              }}
-            >
-              <input
-                key={analyte.analyteName}
-                hidden
-                {...register(
-                  `selectedAnalytes.${parentIndex}.analyteName` as const
-                )}
-                defaultValue={analyte.analyteName}
-              />
-              {analyte.characteristics.map(
-                (characteristic: CharacteristicType, charIndex) => {
-                  return (
-                    <Controller
-                      defaultValue={characteristic.value}
-                      key={
-                        `selectedAnalytes.${parentIndex}.characteristics.${charIndex}.value` as const
-                      }
-                      name={
-                        `selectedAnalytes.${parentIndex}.characteristics.${charIndex}.value` as const
-                      }
-                      control={control}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          key={`char-${charIndex}`}
-                          placeholder={characteristic.name}
-                          label={characteristic.name}
-                        />
-                      )}
-                    />
-                  );
-                }
-              )}
-            </Box>
-          </div>
-        ))}
-        <DialogActions>
-          <Button onClick={() => handleClose(false)}>Cancel</Button>
-          <Button onClick={handleUpdateSampleForm}>Save</Button>
-        </DialogActions>
-      </Card>
-    </Box>
+    <Dialog fullScreen open={open}>
+      <Box>
+        <Card>
+          {fields.map((analyte: TCharField, parentIndex: number) => (
+            <div key={analyte.id}>
+              <Typography variant="h5">{analyte.analyteName}</Typography>
+              <Box
+                component="form"
+                sx={{
+                  '& .MuiTextField-root': { m: 1, width: '25ch' },
+                }}
+              >
+                <input
+                  key={analyte.analyteName}
+                  hidden
+                  {...register(
+                    `selectedAnalytes.${parentIndex}.analyteName` as const
+                  )}
+                  defaultValue={analyte.analyteName}
+                />
+                {analyte.characteristics.map((characteristic, charIndex) => (
+                  <TextField
+                    key={`char-${charIndex}`}
+                    {...register(
+                      `selectedAnalytes.${parentIndex}.characteristics.${charIndex}.value`
+                    )}
+                    placeholder={characteristic.name}
+                    label={characteristic.name}
+                    defaultValue={characteristic.value} // Set default value here
+                  />
+                ))}
+              </Box>
+            </div>
+          ))}
+          <DialogActions>
+            <Button onClick={() => handleClose(false)}>Cancel</Button>
+            <Button onClick={handleUpdateSampleForm}>Save</Button>
+          </DialogActions>
+        </Card>
+      </Box>
+      <DevTool control={control} />
+    </Dialog>
   );
 };
 

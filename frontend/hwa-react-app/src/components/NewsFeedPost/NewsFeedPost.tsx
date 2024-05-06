@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import {
   Alert,
   Card,
@@ -13,25 +13,22 @@ import { useMutation, useQuery } from '@apollo/client';
 import { UsersContext } from '../../Providers/UsersContext';
 import { NEWS_FEED_QUERY } from '../../graphql/queries/newFeedQueries';
 import { DELETE_NEWS_FEED_POST } from '../../graphql/mutations/newsFeedMutations';
-import { NewsFeedProps } from '../../graphql/types';
+import { NewsFeedProps } from '../../types';
 
-const EmptyNewsFeedDisplay = () => {
-  return (
-    <Container>
-      <Card sx={{ marginTop: '2em' }}>
-        <CardContent>
-          <Typography variant="body2" color="text.secondary">
-            No News Feed Posts to Display
-          </Typography>
-        </CardContent>
-      </Card>
-    </Container>
-  );
-};
+const EmptyNewsFeedDisplay = () => (
+  <Container>
+    <Card sx={{ marginTop: '2em' }}>
+      <CardContent>
+        <Typography variant="body2" color="text.secondary">
+          No News Feed Posts to Display
+        </Typography>
+      </CardContent>
+    </Card>
+  </Container>
+);
 
 const NewsFeed = () => {
   const listOfUsers = useContext(UsersContext);
-
   const { data, loading } = useQuery(NEWS_FEED_QUERY);
   const [
     deleteNewsFeedPost,
@@ -40,41 +37,43 @@ const NewsFeed = () => {
 
   const handleDeleteNewsFeedPost = async (id: string) => {
     try {
-      deleteNewsFeedPost({
-        variables: {
-          id,
-        },
-        refetchQueries: [NEWS_FEED_QUERY],
+      await deleteNewsFeedPost({
+        variables: { id },
+        refetchQueries: [{ query: NEWS_FEED_QUERY }],
       });
     } catch (error) {
-      console.error(`Error deleting news feed post with ID ${id}: error`);
+      console.error(`Error deleting news feed post with ID ${id}:`, error);
     }
   };
 
+  const getAuthorName = useMemo(
+    () => (authorId: string) =>
+      listOfUsers.find((user) => user.id === authorId)?.username,
+    [listOfUsers]
+  );
+
   if (loading) return <>Loading...</>;
+
   return (
     <>
       <NewsFeedForm />
-      {!data?.newsFeedPosts.length && <EmptyNewsFeedDisplay />}
-      {!!deleteNewsFeedMutationData && (
+      {!data?.newsFeedPosts.length ? <EmptyNewsFeedDisplay /> : null}
+      {deleteNewsFeedMutationData && (
         <Alert severity="success">News Feed Post successfully deleted</Alert>
       )}
-      {!!deleteNewsFeedMutationError && (
+      {deleteNewsFeedMutationError && (
         <Alert severity="error">Error deleting news feed post</Alert>
       )}
       <Grid
-        justifyContent="center"
         container
+        justifyContent="center"
         spacing={1}
         sx={{ marginBottom: '2em' }}
       >
         {data.newsFeedPosts.map(({ authorId, ...rest }: NewsFeedProps) => {
-          // TODO: Will need to get actual name from Auth0;
-          const authorName = listOfUsers.find(
-            (user) => user.id === authorId
-          )?.username;
+          const authorName = getAuthorName(authorId);
           return (
-            <Grid item spacing={3}>
+            <Grid key={rest.id} item xs={12} md={6} lg={4}>
               <NewsFeedCard
                 authorName={authorName}
                 {...rest}

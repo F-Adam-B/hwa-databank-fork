@@ -1,14 +1,9 @@
-import React from 'react';
-import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
-
-type DataGridProps = {
-  rows: GridRowsProp[];
-  columns: GridColDef[];
-};
-
+import { DataGrid } from '@mui/x-data-grid';
+import { DataGridProps } from '../../types';
+const gridStyle = { height: 300, width: '100%' };
 const DataGridMUI = ({ rows, columns }: DataGridProps) => {
   return (
-    <div style={{ height: 300, width: '100%' }}>
+    <div style={gridStyle}>
       <DataGrid rows={rows} columns={columns} />
     </div>
   );
