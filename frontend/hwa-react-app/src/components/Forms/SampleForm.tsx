@@ -433,7 +433,7 @@ const SampleForm = () => {
           open={openCharacteristicsFormDialog}
         />
       </Card>
-      <DevTool control={control} />
+      {/* <DevTool control={control} /> */}
     </Box>
   );
 };

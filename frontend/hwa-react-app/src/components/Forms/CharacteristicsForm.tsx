@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
+import { DevTool } from '@hookform/devtools';
 
 import {
   Box,
@@ -26,9 +28,9 @@ const CharacteristicsForm = ({
   handleClose,
   open,
 }: TCharacteristicsFormProps) => {
-  const { control, register, getValues } = useForm({
+  const { control, register, getValues, reset } = useForm({
     defaultValues: {
-      selectedAnalytes: [...apiAnalytes],
+      selectedAnalytes: apiAnalytes,
     },
   });
 
@@ -36,6 +38,12 @@ const CharacteristicsForm = ({
     control,
     name: 'selectedAnalytes',
   });
+
+  useEffect(() => {
+    reset({
+      selectedAnalytes: apiAnalytes,
+    });
+  }, [apiAnalytes, reset]);
 
   const { replace } = useFieldArray({
     control: sampleFormControl,
@@ -89,6 +97,7 @@ const CharacteristicsForm = ({
           </DialogActions>
         </Card>
       </Box>
+      <DevTool control={control} />
     </Dialog>
   );
 };
