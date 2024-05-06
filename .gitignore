@@ -12,3 +12,5 @@ backend/helpers/modelShapedHwaDataSet.json
 backend/routes/dummyData.json
 backend/helpers/transformedAnalytesAndChars.json
 backend/package-lock.json
+backend/helpers/fullyTransformedDataSet.json
+backend/helpers/hws_removed_empty_fields.json
