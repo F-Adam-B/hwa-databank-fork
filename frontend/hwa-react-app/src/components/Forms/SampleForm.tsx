@@ -19,7 +19,7 @@ import {
 import ControlledDateField from '../ControlledDateField/ControlledDateField';
 import ControlledTimeField from '../ControlledTimeField/ControlledTimeField';
 import { DevTool } from '@hookform/devtools';
-import { GET_ANALYTE_CHARACTERISTICS_QUERY } from '../../apollo/queries/analyteQueries';
+import { GET_ANALYTE_CHARACTERISTICS } from '../../apollo/queries/analyteQueries';
 import { ADD_SAMPLE_MUTATION } from '../../apollo/mutations/sampleMutations';
 import CharacteristicsForm from './CharacteristicsForm';
 import { TSampleForm } from '../../types';
@@ -71,7 +71,7 @@ const SampleForm = () => {
       error: getAnalyteCharacteristicsError,
       data: analytesWithCharacteristicsData,
     },
-  ] = useLazyQuery(GET_ANALYTE_CHARACTERISTICS_QUERY);
+  ] = useLazyQuery(GET_ANALYTE_CHARACTERISTICS);
 
   const [
     addSampleMutation,

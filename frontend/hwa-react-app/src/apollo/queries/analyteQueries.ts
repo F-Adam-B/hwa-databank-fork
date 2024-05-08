@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
-export const GET_ANALYTE_CHARACTERISTICS_QUERY = gql`
-  query GetAnalyteCharacteristicsQuery($names: [String]!) {
+export const GET_ANALYTE_CHARACTERISTICS = gql`
+  query GetAnalyteCharacteristics($names: [String]!) {
     analytesCharacteristics(names: $names) {
       analyteName
       characteristics {
