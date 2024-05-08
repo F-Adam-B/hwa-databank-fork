@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { GridRowsProp, GridColDef } from '@mui/x-data-grid';
-import { Control } from 'react-hook-form';
+import { Control, FieldValues } from 'react-hook-form';
 // Define basic scalar types that might be represented differently on the server-side.
 // For dates, a string in ISO format could be used on the client-side.
 type Date = string;
@@ -142,8 +142,8 @@ export interface LocationType {
   locationDescription?: string;
 }
 
-export type TAutocompleteProps = {
-  control: Control<any>;
+export type TAutocompleteProps<T extends FieldValues> = {
+  control: Control<T>;
   id?: string;
   label?: string;
   multiple?: boolean;
@@ -166,12 +166,12 @@ export interface ProjectInputType {
   labId?: string;
 }
 
-export type TCharacteristicsFormProps = {
+export type TCharacteristicsFormProps<T extends FieldValues> = {
   apiAnalytes: {
     analyteName: string;
     characteristics: CharacteristicType[];
   }[];
-  control?: Control<any>;
+  control?: Control<T>;
   handleClose: (boolean: boolean) => void;
   open: boolean;
 };

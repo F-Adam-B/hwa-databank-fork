@@ -14,18 +14,19 @@ function App() {
   if (client === undefined) {
     return <div>Loading...</div>;
   }
+
   return (
     <ApolloProvider client={client}>
-      <UsersProvider>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DropdownOptionsProvider>
-            <MapProvider>
-              {/* <ThemeProvider theme={themeOptions}> */}
-              <RouterProvider router={router} />
-            </MapProvider>
-          </DropdownOptionsProvider>
-        </LocalizationProvider>
-      </UsersProvider>
+      {/* <UsersProvider> */}
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        {/* <DropdownOptionsProvider> */}
+        <MapProvider>
+          {/* <ThemeProvider theme={themeOptions}> */}
+          <RouterProvider router={router} />
+        </MapProvider>
+        {/* </DropdownOptionsProvider> */}
+      </LocalizationProvider>
+      {/* </UsersProvider> */}
     </ApolloProvider>
   );
 }

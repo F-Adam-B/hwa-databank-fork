@@ -1,16 +1,18 @@
-import { useContext, memo } from 'react';
-import { useLazyQuery } from '@apollo/client';
+import { memo } from 'react';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import { Box, Card, Typography, Grid, Button } from '@mui/material';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
-import { DropdownOptionsContext } from '../../Providers/DropdownSelectContext';
 import {
   ControlledAutocompleteField,
   ControlledDateField,
   ControlledSelectField,
   MapBox,
 } from '../index';
-import { GET_SAMPLES } from '../../apollo/queries/sampleQueries';
+import {
+  GET_SAMPLES,
+  GET_SEARCH_SAMPLE_FORM_FIELDS,
+} from '../../apollo/queries/sampleQueries';
 import { SearchFormInput } from '../../types';
 
 const defaultValues: SearchFormInput = {
@@ -25,12 +27,18 @@ const defaultValues: SearchFormInput = {
 
 const SearchForm = () => {
   const {
+    data: searchSampleFormFieldData,
+    loading: searchSampleFormFieldsLoading,
+    error: searchSampleFormFieldsError,
+  } = useQuery(GET_SEARCH_SAMPLE_FORM_FIELDS);
+
+  const {
     matricesOptions,
     stationOptions,
     organizationOptions,
     waterBodyOptions,
     analyteOptions,
-  } = useContext(DropdownOptionsContext);
+  } = searchSampleFormFieldData;
 
   const {
     control,

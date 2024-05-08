@@ -1,6 +1,5 @@
-import { useCallback, useContext, useState } from 'react';
-import { useLazyQuery, useMutation } from '@apollo/client';
-import { DropdownOptionsContext } from '../../Providers/DropdownSelectContext';
+import { useCallback, useState } from 'react';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { Controller, useForm } from 'react-hook-form';
 import {
   Box,
@@ -18,12 +17,12 @@ import {
 } from '../index';
 import ControlledDateField from '../ControlledDateField/ControlledDateField';
 import ControlledTimeField from '../ControlledTimeField/ControlledTimeField';
-import { DevTool } from '@hookform/devtools';
 import { GET_ANALYTE_CHARACTERISTICS } from '../../apollo/queries/analyteQueries';
 import { ADD_SAMPLE_MUTATION } from '../../apollo/mutations/sampleMutations';
 import CharacteristicsForm from './CharacteristicsForm';
 import { TSampleForm } from '../../types';
 import { cleanFormData } from '../../utilities/dataTransformations';
+import { GET_SEARCH_SAMPLE_FORM_FIELDS } from '../../apollo/queries/sampleQueries';
 
 const defaultValues: TSampleForm = {
   analytesTested: [],
@@ -83,12 +82,18 @@ const SampleForm = () => {
   ] = useMutation(ADD_SAMPLE_MUTATION);
 
   const {
+    data: searchSampleFormFieldData,
+    loading: searchSampleFormFieldsLoading,
+    error: searchSampleFormFieldsError,
+  } = useQuery(GET_SEARCH_SAMPLE_FORM_FIELDS);
+
+  const {
     matricesOptions,
     stationOptions,
     organizationOptions,
     waterBodyOptions,
     analyteOptions,
-  } = useContext(DropdownOptionsContext);
+  } = searchSampleFormFieldData;
 
   const [error, setError] = useState('');
   const [openCharacteristicsFormDialog, setOpenCharacteristicsFormDialog] =

@@ -14,6 +14,7 @@ import { UsersContext } from '../../Providers/UsersContext';
 import { NEWS_FEED_QUERY } from '../../apollo/queries/newFeedQueries';
 import { DELETE_NEWS_FEED_POST } from '../../apollo/mutations/newsFeedMutations';
 import { NewsFeedProps } from '../../types';
+import { GET_USERS_QUERY } from '../../apollo/queries/userQueries';
 
 const EmptyNewsFeedDisplay = () => (
   <Container>
@@ -28,8 +29,9 @@ const EmptyNewsFeedDisplay = () => (
 );
 
 const NewsFeed = () => {
-  const listOfUsers = useContext(UsersContext);
-  const { data, loading } = useQuery(NEWS_FEED_QUERY);
+  const { data: listOfUsers, loading, error } = useQuery(GET_USERS_QUERY);
+
+  const { data, loading: newsFeedLoading } = useQuery(NEWS_FEED_QUERY);
   const [
     deleteNewsFeedPost,
     { data: deleteNewsFeedMutationData, error: deleteNewsFeedMutationError },
@@ -48,7 +50,10 @@ const NewsFeed = () => {
 
   const getAuthorName = useMemo(
     () => (authorId: string) =>
-      listOfUsers.find((user) => user.id === authorId)?.username,
+      listOfUsers.find(
+        (user: { id: string; username: string; isAdmin: string }) =>
+          user.id === authorId
+      )?.username,
     [listOfUsers]
   );
 
