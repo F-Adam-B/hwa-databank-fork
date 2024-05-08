@@ -3,7 +3,7 @@ scalar Upload
 
 type Query {
   analytes: [AnalyteType]
-  analytesCharacteristics(listOfAnalyteNames: [String]!): [AnalyteType]
+  analytesCharacteristics(names: [String]!): [AnalyteType]
   formFieldValues: FormFieldValueType
   newsFeedPosts: [NewsFeed]
   sample(

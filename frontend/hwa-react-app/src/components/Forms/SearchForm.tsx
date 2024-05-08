@@ -10,7 +10,7 @@ import {
   ControlledSelectField,
   MapBox,
 } from '../index';
-import { GET_SAMPLES } from '../../graphql/queries/sampleQueries';
+import { GET_SAMPLES } from '../../apollo/queries/sampleQueries';
 import { SearchFormInput } from '../../types';
 
 const defaultValues: SearchFormInput = {

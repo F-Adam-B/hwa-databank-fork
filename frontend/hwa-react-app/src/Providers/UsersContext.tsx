@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 import { User, TChildrenProps } from '../types';
 import { useQuery } from '@apollo/client';
-import { GET_USERS_QUERY } from '../graphql/queries/userQueries';
+import { GET_USERS_QUERY } from '../apollo/queries/userQueries';
 
 export const UsersContext = createContext<User[]>([]);
 

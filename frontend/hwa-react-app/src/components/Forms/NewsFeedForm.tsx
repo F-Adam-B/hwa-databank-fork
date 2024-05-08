@@ -16,8 +16,8 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
 import { DevTool } from '@hookform/devtools';
 
-import { SAVE_NEWS_FEED_POST } from '../../graphql/mutations/newsFeedMutations';
-import { NEWS_FEED_QUERY } from '../../graphql/queries/newFeedQueries';
+import { SAVE_NEWS_FEED_POST } from '../../apollo/mutations/newsFeedMutations';
+import { NEWS_FEED_QUERY } from '../../apollo/queries/newFeedQueries';
 import { TNewsFeedFormProps } from '../../types';
 
 const defaultValues: TNewsFeedFormProps = {

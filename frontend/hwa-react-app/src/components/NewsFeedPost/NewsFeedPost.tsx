@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 import {
   Alert,
   Card,
@@ -11,8 +11,8 @@ import { NewsFeedCard, NewsFeedForm } from '../index';
 import { useMutation, useQuery } from '@apollo/client';
 
 import { UsersContext } from '../../Providers/UsersContext';
-import { NEWS_FEED_QUERY } from '../../graphql/queries/newFeedQueries';
-import { DELETE_NEWS_FEED_POST } from '../../graphql/mutations/newsFeedMutations';
+import { NEWS_FEED_QUERY } from '../../apollo/queries/newFeedQueries';
+import { DELETE_NEWS_FEED_POST } from '../../apollo/mutations/newsFeedMutations';
 import { NewsFeedProps } from '../../types';
 
 const EmptyNewsFeedDisplay = () => (
@@ -35,7 +35,7 @@ const NewsFeed = () => {
     { data: deleteNewsFeedMutationData, error: deleteNewsFeedMutationError },
   ] = useMutation(DELETE_NEWS_FEED_POST);
 
-  const handleDeleteNewsFeedPost = async (id: string) => {
+  const handleDeleteNewsFeedPost = useCallback(async (id: string) => {
     try {
       await deleteNewsFeedPost({
         variables: { id },
@@ -44,7 +44,7 @@ const NewsFeed = () => {
     } catch (error) {
       console.error(`Error deleting news feed post with ID ${id}:`, error);
     }
-  };
+  }, []);
 
   const getAuthorName = useMemo(
     () => (authorId: string) =>

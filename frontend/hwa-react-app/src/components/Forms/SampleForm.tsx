@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { DropdownOptionsContext } from '../../Providers/DropdownSelectContext';
 import { Controller, useForm } from 'react-hook-form';
@@ -19,8 +19,8 @@ import {
 import ControlledDateField from '../ControlledDateField/ControlledDateField';
 import ControlledTimeField from '../ControlledTimeField/ControlledTimeField';
 import { DevTool } from '@hookform/devtools';
-import { GET_ANALYTE_CHARACTERISTICS_QUERY } from '../../graphql/queries/analyteQueries';
-import { ADD_SAMPLE_MUTATION } from '../../graphql/mutations/sampleMutations';
+import { GET_ANALYTE_CHARACTERISTICS_QUERY } from '../../apollo/queries/analyteQueries';
+import { ADD_SAMPLE_MUTATION } from '../../apollo/mutations/sampleMutations';
 import CharacteristicsForm from './CharacteristicsForm';
 import { TSampleForm } from '../../types';
 import { cleanFormData } from '../../utilities/dataTransformations';
@@ -105,25 +105,28 @@ const SampleForm = () => {
     defaultValues,
   });
 
-  const onSubmit = async (formData: TSampleForm) => {
-    const reshapedFormData = cleanFormData(formData);
-    try {
-      await addSampleMutation({
-        variables: { sampleFormValues: { id: '123', ...reshapedFormData } },
-      });
-    } catch (error) {
-      console.error('Error adding sample: ', error);
-    }
-  };
+  const onSubmit = useCallback(
+    async (formData: TSampleForm) => {
+      const reshapedFormData = cleanFormData(formData);
+      try {
+        await addSampleMutation({
+          variables: { sampleFormValues: { id: '123', ...reshapedFormData } },
+        });
+      } catch (error) {
+        console.error('Error adding sample: ', error);
+      }
+    },
+    [cleanFormData]
+  );
 
-  const handleSelectCharacteristics = async () => {
+  const handleSelectCharacteristics = useCallback(async () => {
     try {
-      const listOfAnalyteNames = getValues('analytesTested').map(
+      const names = getValues('analytesTested').map(
         (analyte) => analyte.analyteName
       );
       await getAnalyteCharacteristics({
         variables: {
-          listOfAnalyteNames,
+          names,
         },
       });
 
@@ -131,7 +134,7 @@ const SampleForm = () => {
     } catch (error: any) {
       console.error('Error fetching analyte characteristics:', error);
     }
-  };
+  }, [getValues, getAnalyteCharacteristics, setOpenCharacteristicsFormDialog]);
 
   if (error) return <>Error with form: {error}</>;
   if (getAnalyteCharacteristicsError)

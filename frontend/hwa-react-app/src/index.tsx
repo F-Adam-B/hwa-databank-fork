@@ -15,7 +15,7 @@ import { themeOptions } from './Providers/Theme';
 import router from './routes';
 import { MapProvider } from 'react-map-gl';
 import { NavBar } from './components';
-import client from './graphql/apollo-client';
+import client from './apollo/apollo-client';
 import { DropdownOptionsProvider } from './Providers/DropdownSelectProvider';
 import UsersProvider from './Providers/UsersContext';
 

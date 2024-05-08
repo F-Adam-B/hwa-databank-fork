@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
 
@@ -50,11 +50,11 @@ const CharacteristicsForm = ({
     name: 'analytesTested',
   });
 
-  const handleUpdateSampleForm = () => {
+  const handleUpdateSampleForm = useCallback(() => {
     const characteristicFormValues = getValues('selectedAnalytes');
     replace(characteristicFormValues);
     handleClose(false);
-  };
+  }, [getValues, replace, handleClose]);
 
   return (
     <Dialog fullScreen open={open}>

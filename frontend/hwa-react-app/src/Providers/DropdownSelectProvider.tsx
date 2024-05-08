@@ -3,9 +3,9 @@ import { useQuery } from '@apollo/client';
 import { DropdownOptionsContext } from './DropdownSelectContext';
 
 import { DropdownOptionsProviderProps, IDropdownOptions } from '../types';
-import { GET_SEARCH_SAMPLE_FORM_FIELDS } from '../graphql/queries/sampleQueries';
+import { GET_SEARCH_SAMPLE_FORM_FIELDS } from '../apollo/queries/sampleQueries';
 
-import { GET_ANALYTES } from '../graphql/queries/analyteQueries';
+import { GET_ANALYTES } from '../apollo/queries/analyteQueries';
 
 import { getUniqueValues, createFormDropdownObject } from '../utilities';
 
